@@ -18,6 +18,12 @@ $RECYCLE.BIN/
 .env.local
 *.local
 
+# Jekyll build output & cache (generated locally, never committed)
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
 # Dependencies / build output (uncomment as needed)
 # node_modules/
 # dist/
