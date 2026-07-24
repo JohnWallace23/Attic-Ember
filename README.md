@@ -48,6 +48,22 @@ part of the product's unique ID, so give each one a distinct filename.
 Set `sold: true` on an item once it sells to grey out its button instead of
 deleting the listing (nice for showing off what's moved).
 
+### Product categories — the `source_type` field (required)
+
+Every product **must** declare a `source_type`, so a customer always knows
+at a glance what they're buying. Use exactly one of these three values:
+
+| `source_type`  | Use it for                                                | Badge shown          |
+| -------------- | --------------------------------------------------------- | -------------------- |
+| `vintage`      | Genuine secondhand pieces you personally sourced          | One-of-a-kind find   |
+| `reproduction` | New stock from wholesale vendors (e.g. vintagebeistle.com) | New from our vendors |
+| `handmade`     | Candles and other items you make yourself                 | Handmade by us       |
+
+The category badge then appears automatically on both the homepage cards
+and the product page — you don't style anything, just set the field.
+Rule of thumb: **if you didn't make it and it isn't genuinely old, it's a
+`reproduction`.**
+
 ## 5. Add real photos
 
 Drop images into `assets/img/` and reference them in a product's front

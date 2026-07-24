@@ -3,7 +3,7 @@ title: "1950s Beistle Jack-O-Lantern Die-Cut"
 price: 48.00
 era: "1950s"
 category: "Paper &amp; die-cuts"
-badge: "Rare find"
+source_type: "vintage"
 description: >-
   Original Beistle die-cut, not a reproduction — the honeycomb-tissue
   jack-o-lantern face with the classic hinged grin. Some edge wear

@@ -3,6 +3,7 @@ title: "Ben Cooper-Style Skeleton Costume, Child S"
 price: 38.00
 era: "1960s"
 category: "Costumes"
+source_type: "vintage"
 description: >-
   Classic mask-and-smock costume set from the golden era of trick-or-treat
   costuming. Smock has the original tie closures, mask elastic has been

@@ -3,6 +3,7 @@ title: "Light-Up Witch Blow Mold, 24&quot;"
 price: 165.00
 era: "1970s"
 category: "Blow molds"
+source_type: "vintage"
 description: >-
   Classic freestanding witch blow mold with the original cord and socket —
   tested and she still lights up. Colors are strong, not sun-faded, which

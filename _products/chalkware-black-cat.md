@@ -3,6 +3,7 @@ title: "Chalkware Black Cat Candy Container"
 price: 72.00
 era: "1940s"
 category: "Chalkware"
+source_type: "vintage"
 description: >-
   Hand-painted plaster black cat, arched back, original candy-container
   base still intact. Paint has the soft, slightly chalky finish you only
