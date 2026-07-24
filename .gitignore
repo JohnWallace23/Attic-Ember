@@ -1,0 +1,24 @@
+# OS / system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# OneDrive
+*.tmp
+~$*
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.local
+*.local
+
+# Dependencies / build output (uncomment as needed)
+# node_modules/
+# dist/
+# build/
