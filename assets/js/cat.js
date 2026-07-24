@@ -22,38 +22,42 @@
   cat.setAttribute("role", "button");
   cat.setAttribute("tabindex", "0");
   cat.setAttribute("aria-label", "The shop cat. Press to say hello.");
+  // Both poses are drawn as smooth solid silhouettes in one fill color —
+  // no internal outlines. The soft rim that keeps the cat visible on the
+  // dark ground comes from a CSS drop-shadow on the whole svg, so it
+  // hugs the outer silhouette only.
   cat.innerHTML =
     '<div class="cat-bubble" aria-hidden="true"></div>' +
     '<svg class="cat-svg" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">' +
       '<g class="cat-rig">' +
         // side view, used while walking on the ground
-        '<g class="pose-walk">' +
-          '<path class="cat-tail" d="M8 44 Q -2 36 6 26" fill="none" stroke="#201C18" stroke-width="4.5" stroke-linecap="round"/>' +
-          '<g fill="#201C18" stroke="#93A184" stroke-width="1" stroke-opacity="0.35">' +
-            '<rect class="leg leg-a" x="17" y="48" width="4" height="14" rx="2"/>' +
-            '<rect class="leg leg-b" x="25" y="48" width="4" height="14" rx="2"/>' +
-            '<rect class="leg leg-a" x="35" y="48" width="4" height="14" rx="2"/>' +
-            '<rect class="leg leg-b" x="43" y="48" width="4" height="14" rx="2"/>' +
-            '<ellipse cx="31" cy="44" rx="19" ry="11"/>' +
-            '<circle cx="50" cy="34" r="9"/>' +
-            '<polygon points="44,28 42,20 49,25"/>' +
-            '<polygon points="56,28 58,20 51,25"/>' +
-          '</g>' +
-          '<circle class="cat-eyes" cx="47.5" cy="33" r="1.4" fill="#D9A84E"/>' +
-          '<circle class="cat-eyes" cx="53.5" cy="33" r="1.4" fill="#D9A84E"/>' +
+        '<g class="pose-walk" fill="#201C18">' +
+          '<path class="cat-tail" d="M12 44 C4 40 2 31 8 26 C12 22.5 15.5 24.5 14.5 28" fill="none" stroke="#201C18" stroke-width="4.5" stroke-linecap="round"/>' +
+          '<rect class="leg leg-a" x="17" y="46" width="4.5" height="16" rx="2.2"/>' +
+          '<rect class="leg leg-b" x="25" y="46" width="4.5" height="16" rx="2.2"/>' +
+          '<rect class="leg leg-a" x="36" y="46" width="4.5" height="16" rx="2.2"/>' +
+          '<rect class="leg leg-b" x="44" y="46" width="4.5" height="16" rx="2.2"/>' +
+          // torso with an arched back, blending into the shoulders
+          '<path d="M13 47 C13 38 21 32.5 31 32.5 C41 32.5 48.5 36 51 42 C52.5 46 51.5 50 47 51.5 C40 53.5 22 53.5 16.5 51 C14 50 13 48.5 13 47 Z"/>' +
+          '<circle cx="51" cy="32" r="9.5"/>' +
+          '<polygon points="45,26 43,17.5 50,23"/>' +
+          '<polygon points="57,26 59,17.5 52,23"/>' +
+          '<circle class="cat-eyes" cx="48.5" cy="31" r="1.5" fill="#D9A84E"/>' +
+          '<circle class="cat-eyes" cx="54.5" cy="31" r="1.5" fill="#D9A84E"/>' +
         '</g>' +
-        // upright sitting silhouette, used while perched in the moon
-        '<g class="pose-sit">' +
-          '<path d="M14 58 Q34 67 52 60" fill="none" stroke="#201C18" stroke-width="5" stroke-linecap="round"/>' +
-          '<g fill="#201C18" stroke="#93A184" stroke-width="1" stroke-opacity="0.35">' +
-            '<path d="M14 62 C5 48 8 28 24 22 L40 22 L40 62 Z"/>' +
-            '<rect x="34" y="30" width="9" height="32" rx="4"/>' +
-            '<circle cx="40" cy="16" r="10.5"/>' +
-            '<polygon points="33,10 30,1 38,6"/>' +
-            '<polygon points="47,10 50,1 42,6"/>' +
+        // perched in the moon: profile body, face turned to the viewer
+        '<g class="pose-sit" fill="#201C18">' +
+          '<path d="M13 59 C22 68 38 68 50 61" fill="none" stroke="#201C18" stroke-width="5" stroke-linecap="round"/>' +
+          '<path d="M44 62 C45.5 50 46 38 45.5 26 L36 22 C26 26 16 34 12.5 45 C10.5 51 11 57 14 62 Z"/>' +
+          '<circle cx="41" cy="13" r="10"/>' +
+          '<polygon points="33,7 32,0.5 39,4"/>' +
+          '<polygon points="49,7 50,0.5 43,4"/>' +
+          '<circle class="cat-eyes" cx="37" cy="13" r="1.7" fill="#D9A84E"/>' +
+          '<circle class="cat-eyes" cx="45" cy="13" r="1.7" fill="#D9A84E"/>' +
+          '<g stroke="#93A184" stroke-width="0.8" stroke-opacity="0.5">' +
+            '<path d="M27 15 L33 14.5"/><path d="M27 18.5 L33 17"/>' +
+            '<path d="M55 15 L49 14.5"/><path d="M55 18.5 L49 17"/>' +
           '</g>' +
-          '<circle class="cat-eyes" cx="36.5" cy="15" r="1.5" fill="#D9A84E"/>' +
-          '<circle class="cat-eyes" cx="44" cy="15" r="1.5" fill="#D9A84E"/>' +
         '</g>' +
       '</g>' +
     '</svg>';

@@ -200,11 +200,11 @@ img { max-width: 100%; display: block; }
 .hero-art svg { width: 100%; height: auto; }
 
 /* Anchor point for the cat's perch in the crescent. Percentages map to
-   the svg viewBox: seat at (282, 212) of 400x340. */
+   the svg viewBox: seat at (272, 210) of 400x340. */
 .moon-seat {
   position: absolute;
-  left: 70.5%;
-  top: 62.4%;
+  left: 68%;
+  top: 61.8%;
   width: 0;
   height: 0;
 }
@@ -384,7 +384,13 @@ img { max-width: 100%; display: block; }
   -webkit-tap-highlight-color: transparent;
   will-change: transform;
 }
-.page-cat .cat-svg { display: block; overflow: visible; }
+.page-cat .cat-svg {
+  display: block;
+  overflow: visible;
+  /* soft moonlit rim around the whole silhouette — replaces per-shape
+     outlines, so no internal "wireframe" lines */
+  filter: drop-shadow(0 0 1.5px rgba(147,161,132,0.45));
+}
 .page-cat .cat-rig { transform-origin: 50% 100%; }
 
 /* one cat, two poses: side view on the ground, upright in the moon */
@@ -402,7 +408,7 @@ img { max-width: 100%; display: block; }
 
 /* idle: slow tail sway + occasional blink */
 .cat-tail {
-  transform-origin: 8px 24px;
+  transform-origin: 13px 45px;
   animation: cat-tail-sway 3.6s ease-in-out infinite;
 }
 @keyframes cat-tail-sway { 50% { transform: rotate(12deg); } }
