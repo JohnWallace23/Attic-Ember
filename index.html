@@ -10,33 +10,22 @@ title: ""
        printed to look old. Every piece described honestly, warts and all.</p>
     <a href="#shop" class="btn">Browse the shelf</a>
   </div>
-  <div class="hero-art" aria-hidden="true">
-    <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
-      <!-- crescent moon with a cat sitting in it, old-storybook style -->
+  <div class="hero-art">
+    <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- storybook crescent moon — the shop cat perches here (see cat.js) -->
       <g>
         <!-- soft halo -->
-        <circle cx="300" cy="100" r="96" fill="#B98A2E" opacity="0.10"/>
-        <circle cx="300" cy="100" r="80" fill="#B98A2E" opacity="0.12"/>
-        <!-- the crescent, tilted into a hammock for the cat -->
-        <g transform="rotate(80 300 100)">
-          <path d="M300 20 A80 80 0 1 1 300 180 A105 105 0 0 0 300 20 Z"
-                fill="#D9A84E" opacity="0.95"/>
-        </g>
-        <!-- cat curled in the bowl of the moon -->
-        <g fill="#201C18" stroke="#93A184" stroke-width="1.5" stroke-opacity="0.45">
-          <path d="M316 132 Q332 128 328 108" fill="none" stroke="#201C18"
-                stroke-width="5" stroke-linecap="round" stroke-opacity="1"/>
-          <ellipse cx="304" cy="122" rx="14" ry="17"/>
-          <circle cx="304" cy="97" r="11"/>
-          <polygon points="295,91 292,78 301,85"/>
-          <polygon points="313,91 316,78 307,85"/>
-        </g>
-        <circle cx="300" cy="96" r="1.6" fill="#D9A84E"/>
-        <circle cx="308" cy="96" r="1.6" fill="#D9A84E"/>
-        <!-- a few faint stars -->
-        <circle cx="222" cy="52" r="2" fill="#EDE3D0" opacity="0.65"/>
-        <circle cx="366" cy="196" r="1.6" fill="#EDE3D0" opacity="0.55"/>
-        <circle cx="252" cy="26" r="1.4" fill="#EDE3D0" opacity="0.5"/>
+        <circle cx="258" cy="140" r="112" fill="#B98A2E" opacity="0.10"/>
+        <circle cx="258" cy="140" r="92" fill="#B98A2E" opacity="0.13"/>
+        <!-- the crescent: outer half-circle arc, slimmer inner arc,
+             tapered horns pointing right -->
+        <path d="M310 35 A105 105 0 1 0 310 245 A130 130 0 0 1 310 35 Z"
+              fill="#D9A84E" opacity="0.95"/>
+        <!-- faint stars in and around the crescent's opening -->
+        <circle cx="336" cy="88" r="2" fill="#EDE3D0" opacity="0.65"/>
+        <circle cx="352" cy="146" r="1.5" fill="#EDE3D0" opacity="0.5"/>
+        <circle cx="334" cy="200" r="1.7" fill="#EDE3D0" opacity="0.55"/>
+        <circle cx="240" cy="30" r="1.4" fill="#EDE3D0" opacity="0.5"/>
       </g>
       <!-- pumpkin -->
       <path d="M195 150 C160 150 138 180 138 220 C138 262 165 292 200 292 C235 292 262 262 262 220 C262 180 240 150 205 150 Z"
@@ -49,6 +38,9 @@ title: ""
       <polygon points="230,215 245,235 215,235" fill="#201C18"/>
       <path d="M160 255 Q200 285 240 255 L232 268 Q200 292 168 268 Z" fill="#201C18"/>
     </svg>
+    <!-- anchor point where the cat sits: bottom-center of the cat lands
+         here. Coordinates mirror the svg viewBox (282/400, 212/340). -->
+    <div class="moon-seat"></div>
   </div>
 </section>
 

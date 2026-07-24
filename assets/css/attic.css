@@ -196,7 +196,18 @@ img { max-width: 100%; display: block; }
 .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #060504; }
 .btn.ghost { background: transparent; color: var(--paper); }
 
+.hero-art { position: relative; }
 .hero-art svg { width: 100%; height: auto; }
+
+/* Anchor point for the cat's perch in the crescent. Percentages map to
+   the svg viewBox: seat at (282, 212) of 400x340. */
+.moon-seat {
+  position: absolute;
+  left: 70.5%;
+  top: 62.4%;
+  width: 0;
+  height: 0;
+}
 
 /* ---- section eyebrow ---- */
 .eyebrow {
@@ -376,6 +387,19 @@ img { max-width: 100%; display: block; }
 .page-cat .cat-svg { display: block; overflow: visible; }
 .page-cat .cat-rig { transform-origin: 50% 100%; }
 
+/* one cat, two poses: side view on the ground, upright in the moon */
+.page-cat .pose-sit { display: none; }
+.page-cat.seated .pose-sit { display: block; }
+.page-cat.seated .pose-walk { display: none; }
+.page-cat.seated {
+  /* JS parks the cat in .moon-seat; bottom-center lands on the anchor */
+  transform: translate(-50%, -100%);
+}
+
+/* mid-leap: tail streams behind, legs tucked */
+.page-cat.leaping .cat-tail { animation: none; transform: rotate(16deg); }
+.page-cat.leaping .leg { transform: translateY(-3px); }
+
 /* idle: slow tail sway + occasional blink */
 .cat-tail {
   transform-origin: 8px 24px;
@@ -405,6 +429,22 @@ img { max-width: 100%; display: block; }
   20% { transform: scale(1.15, 0.8); }
   50% { transform: scale(0.9, 1.2) translateY(-7px); }
   80% { transform: scale(1.05, 0.95); }
+}
+
+/* touchdown squash after leaping off the moon */
+.page-cat.landing .cat-rig { animation: cat-land 0.3s ease; }
+@keyframes cat-land {
+  35% { transform: scale(1.2, 0.75); }
+  100% { transform: none; }
+}
+
+/* the long luxurious post-nap stretch */
+.page-cat.stretching .cat-rig { animation: cat-stretch 1.3s ease-in-out; }
+@keyframes cat-stretch {
+  0%   { transform: none; }
+  30%  { transform: scaleX(1.3) scaleY(0.8) translateY(2px); }
+  60%  { transform: scaleX(1.3) scaleY(0.8) translateY(2px); }
+  100% { transform: none; }
 }
 
 /* speech bubble */
