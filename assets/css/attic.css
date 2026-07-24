@@ -163,6 +163,35 @@ img { max-width: 100%; display: block; }
 }
 .cart-stamp:hover { transform: rotate(0deg); background: var(--pumpkin); color: var(--paper); }
 
+/* Fire-crackle sound toggle (built by assets/js/ambience.js) */
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: var(--paper);
+  background: transparent;
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.sound-toggle:hover { background: var(--gold); color: var(--ink); }
+.sound-toggle .slash { opacity: 0; }              /* shown only when muted */
+.sound-toggle.muted { color: var(--paper-deep); border-color: var(--sage); opacity: 0.8; }
+.sound-toggle.muted .waves { opacity: 0; }
+.sound-toggle.muted .slash { opacity: 1; }
+/* subtle invitation to click, until the crackle first starts */
+.sound-toggle.awaiting { animation: sound-invite 2.4s ease-in-out infinite; }
+@keyframes sound-invite {
+  50% { border-color: var(--pumpkin); box-shadow: 0 0 10px rgba(201,98,45,0.35); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sound-toggle.awaiting { animation: none; }
+}
+
 /* ---- hero ---- */
 .hero {
   padding: 64px 0 48px;
