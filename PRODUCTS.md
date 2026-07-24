@@ -1,0 +1,170 @@
+# Managing your products — the no-jargon guide
+
+This is your cheat sheet for adding products, changing prices, and marking
+things sold. **You do not need to know any code.** If you can copy, paste,
+and type, you can run the shop.
+
+> **The one big idea:** every product is one little text file inside the
+> `_products/` folder. Editing a product = editing its file. Adding a
+> product = making a new file. That's the whole system.
+
+Everything you'll do lives here:
+👉 **https://github.com/JohnWallace23/Attic-Ember/tree/main/_products**
+
+When you save a change, the website updates itself in about **1–2 minutes**.
+You don't have to "publish" or "deploy" anything.
+
+---
+
+## Do it all from your web browser (no computer setup needed)
+
+You can edit everything right on GitHub — even from your phone.
+
+### To change a price (or fix a typo, or edit a description)
+
+1. Go to the `_products` folder (link above).
+2. Click the product you want to change.
+3. Click the **pencil icon ✏️** in the top-right corner.
+4. Change what you need (e.g. the price number).
+5. Scroll down, click the green **Commit changes** button, then **Commit changes** again in the popup.
+6. Wait a minute or two, refresh your live site. Done. 🎉
+
+### To add a brand-new product
+
+1. Go to the `_products` folder (link above).
+2. Click **Add file → Create new file** (top right).
+3. Type a filename ending in `.md` — see the naming rule below.
+4. Copy one of the **templates** further down this page and paste it in.
+5. Fill in your details.
+6. Click **Commit changes** twice. Your product is live in a minute or two.
+
+### To mark something SOLD (instead of deleting it)
+
+Nice for showing off what's moved. Edit the product's file and add this
+line anywhere in the settings block:
+
+```
+sold: true
+```
+
+The "Add" button turns into a greyed-out "Sold." To bring it back, delete
+that line (or change `true` to `false`).
+
+---
+
+## Naming your product files
+
+The filename becomes part of the product's web address, so:
+
+- Use lowercase letters, numbers, and hyphens `-` instead of spaces.
+- Make it **unique** and describe the item.
+- Always end it with `.md`.
+
+✅ Good: `1960s-ghost-diecut.md`, `bleeding-heart-candle.md`
+❌ Avoid: `New Product.md`, `IMG_2931.md`, `candle.md` (too vague — you'll
+have more than one)
+
+---
+
+## Copy-paste templates
+
+Copy **everything between the two dashed lines, including the dashed
+lines**, into your new file. Then just replace the words. Keep the quotes
+`" "` and the general shape exactly as they are.
+
+### 🟥 Template: Genuine vintage find
+
+```
+---
+title: "Your Item Name Here"
+price: 48.00
+era: "1950s"
+category: "Paper & die-cuts"
+source_type: "vintage"
+description: >-
+  A sentence or two about the piece — what it is, what's special about
+  it, and its history. Write like you're telling a customer in person.
+condition: >-
+  Be honest here — note any wear, chips, fading, or repairs. Buyers
+  trust sellers who point out the flaws.
+---
+```
+
+### 🟩 Template: Vendor reproduction (new stock)
+
+```
+---
+title: "Your Item Name Here"
+price: 12.00
+era: "New (1950s design)"
+category: "Paper & die-cuts"
+source_type: "reproduction"
+description: >-
+  What it is, and that it's a brand-new reproduction of a classic design.
+  Mention the vendor's quality if you like.
+condition: >-
+  New. Never displayed.
+---
+```
+
+### 🟧 Template: Handmade candle (made by you)
+
+```
+---
+title: "Your Candle Name Here"
+price: 28.00
+era: "Made to order"
+category: "Candles"
+source_type: "handmade"
+description: >-
+  Describe the candle — the look, the wax, the scent (or that it's
+  unscented), and that you pour it yourself in small batches.
+---
+```
+
+---
+
+## What each line means (plain English)
+
+| Line          | What to put                                                                 |
+| ------------- | --------------------------------------------------------------------------- |
+| `title`       | The product's name. **Keep the quotes.**                                    |
+| `price`       | Just the number, like `48.00`. **No dollar sign** — the site adds it.       |
+| `era`         | The little line under the name (e.g. `"1940s"`, `"Made to order"`).         |
+| `category`    | The grouping label (e.g. `"Chalkware"`, `"Candles"`, `"Blow molds"`).      |
+| `source_type` | **The important one.** Exactly one of: `"vintage"`, `"reproduction"`, `"handmade"`. This sets the colored badge automatically. |
+| `description` | The paragraph customers read. Write naturally.                              |
+| `condition`   | The honesty note for vintage/repro items. **Leave this line out for candles.** |
+
+> **Which `source_type`?** Rule of thumb: *if you didn't make it, and it
+> isn't genuinely old, it's a `reproduction`.*
+
+---
+
+## Adding a photo (optional — you can list before you shoot)
+
+Until you add a photo, the product shows a nice placeholder pattern, so
+it's totally fine to publish first and add the picture later.
+
+When you're ready:
+
+1. Put your photo in the `assets/img` folder (Add file → Upload files on GitHub).
+2. Add this line to the product's settings block, matching your filename:
+
+```
+image: /assets/img/your-photo-name.jpg
+```
+
+---
+
+## Three small rules that keep things from breaking
+
+1. **Keep the two `---` lines** at the very top and bottom of the settings
+   block. They tell the site where the settings start and end.
+2. **Prices are just numbers** — `165.00`, never `$165` or `165 dollars`.
+3. **To put an inch mark (") in a title**, type `&quot;` instead, because
+   real quotes are used to wrap the title. Example:
+   `title: "Witch Blow Mold, 24&quot;"` shows as `Witch Blow Mold, 24"`.
+
+That's everything. When in doubt, open an existing product in `_products/`
+and copy how it's set up — the four examples are there as working models.

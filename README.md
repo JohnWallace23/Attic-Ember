@@ -45,6 +45,10 @@ Each product is a file in `_products/`. Copy one of the examples
 title, price, era, category, description, condition. The filename becomes
 part of the product's unique ID, so give each one a distinct filename.
 
+> **Not comfortable with the technical side?** See **[PRODUCTS.md](PRODUCTS.md)**
+> — a plain-language, copy-paste guide for adding products, changing
+> prices, and marking items sold, entirely from your web browser. No code.
+
 Set `sold: true` on an item once it sells to grey out its button instead of
 deleting the listing (nice for showing off what's moved).
 
