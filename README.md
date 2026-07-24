@@ -98,3 +98,10 @@ bundle exec jekyll serve
 
 Not required — GitHub will build it for you either way — but useful if
 you want to check something before it's live.
+
+## Credits
+
+- Ambient fire sound: *"Fireplace Sound Loop"* by **NenadSimic** via
+  [OpenGameArt.org](https://opengameart.org/content/fireplace-sound-loop) —
+  released under **CC0 / public domain** (no attribution required; credited
+  here for our own records). Compressed to a small mono MP3.
