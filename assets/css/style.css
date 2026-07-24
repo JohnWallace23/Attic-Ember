@@ -26,6 +26,30 @@
 
 html { scroll-behavior: smooth; }
 
+/* ---- drifting embers canvas (created by assets/js/atmosphere.js) ----
+   Fixed behind all content, never intercepts clicks. The JS never builds
+   this element under prefers-reduced-motion, so there's nothing to hide,
+   but we belt-and-suspenders it here too. */
+.atmosphere-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+/* Keep all real content above the embers. The embers only show through
+   transparent areas (hero, section padding, page margins) — never over
+   the opaque header, cards, or footer, so text stays fully readable. */
+.site-header,
+main,
+.site-footer,
+body > .scallop {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere-canvas { display: none; }
+}
+
 body {
   margin: 0;
   background: var(--paper);
