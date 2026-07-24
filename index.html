@@ -78,7 +78,7 @@ title: ""
     {% for product in site.products %}
       {% unless product.draft %}
       <article class="card">
-        {% if product.badge %}<span class="badge">{{ product.badge }}</span>{% endif %}
+        {% include source-badge.html type=product.source_type %}
         <a href="{{ product.url | relative_url }}" style="color:inherit; text-decoration:none;">
           <div class="card-photo">
             {% if product.image %}

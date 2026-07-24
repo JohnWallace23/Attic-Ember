@@ -1,0 +1,22 @@
+{%- comment -%}
+  Category badge, driven by a product's source_type. One place owns the
+  label + color for each of the three categories, used by both the
+  homepage cards and the product pages.
+
+  Usage:
+    {% include source-badge.html type=product.source_type %}
+    {% include source-badge.html type=page.source_type inline=true %}
+{%- endcomment -%}
+{%- assign label = "" -%}
+{%- assign cls = "" -%}
+{%- case include.type -%}
+  {%- when "vintage" -%}
+    {%- assign label = "One-of-a-kind find" -%}{%- assign cls = "badge--vintage" -%}
+  {%- when "reproduction" -%}
+    {%- assign label = "New from our vendors" -%}{%- assign cls = "badge--repro" -%}
+  {%- when "handmade" -%}
+    {%- assign label = "Handmade by us" -%}{%- assign cls = "badge--handmade" -%}
+{%- endcase -%}
+{%- if label != "" -%}
+<span class="badge {{ cls }}{% if include.inline %} badge--inline{% endif %}">{{ label }}</span>
+{%- endif -%}
