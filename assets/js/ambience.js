@@ -40,27 +40,35 @@
     master.gain.value = 0;      // fade up from silence
     master.connect(ctx.destination);
 
-    // --- the fire's roar: looped brown noise through a warm lowpass ---
-    var bedSecs = 2.5;
+    // --- airy bed: quiet white-noise hiss, rumble removed, gently
+    //     "breathing" so the fire's air swells and settles. NOT a low
+    //     roar (that read as traffic). ---
+    var bedSecs = 3;
     var bedBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * bedSecs), ctx.sampleRate);
     var bed = bedBuf.getChannelData(0);
-    var last = 0;
-    for (var i = 0; i < bed.length; i++) {
-      var white = Math.random() * 2 - 1;
-      last = (last + 0.02 * white) / 1.02;     // integrate -> brown noise
-      bed[i] = last * 3.2;
-    }
+    for (var i = 0; i < bed.length; i++) bed[i] = Math.random() * 2 - 1;
     var bedSrc = ctx.createBufferSource();
     bedSrc.buffer = bedBuf;
     bedSrc.loop = true;
-    var lp = ctx.createBiquadFilter();
+    var hp = ctx.createBiquadFilter();       // kill the sub rumble
+    hp.type = "highpass";
+    hp.frequency.value = 220;
+    hp.Q.value = 0.5;
+    var lp = ctx.createBiquadFilter();       // soften the top hiss
     lp.type = "lowpass";
-    lp.frequency.value = 900;
-    lp.Q.value = 0.4;
+    lp.frequency.value = 3400;
+    lp.Q.value = 0.3;
     var bedGain = ctx.createGain();
-    bedGain.gain.value = 0.10;
-    bedSrc.connect(lp).connect(bedGain).connect(master);
+    bedGain.gain.value = 0.045;              // very quiet
+    bedSrc.connect(hp).connect(lp).connect(bedGain).connect(master);
     bedSrc.start();
+    // slow breathing: an LFO nudging the bed level up and down
+    var lfo = ctx.createOscillator();
+    lfo.frequency.value = 0.13 + Math.random() * 0.08;
+    var lfoGain = ctx.createGain();
+    lfoGain.gain.value = 0.02;
+    lfo.connect(lfoGain).connect(bedGain.gain);
+    lfo.start();
 
     // shared bus so crackle pops sit at a consistent level
     crackleBus = ctx.createGain();
@@ -68,35 +76,47 @@
     crackleBus.connect(master);
   }
 
-  // ---- one crackle pop: a very short, fast-decaying filtered noise burst ---
-  function pop() {
-    var dur = 0.015 + Math.random() * 0.05;
+  // ---- one spike: a single short click of noise with a fast exponential
+  //      decay, through a *lowpass* (low Q) so it reads as a woody tick,
+  //      never a resonant metallic ting. ---
+  function spike(when, cutoff, dur, level) {
     var n = Math.max(1, Math.floor(ctx.sampleRate * dur));
     var buf = ctx.createBuffer(1, n, ctx.sampleRate);
     var d = buf.getChannelData(0);
+    var decay = 16 + Math.random() * 26;
     for (var i = 0; i < n; i++) {
-      var env = 1 - i / n;
-      d[i] = (Math.random() * 2 - 1) * env * env;   // sharp attack, quick decay
+      d[i] = (Math.random() * 2 - 1) * Math.exp(-decay * (i / n));
     }
     var src = ctx.createBufferSource();
     src.buffer = buf;
-    var bp = ctx.createBiquadFilter();
-    bp.type = "bandpass";
-    bp.frequency.value = 700 + Math.random() * 2600;
-    bp.Q.value = 0.5 + Math.random() * 1.2;
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = cutoff;
+    f.Q.value = 0.6;
     var g = ctx.createGain();
-    // mostly soft ticks, the occasional louder snap
-    g.gain.value = (Math.random() < 0.12 ? 0.5 : 0.16) + Math.random() * 0.18;
-    src.connect(bp).connect(g).connect(crackleBus);
-    src.start();
+    g.gain.value = level;
+    src.connect(f).connect(g).connect(crackleBus);
+    src.start(when);
   }
 
-  // ---- self-rescheduling crackle loop (only while playing) ----
-  function scheduleCrackle() {
+  // ---- a crackle event = a little cluster of ticks (the "sputter"),
+  //      sometimes with a deeper low spit. This clustered stutter is the
+  //      signature of fire, versus one clean pop. ---
+  function crackle() {
     if (!playing || !ctx) return;
-    var bursts = 1 + (Math.random() < 0.3 ? 1 : 0);
-    for (var i = 0; i < bursts; i++) pop();
-    crackleTimer = setTimeout(scheduleCrackle, 90 + Math.random() * 700);
+    var t0 = ctx.currentTime + 0.002;
+    var ticks = 2 + Math.floor(Math.random() * 5);
+    for (var k = 0; k < ticks; k++) {
+      var when = t0 + k * (0.004 + Math.random() * 0.02);
+      var hi = Math.random() < 0.55;                 // mix of high ticks + mid crackles
+      var cutoff = hi ? 2600 + Math.random() * 3200 : 1100 + Math.random() * 1400;
+      var level = (hi ? 0.06 : 0.12) + Math.random() * 0.1;
+      spike(when, cutoff, 0.006 + Math.random() * 0.028, level);
+    }
+    if (Math.random() < 0.16) {                       // occasional deep "spit"
+      spike(t0, 260 + Math.random() * 320, 0.05 + Math.random() * 0.06, 0.16 + Math.random() * 0.12);
+    }
+    crackleTimer = setTimeout(crackle, 60 + Math.random() * 480);
   }
 
   function ramp(to, secs) {
@@ -115,7 +135,7 @@
     if (!playing) {
       playing = true;
       ramp(MASTER, 1.6);        // gentle fade in
-      scheduleCrackle();
+      crackle();
     }
     setBtn();
   }
