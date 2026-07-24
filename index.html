@@ -1,0 +1,94 @@
+---
+layout: default
+title: ""
+---
+<section class="hero wrap">
+  <div>
+    <h1>Genuine vintage Halloween,<br>found not made.</h1>
+    <p>Die-cuts, chalkware, blow molds, and costumes with real years on them —
+       hand-picked from estate sales and old collections around Chicago, not
+       printed to look old. Every piece described honestly, warts and all.</p>
+    <a href="#shop" class="btn">Browse the shelf</a>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- moon -->
+      <circle cx="300" cy="80" r="58" fill="#B98A2E" opacity="0.85"/>
+      <!-- pumpkin -->
+      <path d="M195 150 C160 150 138 180 138 220 C138 262 165 292 200 292 C235 292 262 262 262 220 C262 180 240 150 205 150 Z"
+            fill="#C9622D" stroke="#201C18" stroke-width="5"/>
+      <path d="M138 220 C138 220 168 208 200 208 C232 208 262 220 262 220"
+            fill="none" stroke="#201C18" stroke-width="4" opacity="0.5"/>
+      <rect x="192" y="118" width="16" height="34" rx="4" fill="#5C6B4F" stroke="#201C18" stroke-width="4"/>
+      <!-- jack o lantern face -->
+      <polygon points="170,215 185,235 155,235" fill="#201C18"/>
+      <polygon points="230,215 245,235 215,235" fill="#201C18"/>
+      <path d="M160 255 Q200 285 240 255 L232 268 Q200 292 168 268 Z" fill="#201C18"/>
+      <!-- black cat silhouette -->
+      <path d="M40 300 C40 260 60 235 75 235 C70 220 78 205 90 205 C95 218 92 228 92 228 C110 222 130 232 135 250
+               C150 245 165 255 165 275 L165 300 Z" fill="#201C18"/>
+      <polygon points="70,235 60,205 85,222" fill="#201C18"/>
+      <polygon points="90,228 95,198 112,220" fill="#201C18"/>
+      <circle cx="120" cy="270" r="4" fill="#EDE3D0"/>
+    </svg>
+  </div>
+</section>
+
+<div class="scallop"></div>
+
+<section class="shop wrap" id="shop">
+  <p class="eyebrow">Currently in the shop</p>
+  <h2 class="section-title">What's on the shelf</h2>
+
+  <div class="grid">
+    {% for product in site.products %}
+      {% unless product.draft %}
+      <article class="card">
+        {% if product.badge %}<span class="badge">{{ product.badge }}</span>{% endif %}
+        <a href="{{ product.url | relative_url }}" style="color:inherit; text-decoration:none;">
+          <div class="card-photo">
+            {% if product.image %}
+              <img src="{{ product.image | relative_url }}" alt="{{ product.title }}">
+            {% else %}
+              [ photo coming ]
+            {% endif %}
+          </div>
+        </a>
+        <div class="card-body">
+          <a href="{{ product.url | relative_url }}" style="color:inherit; text-decoration:none;">
+            <h3>{{ product.title }}</h3>
+          </a>
+          <p class="card-meta">{{ product.era | default: "Vintage" }} &middot; {{ product.category }}</p>
+          <p class="card-desc">{{ product.excerpt | default: product.description | truncatewords: 16 }}</p>
+          <div class="card-footer">
+            <span class="price">${{ product.price }}</span>
+            <button
+              class="add-btn snipcart-add-item"
+              data-item-id="{{ product.id | default: product.slug }}"
+              data-item-price="{{ product.price }}"
+              data-item-url="{{ product.url | absolute_url }}"
+              data-item-name="{{ product.title }}"
+              data-item-image="{{ product.image | absolute_url }}"
+              {% if product.sold %}disabled{% endif %}
+            >
+              {% if product.sold %}Sold{% else %}Add{% endif %}
+            </button>
+          </div>
+        </div>
+      </article>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</section>
+
+<div class="scallop"></div>
+
+<section class="wrap" id="about" style="padding: 56px 0 64px; max-width: 720px;">
+  <p class="eyebrow">Our story</p>
+  <h2 class="section-title">Why vintage, why now</h2>
+  <p style="font-size:17px;">
+    Swap this paragraph for your real story — how you started collecting,
+    what draws you to this stuff, what makes your eye different from the
+    next seller's. That story is most of what people are actually buying.
+  </p>
+</section>

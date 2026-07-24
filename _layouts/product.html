@@ -1,0 +1,55 @@
+---
+layout: default
+---
+<div class="wrap">
+  <div class="product-page">
+
+    <div class="product-photo">
+      {% if page.image %}
+        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}">
+      {% else %}
+        [ photo of {{ page.title }} goes here ]
+      {% endif %}
+    </div>
+
+    <div class="product-info">
+      {% if page.badge %}<div class="badge" style="position:static; display:inline-block; margin-bottom:12px;">{{ page.badge }}</div>{% endif %}
+      <h1>{{ page.title }}</h1>
+      <p class="product-price">${{ page.price }}</p>
+
+      <p class="product-desc">{{ page.description }}</p>
+
+      {% if page.condition %}
+      <div class="condition-note">
+        <strong>Condition:</strong> {{ page.condition }}
+      </div>
+      {% endif %}
+
+      <!--
+        Snipcart add-to-cart button.
+        data-item-id must be unique per product (the file slug works well).
+        data-item-price must match the number above — Snipcart validates
+        this server-side against your product list once you set that up,
+        so keep it accurate.
+      -->
+      <button
+        class="add-btn snipcart-add-item"
+        data-item-id="{{ page.id | default: page.slug }}"
+        data-item-price="{{ page.price }}"
+        data-item-url="{{ page.url | absolute_url }}"
+        data-item-description="{{ page.description }}"
+        data-item-image="{{ page.image | absolute_url }}"
+        data-item-name="{{ page.title }}"
+        {% if page.sold %}disabled{% endif %}
+        style="font-size:16px; padding:14px 24px;"
+      >
+        {% if page.sold %}Sold{% else %}Add to cart — ${{ page.price }}{% endif %}
+      </button>
+
+      <p class="fine-print" style="margin-top:20px; color: var(--sage);">
+        One of one. When it's gone, it's gone — this isn't a reprint.
+      </p>
+    </div>
+
+  </div>
+</div>

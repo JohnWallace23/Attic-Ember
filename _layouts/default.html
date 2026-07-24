@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}{% if page.title %} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
+  <!-- Snipcart -->
+  <link rel="preconnect" href="https://app.snipcart.com">
+  <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="{{ '/' | relative_url }}">Attic <span>&amp;</span> Ember</a>
+        <span class="tagline">{{ site.tagline }}</span>
+      </div>
+      <div class="header-right">
+        <a href="{{ '/#shop' | relative_url }}">Shop</a>
+        <a href="{{ '/#about' | relative_url }}">Our story</a>
+        <button class="cart-stamp snipcart-checkout" aria-label="Open cart">
+          Cart (<span class="snipcart-items-count">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="scallop"></div>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <div class="scallop flip orange"></div>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <h4>Attic &amp; Ember</h4>
+        <p>Real vintage Halloween, sourced and shipped from Chicago, IL.<br>
+        Every piece inspected and described honestly — condition notes included, not buried.</p>
+      </div>
+      <div>
+        <h4>Shipping</h4>
+        <p>Ships within 3 business days.<br>Fragile items double-boxed with care.</p>
+      </div>
+      <div>
+        <h4>Get in touch</h4>
+        <p><a href="mailto:hello@example.com">hello@example.com</a></p>
+      </div>
+    </div>
+    <div class="wrap fine-print" style="margin-top:20px;">
+      &copy; {{ 'now' | date: "%Y" }} Attic &amp; Ember. Not affiliated with any of the original manufacturers whose vintage pieces we resell.
+    </div>
+  </footer>
+
+  <div hidden id="snipcart" data-api-key="{{ site.snipcart_public_api_key }}"></div>
+  <script async src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+
+</body>
+</html>

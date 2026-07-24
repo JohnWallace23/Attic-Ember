@@ -1,0 +1,308 @@
+/* ==========================================================================
+   Attic & Ember — design tokens
+   Palette pulled from the actual objects: kraft paper, pumpkin flesh,
+   printer's ink, harvest gold, faded porch-light sage.
+   ========================================================================== */
+
+:root {
+  --paper:      #EDE3D0;
+  --paper-deep: #E3D5B8;
+  --ink:        #201C18;
+  --pumpkin:    #C9622D;
+  --pumpkin-deep: #A94E22;
+  --gold:       #B98A2E;
+  --sage:       #5C6B4F;
+  --rust:       #7A3B2E;
+
+  --display: "Rye", serif;
+  --body: "Lora", Georgia, serif;
+  --mono: "Special Elite", "Courier New", monospace;
+
+  --rule: 2px solid var(--ink);
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(0,0,0,0.025) 0, transparent 45%),
+    radial-gradient(circle at 85% 60%, rgba(0,0,0,0.03) 0, transparent 50%);
+}
+
+a { color: var(--rust); }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+img { max-width: 100%; display: block; }
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---- scalloped divider, drawn as a repeating SVG, not an image asset ---- */
+.scallop {
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18'%3E%3Cpath d='M0 0 C6 18 12 18 18 0 C24 18 30 18 36 0 Z' fill='%23201C18'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 36px 18px;
+}
+.scallop.flip { transform: rotate(180deg); }
+.scallop.orange {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18'%3E%3Cpath d='M0 0 C6 18 12 18 18 0 C24 18 30 18 36 0 Z' fill='%23C9622D'/%3E%3C/svg%3E");
+}
+
+/* ---- header ---- */
+.site-header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 0 14px;
+}
+.site-header .wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.brand {
+  font-family: var(--display);
+  font-size: 30px;
+  letter-spacing: 0.5px;
+  color: var(--paper);
+  text-decoration: none;
+}
+.brand span { color: var(--pumpkin); }
+.tagline {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--paper-deep);
+  opacity: 0.85;
+  margin-left: 14px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--mono);
+  font-size: 14px;
+}
+.header-right a { color: var(--paper); text-decoration: none; border-bottom: 1px dashed var(--gold); }
+
+/* Snipcart cart trigger, styled like a rubber ink stamp */
+.cart-stamp {
+  font-family: var(--mono);
+  background: transparent;
+  border: 2px solid var(--pumpkin);
+  color: var(--pumpkin);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transform: rotate(-2deg);
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.cart-stamp:hover { transform: rotate(0deg); background: var(--pumpkin); color: var(--paper); }
+
+/* ---- hero ---- */
+.hero {
+  padding: 64px 0 48px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+}
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.05;
+  margin: 0 0 20px;
+  color: var(--rust);
+}
+.hero p { font-size: 19px; max-width: 46ch; margin: 0 0 28px; }
+.btn {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 15px;
+  background: var(--pumpkin);
+  color: var(--paper);
+  padding: 13px 26px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.btn.ghost { background: transparent; color: var(--ink); }
+
+.hero-art svg { width: 100%; height: auto; }
+
+/* ---- section eyebrow ---- */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin: 0 0 6px;
+}
+.section-title {
+  font-family: var(--display);
+  font-size: 32px;
+  margin: 0 0 32px;
+  color: var(--ink);
+}
+
+/* ---- product grid ---- */
+.shop { padding: 56px 0 72px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+@media (max-width: 860px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } .hero { grid-template-columns: 1fr; padding-top: 40px; } }
+
+.card {
+  background: var(--paper-deep);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+.card:hover { transform: translateY(-4px); }
+.card-photo {
+  aspect-ratio: 4 / 3;
+  background:
+    repeating-linear-gradient(45deg, rgba(32,28,24,0.06) 0 2px, transparent 2px 14px),
+    var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  opacity: 0.55;
+  font-family: var(--mono);
+  font-size: 13px;
+  border-bottom: 2px solid var(--ink);
+}
+.badge {
+  position: absolute;
+  top: 10px;
+  left: -6px;
+  background: var(--sage);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  transform: rotate(-6deg);
+  border-radius: 2px;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.25);
+}
+.card-body { padding: 16px 18px 20px; }
+.card-body h3 {
+  font-family: var(--display);
+  font-size: 21px;
+  margin: 0 0 4px;
+  color: var(--rust);
+}
+.card-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--sage);
+  margin: 0 0 10px;
+}
+.card-desc { font-size: 15px; margin: 0 0 14px; color: var(--ink); opacity: 0.85; }
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.price {
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--ink);
+}
+.add-btn {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 9px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.add-btn:hover { background: var(--pumpkin-deep); }
+.add-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---- product page ---- */
+.product-page { padding: 48px 0 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+@media (max-width: 760px) { .product-page { grid-template-columns: 1fr; } }
+.product-photo {
+  aspect-ratio: 1 / 1;
+  background:
+    repeating-linear-gradient(45deg, rgba(32,28,24,0.06) 0 2px, transparent 2px 14px),
+    var(--paper-deep);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  color: var(--ink);
+  opacity: 0.55;
+}
+.product-info h1 {
+  font-family: var(--display);
+  font-size: 40px;
+  color: var(--rust);
+  margin: 0 0 8px;
+}
+.product-price { font-family: var(--mono); font-size: 24px; margin: 0 0 18px; }
+.product-desc { font-size: 16px; margin: 0 0 24px; }
+.condition-note {
+  background: rgba(92,107,79,0.12);
+  border-left: 3px solid var(--sage);
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+/* ---- footer ---- */
+.site-footer {
+  background: var(--ink);
+  color: var(--paper-deep);
+  padding: 40px 0 32px;
+  font-size: 14px;
+}
+.site-footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+.site-footer h4 {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  color: var(--pumpkin);
+  margin: 0 0 10px;
+}
+.site-footer a { color: var(--paper-deep); }
+.fine-print { opacity: 0.6; font-family: var(--mono); font-size: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}

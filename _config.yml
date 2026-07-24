@@ -1,0 +1,27 @@
+title: Attic & Ember
+tagline: Genuine vintage Halloween, found not made
+description: >-
+  A small Chicago-run shop for real vintage Halloween collectibles —
+  die-cuts, chalkware, blow molds, and costumes with some history to them.
+baseurl: ""
+url: ""
+
+collections:
+  products:
+    output: true
+    permalink: /shop/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: products
+    values:
+      layout: product
+
+# ---- Snipcart ----
+# Get your PUBLIC API key from https://app.snipcart.com/dashboard/account/api-keys
+# (use the TEST key while you're building, swap to the LIVE key when you launch)
+snipcart_public_api_key: "YOUR_SNIPCART_PUBLIC_API_KEY"
+
+plugins:
+  - jekyll-feed
