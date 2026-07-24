@@ -22,43 +22,70 @@
   cat.setAttribute("role", "button");
   cat.setAttribute("tabindex", "0");
   cat.setAttribute("aria-label", "The shop cat. Press to say hello.");
-  // Both poses are drawn as smooth solid silhouettes in one fill color —
-  // no internal outlines. The soft rim that keeps the cat visible on the
-  // dark ground comes from a CSS drop-shadow on the whole svg, so it
-  // hugs the outer silhouette only.
+  // Cute is proportions: big head, huge gold slit-pupil eyes, tall ears
+  // with inner-ear color, tiny nose, plump body, rosy cheeks, a little
+  // collar. Solid silhouettes, no internal outlines — the rim comes from
+  // a CSS drop-shadow hugging the outer edge.
   cat.innerHTML =
     '<div class="cat-bubble" aria-hidden="true"></div>' +
     '<svg class="cat-svg" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">' +
       '<g class="cat-rig">' +
         // side view, used while walking on the ground
-        '<g class="pose-walk" fill="#201C18">' +
+        '<g class="pose-walk">' +
           '<path class="cat-tail" d="M12 44 C4 40 2 31 8 26 C12 22.5 15.5 24.5 14.5 28" fill="none" stroke="#201C18" stroke-width="4.5" stroke-linecap="round"/>' +
-          '<rect class="leg leg-a" x="17" y="46" width="4.5" height="16" rx="2.2"/>' +
-          '<rect class="leg leg-b" x="25" y="46" width="4.5" height="16" rx="2.2"/>' +
-          '<rect class="leg leg-a" x="36" y="46" width="4.5" height="16" rx="2.2"/>' +
-          '<rect class="leg leg-b" x="44" y="46" width="4.5" height="16" rx="2.2"/>' +
-          // torso with an arched back, blending into the shoulders
-          '<path d="M13 47 C13 38 21 32.5 31 32.5 C41 32.5 48.5 36 51 42 C52.5 46 51.5 50 47 51.5 C40 53.5 22 53.5 16.5 51 C14 50 13 48.5 13 47 Z"/>' +
-          '<circle cx="51" cy="32" r="9.5"/>' +
-          '<polygon points="45,26 43,17.5 50,23"/>' +
-          '<polygon points="57,26 59,17.5 52,23"/>' +
-          '<circle class="cat-eyes" cx="48.5" cy="31" r="1.5" fill="#D9A84E"/>' +
-          '<circle class="cat-eyes" cx="54.5" cy="31" r="1.5" fill="#D9A84E"/>' +
-        '</g>' +
-        // perched in the moon: slim profile body, face turned to the
-        // viewer, tail draped over the moon's edge and hanging down
-        '<g class="pose-sit" fill="#201C18">' +
-          '<path d="M16 58 C11 62 9 67 9.5 73 C10 78 14 79 15 74.5 C15.8 71 14.5 66 16 62" fill="none" stroke="#201C18" stroke-width="4.5" stroke-linecap="round"/>' +
-          '<path d="M42 62 C44 50 44.5 36 43 24 L34 20 C25 24 15.5 33 13 45 C11 52 12 58 15 62 Z"/>' +
-          '<circle cx="39" cy="12" r="9.5"/>' +
-          '<polygon points="31.5,6.5 30.5,0.5 37,3.5"/>' +
-          '<polygon points="46.5,6.5 47.5,0.5 41,3.5"/>' +
-          '<circle class="cat-eyes" cx="35.5" cy="12" r="1.6" fill="#D9A84E"/>' +
-          '<circle class="cat-eyes" cx="42.5" cy="12" r="1.6" fill="#D9A84E"/>' +
-          '<g stroke="#93A184" stroke-width="0.8" stroke-opacity="0.5">' +
-            '<path d="M25.5 14 L31.5 13.5"/><path d="M25.5 17.5 L31.5 16"/>' +
-            '<path d="M52.5 14 L46.5 13.5"/><path d="M52.5 17.5 L46.5 16"/>' +
+          '<g fill="#201C18">' +
+            '<rect class="leg leg-a" x="16" y="46" width="5" height="16" rx="2.4"/>' +
+            '<rect class="leg leg-b" x="24" y="46" width="5" height="16" rx="2.4"/>' +
+            '<rect class="leg leg-a" x="35" y="46" width="5" height="16" rx="2.4"/>' +
+            '<rect class="leg leg-b" x="43" y="46" width="5" height="16" rx="2.4"/>' +
+            '<path d="M12 48 C12 40 19 35 30 35 C40 35 46.5 38 49.5 43 C51.5 47 50.5 51 45 52.5 C37 54.5 20 54.5 15.5 52 C13 50.5 12 49.5 12 48 Z"/>' +
+            '<circle cx="47" cy="25" r="11"/>' +
+            '<polygon points="39.5,17.5 38.5,7 47,13"/>' +
+            '<polygon points="54.5,17.5 56.5,7 48.5,13"/>' +
           '</g>' +
+          '<polygon points="41.5,15.5 41,10 45.5,13.2" fill="#B4726B" opacity="0.85"/>' +
+          '<g class="cat-eye">' +
+            '<ellipse cx="49.5" cy="24" rx="3.4" ry="3.9" fill="#EDB94F"/>' +
+            '<ellipse cx="49.5" cy="24" rx="1.1" ry="3" fill="#201C18"/>' +
+            '<circle cx="48.3" cy="22.6" r="0.7" fill="#EDE3D0" opacity="0.9"/>' +
+          '</g>' +
+          '<circle cx="42.5" cy="29.5" r="1.6" fill="#C9622D" opacity="0.55"/>' +
+          '<polygon points="57.2,25.5 58.8,26.8 57,27.8" fill="#B4726B"/>' +
+          '<path d="M41 33.5 Q46.5 36.5 52.5 34.5 L52.5 37.5 Q46.5 39.5 41 36.5 Z" fill="#C9622D"/>' +
+          '<circle cx="47" cy="38" r="1.6" fill="#D9A84E"/>' +
+        '</g>' +
+        // perched in the moon: plump front-facing sit, tail draped over
+        // the moon\'s edge and hanging down
+        '<g class="pose-sit">' +
+          '<path class="sit-tail" d="M16 58 C11 62 9 67 9.5 73 C10 78 14 79 15 74.5 C15.8 71 14.5 66 16 62" fill="none" stroke="#201C18" stroke-width="4.5" stroke-linecap="round"/>' +
+          '<g fill="#201C18">' +
+            '<path d="M20 62 C13.5 56 12.5 45 17 37.5 C20 32 26 28.5 32 28.5 C38 28.5 44 32 47 37.5 C51.5 45 50.5 56 44 62 Z"/>' +
+            '<circle cx="32" cy="17" r="12.5"/>' +
+            '<polygon points="22,9.5 19,0.5 29.5,5.5"/>' +
+            '<polygon points="42,9.5 45,0.5 34.5,5.5"/>' +
+          '</g>' +
+          '<polygon points="23.2,7.8 21.5,2.8 27.5,5.6" fill="#B4726B" opacity="0.85"/>' +
+          '<polygon points="40.8,7.8 42.5,2.8 36.5,5.6" fill="#B4726B" opacity="0.85"/>' +
+          '<g class="cat-eye">' +
+            '<ellipse cx="26" cy="17.5" rx="4.1" ry="4.5" fill="#EDB94F"/>' +
+            '<ellipse cx="26" cy="17.5" rx="1.2" ry="3.4" fill="#201C18"/>' +
+            '<circle cx="24.6" cy="15.8" r="0.8" fill="#EDE3D0" opacity="0.9"/>' +
+          '</g>' +
+          '<g class="cat-eye">' +
+            '<ellipse cx="38" cy="17.5" rx="4.1" ry="4.5" fill="#EDB94F"/>' +
+            '<ellipse cx="38" cy="17.5" rx="1.2" ry="3.4" fill="#201C18"/>' +
+            '<circle cx="36.6" cy="15.8" r="0.8" fill="#EDE3D0" opacity="0.9"/>' +
+          '</g>' +
+          '<polygon points="30.6,23.5 33.4,23.5 32,25.4" fill="#B4726B"/>' +
+          '<path d="M30 26.6 Q31 27.6 32 26.6 Q33 27.6 34 26.6" fill="none" stroke="#EDE3D0" stroke-width="0.7" stroke-opacity="0.4"/>' +
+          '<circle cx="20" cy="21.5" r="1.9" fill="#C9622D" opacity="0.5"/>' +
+          '<circle cx="44" cy="21.5" r="1.9" fill="#C9622D" opacity="0.5"/>' +
+          '<g stroke="#93A184" stroke-width="0.8" stroke-opacity="0.5">' +
+            '<path d="M13.5 19 L20 18.5"/><path d="M13.5 22.5 L20 21"/>' +
+            '<path d="M50.5 19 L44 18.5"/><path d="M50.5 22.5 L44 21"/>' +
+          '</g>' +
+          '<path d="M24 28.8 Q32 32.3 40 28.8 L40 32 Q32 35.5 24 32 Z" fill="#C9622D"/>' +
+          '<circle cx="32" cy="33.8" r="2" fill="#D9A84E"/>' +
         '</g>' +
       '</g>' +
     '</svg>';
@@ -142,6 +169,10 @@
     mode = "ground";
   }
 
+  function hopDur(dx, dy) {
+    return clamp(Math.sqrt(dx * dx + dy * dy) * 0.9 + 320, 500, 950);
+  }
+
   function hopDown() {
     var r = cat.getBoundingClientRect();
     document.body.appendChild(cat);
@@ -152,22 +183,28 @@
     cat.style.top = "0";
     cat.style.right = "auto";
     cat.style.bottom = "auto";
+    cat.style.transform = "translate(" + r.left + "px," + r.top + "px)";
     // leap a little toward the middle of the page
     var xT = clamp(r.left + (r.left > window.innerWidth / 2 ? -70 : 70), 12, maxX());
-    hop = { x0: r.left, y0: r.top, xT: xT, t0: performance.now(), dur: 750 };
+    var yT = window.innerHeight - GROUND_SIZE - 4;
+    // anticipation: crouch for a beat (t0 in the future), then launch
+    hop = { x0: r.left, y0: r.top, xT: xT,
+            t0: performance.now() + 170, dur: hopDur(xT - r.left, yT - r.top) };
     svg.style.transform = xT < r.left ? "scaleX(-1)" : "";
-    cat.classList.add("leaping");
+    cat.classList.add("crouch");
     mode = "hopdown";
   }
 
   function hopUp() {
     var r = cat.getBoundingClientRect();
+    var sr = seatEl.getBoundingClientRect();
     cat.classList.remove("walking", "stretching", "landing");
-    sizeForSeat();
     cat.style.top = "0";
     cat.style.bottom = "auto";
-    hop = { x0: r.left, y0: r.top, t0: performance.now(), dur: 750 };
-    cat.classList.add("leaping");
+    cat.style.transform = "translate(" + r.left + "px," + r.top + "px)";
+    hop = { x0: r.left, y0: r.top,
+            t0: performance.now() + 170, dur: hopDur(sr.left - r.left, sr.top - r.top) };
+    cat.classList.add("crouch");
     mode = "hopup";
   }
 
@@ -210,7 +247,10 @@
       cat.classList.remove("hop", "poof");
     } else if (e.animationName === "cat-land") {
       cat.classList.remove("landing");
-      cat.classList.add("stretching");     // land → big stretch
+      // a settle-beat between landing and stretching — cats don't rush
+      setTimeout(function () {
+        if (mode === "ground") cat.classList.add("stretching");
+      }, 280);
     } else if (e.animationName === "cat-stretch") {
       cat.classList.remove("stretching");
     }
@@ -244,33 +284,51 @@
         pickTarget();
       }
     } else if (mode === "hopdown") {
-      var t = clamp((now - hop.t0) / hop.dur, 0, 1);
-      var yT = window.innerHeight - GROUND_SIZE - 4;
-      var cx = hop.x0 + (hop.xT - hop.x0) * t;
-      // accelerating fall with a small initial rise
-      var cy = hop.y0 + (yT - hop.y0) * t * t - 45 * 4 * t * (1 - t);
-      cat.style.transform = "translate(" + cx + "px," + cy + "px)";
-      if (t >= 1) {
-        ground(hop.xT);
-        cat.classList.add("landing");      // squash → stretch → wander
-        pauseUntil = now + 2600;
-        syncState();
+      var t = (now - hop.t0) / hop.dur;
+      if (t >= 0 && cat.classList.contains("crouch")) {
+        cat.classList.remove("crouch");    // launch!
+        cat.classList.add("leaping");
+      }
+      if (t >= 0) {
+        t = clamp(t, 0, 1);
+        var yT = window.innerHeight - GROUND_SIZE - 4;
+        var cx = hop.x0 + (hop.xT - hop.x0) * t;
+        // ballistic: accelerating fall with a launch rise at the start
+        var cy = hop.y0 + (yT - hop.y0) * t * t - 50 * 4 * t * (1 - t);
+        cat.style.transform = "translate(" + cx + "px," + cy + "px)";
+        if (t >= 1) {
+          cat.classList.remove("leaping");
+          ground(hop.xT);
+          cat.classList.add("landing");    // squash, settle, then stretch
+          pauseUntil = now + 3200;
+          syncState();
+        }
       }
     } else if (mode === "hopup") {
-      var t2 = clamp((now - hop.t0) / hop.dur, 0, 1);
-      // chase the seat's live position — the page may still be scrolling
-      var sr = seatEl.getBoundingClientRect();
-      var s = catSize();
-      var xT2 = sr.left - s / 2;
-      var yT2 = sr.top - s;
-      var ss = t2 * t2 * (3 - 2 * t2);   // smoothstep
-      var cx2 = hop.x0 + (xT2 - hop.x0) * ss;
-      var cy2 = hop.y0 + (yT2 - hop.y0) * ss - 55 * 4 * t2 * (1 - t2);
-      svg.style.transform = xT2 < hop.x0 - 8 ? "scaleX(-1)" : "";
-      cat.style.transform = "translate(" + cx2 + "px," + cy2 + "px)";
-      if (t2 >= 1) {
-        seat();
-        syncState();
+      var t2 = (now - hop.t0) / hop.dur;
+      if (t2 >= 0 && cat.classList.contains("crouch")) {
+        cat.classList.remove("crouch");    // spring!
+        cat.classList.add("leaping");
+        sizeForSeat();
+      }
+      if (t2 >= 0) {
+        t2 = clamp(t2, 0, 1);
+        // chase the seat's live position — the page may still be scrolling
+        var sr = seatEl.getBoundingClientRect();
+        var s = catSize();
+        var xT2 = sr.left - s / 2;
+        var yT2 = sr.top - s;
+        // fast initial spring that settles at the top
+        var ss = 1 - (1 - t2) * (1 - t2) * (1 - t2);
+        var cx2 = hop.x0 + (xT2 - hop.x0) * ss;
+        var cy2 = hop.y0 + (yT2 - hop.y0) * ss - 55 * 4 * t2 * (1 - t2);
+        svg.style.transform = xT2 < hop.x0 - 8 ? "scaleX(-1)" : "";
+        cat.style.transform = "translate(" + cx2 + "px," + cy2 + "px)";
+        if (t2 >= 1) {
+          cat.classList.remove("leaping");
+          seat();
+          syncState();
+        }
       }
     }
     // seated: nothing to do per-frame — the cat is being perfectly still
