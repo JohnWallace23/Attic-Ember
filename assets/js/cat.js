@@ -45,18 +45,19 @@
           '<circle class="cat-eyes" cx="48.5" cy="31" r="1.5" fill="#D9A84E"/>' +
           '<circle class="cat-eyes" cx="54.5" cy="31" r="1.5" fill="#D9A84E"/>' +
         '</g>' +
-        // perched in the moon: profile body, face turned to the viewer
+        // perched in the moon: slim profile body, face turned to the
+        // viewer, tail draped over the moon's edge and hanging down
         '<g class="pose-sit" fill="#201C18">' +
-          '<path d="M13 59 C22 68 38 68 50 61" fill="none" stroke="#201C18" stroke-width="5" stroke-linecap="round"/>' +
-          '<path d="M44 62 C45.5 50 46 38 45.5 26 L36 22 C26 26 16 34 12.5 45 C10.5 51 11 57 14 62 Z"/>' +
-          '<circle cx="41" cy="13" r="10"/>' +
-          '<polygon points="33,7 32,0.5 39,4"/>' +
-          '<polygon points="49,7 50,0.5 43,4"/>' +
-          '<circle class="cat-eyes" cx="37" cy="13" r="1.7" fill="#D9A84E"/>' +
-          '<circle class="cat-eyes" cx="45" cy="13" r="1.7" fill="#D9A84E"/>' +
+          '<path d="M16 58 C11 62 9 67 9.5 73 C10 78 14 79 15 74.5 C15.8 71 14.5 66 16 62" fill="none" stroke="#201C18" stroke-width="4.5" stroke-linecap="round"/>' +
+          '<path d="M42 62 C44 50 44.5 36 43 24 L34 20 C25 24 15.5 33 13 45 C11 52 12 58 15 62 Z"/>' +
+          '<circle cx="39" cy="12" r="9.5"/>' +
+          '<polygon points="31.5,6.5 30.5,0.5 37,3.5"/>' +
+          '<polygon points="46.5,6.5 47.5,0.5 41,3.5"/>' +
+          '<circle class="cat-eyes" cx="35.5" cy="12" r="1.6" fill="#D9A84E"/>' +
+          '<circle class="cat-eyes" cx="42.5" cy="12" r="1.6" fill="#D9A84E"/>' +
           '<g stroke="#93A184" stroke-width="0.8" stroke-opacity="0.5">' +
-            '<path d="M27 15 L33 14.5"/><path d="M27 18.5 L33 17"/>' +
-            '<path d="M55 15 L49 14.5"/><path d="M55 18.5 L49 17"/>' +
+            '<path d="M25.5 14 L31.5 13.5"/><path d="M25.5 17.5 L31.5 16"/>' +
+            '<path d="M52.5 14 L46.5 13.5"/><path d="M52.5 17.5 L46.5 16"/>' +
           '</g>' +
         '</g>' +
       '</g>' +

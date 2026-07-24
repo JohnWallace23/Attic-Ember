@@ -199,12 +199,13 @@ img { max-width: 100%; display: block; }
 .hero-art { position: relative; }
 .hero-art svg { width: 100%; height: auto; }
 
-/* Anchor point for the cat's perch in the crescent. Percentages map to
-   the svg viewBox: seat at (272, 210) of 400x340. */
+/* Anchor point for the cat's perch: on the moon's lower horn as it
+   sweeps right. Percentages map to the svg viewBox: (300, 227) of
+   400x340. */
 .moon-seat {
   position: absolute;
-  left: 68%;
-  top: 61.8%;
+  left: 75%;
+  top: 66.8%;
   width: 0;
   height: 0;
 }

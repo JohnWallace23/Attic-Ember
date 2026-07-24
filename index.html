@@ -21,10 +21,12 @@ title: ""
         </radialGradient>
       </defs>
 
-      <!-- storybook crescent moon — the shop cat perches here (see cat.js) -->
-      <circle cx="262" cy="140" r="132" fill="url(#moon-glow)"/>
+      <!-- storybook crescent moon — the shop cat perches here (see cat.js).
+           Rotated so the lower horn sweeps out to the right: that arc is
+           the cat's perch. -->
+      <circle cx="270" cy="140" r="132" fill="url(#moon-glow)"/>
       <path d="M310 35 A105 105 0 1 0 310 245 A118 118 0 0 1 310 35 Z"
-            fill="#D9A84E"/>
+            fill="#D9A84E" transform="rotate(-14 310 140)"/>
       <!-- four-point star sparkles in the crescent's opening -->
       <path d="M336 80 l2.4 6.6 6.6 2.4 -6.6 2.4 -2.4 6.6 -2.4 -6.6 -6.6 -2.4 6.6 -2.4 Z"
             fill="#EDE3D0" opacity="0.7"/>
@@ -34,28 +36,31 @@ title: ""
             fill="#EDE3D0" opacity="0.6"/>
       <circle cx="238" cy="28" r="1.6" fill="#EDE3D0" opacity="0.5"/>
 
-      <!-- pumpkin: squat, five lobes back-to-front so the overlapping
-           strokes become the ridges -->
-      <g fill="#C9622D" stroke="#201C18" stroke-width="5">
-        <ellipse cx="148" cy="228" rx="28" ry="46"/>
-        <ellipse cx="242" cy="228" rx="28" ry="46"/>
-        <ellipse cx="167" cy="226" rx="36" ry="54"/>
-        <ellipse cx="223" cy="226" rx="36" ry="54"/>
-        <ellipse cx="195" cy="224" rx="42" ry="58"/>
+      <!-- pumpkin, shifted left so it tucks beside the moon instead of
+           stacking on it. Five lobes back-to-front so the overlapping
+           strokes become the ridges. -->
+      <g transform="translate(-30 0)">
+        <g fill="#C9622D" stroke="#201C18" stroke-width="5">
+          <ellipse cx="148" cy="228" rx="28" ry="46"/>
+          <ellipse cx="242" cy="228" rx="28" ry="46"/>
+          <ellipse cx="167" cy="226" rx="36" ry="54"/>
+          <ellipse cx="223" cy="226" rx="36" ry="54"/>
+          <ellipse cx="195" cy="224" rx="42" ry="58"/>
+        </g>
+        <!-- curled stem with a tendril -->
+        <path d="M186 170 C184 154 190 142 202 139 C210 137 214 142 212 149 C210 156 205 161 203 168 Z"
+              fill="#5C6B4F" stroke="#201C18" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M212 146 C222 140 230 144 229 152 C228 158 222 159 220 155"
+              fill="none" stroke="#5C6B4F" stroke-width="3" stroke-linecap="round"/>
+        <!-- jack o lantern face -->
+        <polygon points="156,214 178,214 167,192" fill="#201C18"/>
+        <polygon points="212,214 234,214 223,192" fill="#201C18"/>
+        <polygon points="188,232 202,232 195,218" fill="#201C18"/>
+        <path d="M148 238 Q195 272 242 238 Q195 312 148 238 Z" fill="#201C18"/>
+        <!-- teeth -->
+        <rect x="180" y="252" width="12" height="10" rx="1.5" fill="#C9622D"/>
+        <rect x="200" y="264" width="12" height="10" rx="1.5" fill="#C9622D"/>
       </g>
-      <!-- curled stem with a tendril -->
-      <path d="M186 170 C184 154 190 142 202 139 C210 137 214 142 212 149 C210 156 205 161 203 168 Z"
-            fill="#5C6B4F" stroke="#201C18" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M212 146 C222 140 230 144 229 152 C228 158 222 159 220 155"
-            fill="none" stroke="#5C6B4F" stroke-width="3" stroke-linecap="round"/>
-      <!-- jack o lantern face -->
-      <polygon points="156,214 178,214 167,192" fill="#201C18"/>
-      <polygon points="212,214 234,214 223,192" fill="#201C18"/>
-      <polygon points="188,232 202,232 195,218" fill="#201C18"/>
-      <path d="M148 238 Q195 272 242 238 Q195 312 148 238 Z" fill="#201C18"/>
-      <!-- teeth -->
-      <rect x="180" y="252" width="12" height="10" rx="1.5" fill="#C9622D"/>
-      <rect x="200" y="264" width="12" height="10" rx="1.5" fill="#C9622D"/>
     </svg>
     <!-- anchor point where the cat sits: bottom-center of the cat lands
          here. Coordinates mirror the svg viewBox (282/400, 212/340). -->
