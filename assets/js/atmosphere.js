@@ -15,8 +15,8 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   if (reduceMotion.matches) return;
 
-  // Warm ember colors, pulled from the site's palette (pumpkin + gold).
-  var COLORS = ["#C9622D", "#B98A2E", "#E0A24E"];
+  // Warm ember body colors (each ember also gets a hot near-white core).
+  var COLORS = ["#E8873A", "#D9A84E", "#C9622D", "#F0B24E"];
 
   var canvas = document.createElement("canvas");
   canvas.className = "atmosphere-canvas";
@@ -80,6 +80,10 @@
 
     ctx.clearRect(0, 0, width, height);
 
+    // Additive blending: overlapping glows brighten like real light
+    // sources instead of muddying like paint.
+    ctx.globalCompositeOperation = "lighter";
+
     for (var i = 0; i < embers.length; i++) {
       var e = embers[i];
 
@@ -94,22 +98,27 @@
         continue;
       }
 
-      // Soft flicker + fade out over the top third of the screen.
-      var flick = 0.75 + Math.sin(now / 1000 * e.flicker + e.phase) * 0.25;
+      // Ember twinkle: a slow breathing glow with an occasional sharper
+      // dip, like a spark catching the air. Squaring the sine biases it
+      // toward "mostly lit, briefly dim" instead of a constant pulse.
+      var s = Math.sin(now / 1000 * e.flicker + e.phase);
+      var flick = 0.35 + 0.65 * s * s;
       var fade = e.y < height * 0.33 ? e.y / (height * 0.33) : 1;
       var alpha = e.baseAlpha * flick * fade;
 
-      // Draw each ember as a small radial glow.
-      var g = ctx.createRadialGradient(x, e.y, 0, x, e.y, e.r * 3);
-      g.addColorStop(0, e.color);
+      // Hot near-white core, ember-colored body, fading to nothing.
+      var g = ctx.createRadialGradient(x, e.y, 0, x, e.y, e.r * 2.5);
+      g.addColorStop(0, "#FFF3D0");
+      g.addColorStop(0.3, e.color);
       g.addColorStop(1, "rgba(0,0,0,0)");
       ctx.globalAlpha = alpha;
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(x, e.y, e.r * 3, 0, Math.PI * 2);
+      ctx.arc(x, e.y, e.r * 2.5, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
 
     rafId = requestAnimationFrame(draw);
   }

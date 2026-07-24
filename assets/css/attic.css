@@ -8,10 +8,14 @@
   --paper:      #EDE3D0;
   --paper-deep: #E3D5B8;
   --ink:        #201C18;
+  --night:      #14100D;   /* page ground: deep night-brown, darker than ink */
+  --night-soft: #1D1712;   /* slightly lifted dark for panels */
   --pumpkin:    #C9622D;
   --pumpkin-deep: #A94E22;
   --gold:       #B98A2E;
+  --gold-bright: #D9A84E;  /* readable gold for headings/links on night */
   --sage:       #5C6B4F;
+  --sage-light: #93A184;   /* moonlit sage for text on dark */
   --rust:       #7A3B2E;
 
   --display: "Rye", serif;
@@ -52,17 +56,37 @@ body > .scallop {
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--night);
+  color: var(--paper);
   font-family: var(--body);
   font-size: 17px;
   line-height: 1.55;
+  /* moonlight from the upper right, a faint warm hearth-glow low left */
   background-image:
-    radial-gradient(circle at 20% 10%, rgba(0,0,0,0.025) 0, transparent 45%),
-    radial-gradient(circle at 85% 60%, rgba(0,0,0,0.03) 0, transparent 50%);
+    radial-gradient(ellipse 70% 45% at 78% -8%, rgba(185,138,46,0.10) 0, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 12% 108%, rgba(201,98,45,0.07) 0, transparent 60%);
+  background-attachment: fixed;
 }
 
-a { color: var(--rust); }
+/* ---- drifting fog — one fixed layer of soft moonlit blooms, slowly
+   wandering. Oversized so its edges never show while it moves. ---- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 42% 30% at 68% 24%, rgba(237,227,208,0.05) 0, transparent 70%),
+    radial-gradient(ellipse 36% 26% at 24% 70%, rgba(185,138,46,0.05) 0, transparent 70%);
+  animation: fog-drift 90s ease-in-out infinite alternate;
+}
+@keyframes fog-drift {
+  from { transform: translate3d(-2%, -1%, 0); }
+  to   { transform: translate3d(2.5%, 1.5%, 0); }
+}
+
+a { color: var(--gold-bright); }
 a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 3px solid var(--gold);
   outline-offset: 2px;
@@ -152,7 +176,8 @@ img { max-width: 100%; display: block; }
   font-size: clamp(38px, 5vw, 58px);
   line-height: 1.05;
   margin: 0 0 20px;
-  color: var(--rust);
+  color: var(--gold-bright);
+  text-shadow: 0 0 32px rgba(185,138,46,0.25);
 }
 .hero p { font-size: 19px; max-width: 46ch; margin: 0 0 28px; }
 .btn {
@@ -164,12 +189,12 @@ img { max-width: 100%; display: block; }
   padding: 13px 26px;
   border-radius: var(--radius);
   text-decoration: none;
-  border: 2px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
+  border: 2px solid #060504;
+  box-shadow: 4px 4px 0 #060504;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-.btn.ghost { background: transparent; color: var(--ink); }
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #060504; }
+.btn.ghost { background: transparent; color: var(--paper); }
 
 .hero-art svg { width: 100%; height: auto; }
 
@@ -179,14 +204,14 @@ img { max-width: 100%; display: block; }
   font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--sage);
+  color: var(--sage-light);
   margin: 0 0 6px;
 }
 .section-title {
   font-family: var(--display);
   font-size: 32px;
   margin: 0 0 32px;
-  color: var(--ink);
+  color: var(--paper);
 }
 
 /* ---- product grid ---- */
@@ -205,9 +230,18 @@ img { max-width: 100%; display: block; }
   border-radius: var(--radius);
   overflow: hidden;
   position: relative;
-  transition: transform 0.15s ease;
+  /* lit paper object on a dark shelf: deep drop + faint warm halo */
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(185,138,46,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.card:hover { transform: translateY(-4px); }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.6),
+    0 0 28px rgba(201,98,45,0.18);
+}
 .card-photo {
   aspect-ratio: 4 / 3;
   background:
@@ -295,14 +329,14 @@ img { max-width: 100%; display: block; }
 .product-info h1 {
   font-family: var(--display);
   font-size: 40px;
-  color: var(--rust);
+  color: var(--gold-bright);
   margin: 0 0 8px;
 }
 .product-price { font-family: var(--mono); font-size: 24px; margin: 0 0 18px; }
 .product-desc { font-size: 16px; margin: 0 0 24px; }
 .condition-note {
-  background: rgba(92,107,79,0.12);
-  border-left: 3px solid var(--sage);
+  background: rgba(147,161,132,0.10);
+  border-left: 3px solid var(--sage-light);
   padding: 12px 16px;
   font-size: 14px;
   margin: 0 0 24px;
@@ -329,4 +363,5 @@ img { max-width: 100%; display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }
+  body::before { animation: none; }
 }
