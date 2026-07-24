@@ -40,17 +40,25 @@
             '<rect class="leg leg-b" x="43" y="46" width="5" height="16" rx="2.4"/>' +
             '<path d="M12 48 C12 40 19 35 30 35 C40 35 46.5 38 49.5 43 C51.5 47 50.5 51 45 52.5 C37 54.5 20 54.5 15.5 52 C13 50.5 12 49.5 12 48 Z"/>' +
             '<circle cx="47" cy="25" r="11"/>' +
-            '<polygon points="39.5,17.5 38.5,7 47,13"/>' +
-            '<polygon points="54.5,17.5 56.5,7 48.5,13"/>' +
+            '<polygon points="38.5,18 36.5,7.5 45,12.5"/>' +
+            '<polygon points="55.5,18 57.5,7.5 49,12.5"/>' +
           '</g>' +
-          '<polygon points="41.5,15.5 41,10 45.5,13.2" fill="#B4726B" opacity="0.85"/>' +
+          '<polygon points="39.5,16 38.2,9.5 43.5,12.8" fill="#B4726B" opacity="0.85"/>' +
+          '<polygon points="54.5,16 55.8,9.5 50.5,12.8" fill="#B4726B" opacity="0.85"/>' +
+          // face turned to the viewer while the body walks in profile
           '<g class="cat-eye">' +
-            '<ellipse cx="49.5" cy="24" rx="3.4" ry="3.9" fill="#EDB94F"/>' +
-            '<ellipse cx="49.5" cy="24" rx="1.1" ry="3" fill="#201C18"/>' +
-            '<circle cx="48.3" cy="22.6" r="0.7" fill="#EDE3D0" opacity="0.9"/>' +
+            '<ellipse cx="42.5" cy="24.5" rx="3.3" ry="3.8" fill="#EDB94F"/>' +
+            '<ellipse cx="42.5" cy="24.5" rx="1.1" ry="2.9" fill="#201C18"/>' +
+            '<circle cx="41.3" cy="23.1" r="0.7" fill="#EDE3D0" opacity="0.9"/>' +
           '</g>' +
-          '<circle cx="42.5" cy="29.5" r="1.6" fill="#C9622D" opacity="0.55"/>' +
-          '<polygon points="57.2,25.5 58.8,26.8 57,27.8" fill="#B4726B"/>' +
+          '<g class="cat-eye">' +
+            '<ellipse cx="51.5" cy="24.5" rx="3.3" ry="3.8" fill="#EDB94F"/>' +
+            '<ellipse cx="51.5" cy="24.5" rx="1.1" ry="2.9" fill="#201C18"/>' +
+            '<circle cx="50.3" cy="23.1" r="0.7" fill="#EDE3D0" opacity="0.9"/>' +
+          '</g>' +
+          '<polygon points="45.7,29.3 48.3,29.3 47,31" fill="#B4726B"/>' +
+          '<circle cx="37.8" cy="28.5" r="1.5" fill="#C9622D" opacity="0.5"/>' +
+          '<circle cx="56.2" cy="28.5" r="1.5" fill="#C9622D" opacity="0.5"/>' +
           '<path d="M41 33.5 Q46.5 36.5 52.5 34.5 L52.5 37.5 Q46.5 39.5 41 36.5 Z" fill="#C9622D"/>' +
           '<circle cx="47" cy="38" r="1.6" fill="#D9A84E"/>' +
         '</g>' +
