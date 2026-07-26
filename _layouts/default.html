@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Rye&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ '/assets/css/attic.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/attic.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 
   <!-- Snipcart -->
   <link rel="preconnect" href="https://app.snipcart.com">
@@ -67,15 +67,15 @@
 
   <!-- Drifting embers atmosphere (progressive enhancement; self-disables
        under prefers-reduced-motion). -->
-  <script src="{{ '/assets/js/atmosphere.js' | relative_url }}" defer></script>
+  <script src="{{ '/assets/js/atmosphere.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 
   <!-- The shop cat: ambles along the bottom of the page, reacts to
        petting. Sits still under prefers-reduced-motion. -->
-  <script src="{{ '/assets/js/cat.js' | relative_url }}" defer></script>
+  <script src="{{ '/assets/js/cat.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 
   <!-- Hearth ambience: a real CC0 campfire loop with a header mute
        toggle. Silent until the visitor's first interaction. -->
-  <script src="{{ '/assets/js/ambience.js' | relative_url }}"
+  <script src="{{ '/assets/js/ambience.js' | relative_url }}?v={{ site.time | date: '%s' }}"
           data-audio="{{ '/assets/audio/fire-crackle.mp3' | relative_url }}" defer></script>
 
 </body>
