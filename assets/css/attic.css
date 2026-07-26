@@ -257,6 +257,7 @@ img { max-width: 100%; display: block; }
 
 /* ---- product grid ---- */
 .shop { padding: 56px 0 72px; }
+.shop-all-cta { text-align: center; margin-top: 40px; }
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

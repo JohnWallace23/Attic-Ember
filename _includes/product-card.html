@@ -1,0 +1,38 @@
+{%- comment -%}
+  One product card, used by both the homepage (featured items) and the
+  /shop/ All Items page, so the two never drift.
+  Usage: {% include product-card.html product=product %}
+{%- endcomment -%}
+<article class="card">
+  {% include source-badge.html type=include.product.source_type %}
+  <a href="{{ include.product.url | relative_url }}" style="color:inherit; text-decoration:none;">
+    <div class="card-photo">
+      {% if include.product.image %}
+        <img src="{{ include.product.image | relative_url }}" alt="{{ include.product.title }}">
+      {% else %}
+        [ photo coming ]
+      {% endif %}
+    </div>
+  </a>
+  <div class="card-body">
+    <a href="{{ include.product.url | relative_url }}" style="color:inherit; text-decoration:none;">
+      <h3>{{ include.product.title }}</h3>
+    </a>
+    <p class="card-meta">{{ include.product.era | default: "Vintage" }} &middot; {{ include.product.category }}</p>
+    <p class="card-desc">{{ include.product.excerpt | default: include.product.description | truncatewords: 16 }}</p>
+    <div class="card-footer">
+      <span class="price">${{ include.product.price }}</span>
+      <button
+        class="add-btn snipcart-add-item"
+        data-item-id="{{ include.product.id | default: include.product.slug }}"
+        data-item-price="{{ include.product.price }}"
+        data-item-url="{{ include.product.url | absolute_url }}"
+        data-item-name="{{ include.product.title }}"
+        data-item-image="{{ include.product.image | absolute_url }}"
+        {% if include.product.sold %}disabled{% endif %}
+      >
+        {% if include.product.sold %}Sold{% else %}Add{% endif %}
+      </button>
+    </div>
+  </div>
+</article>

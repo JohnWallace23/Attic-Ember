@@ -1,0 +1,20 @@
+---
+layout: default
+title: "Shop"
+description: "Every genuine vintage find, honest reproduction, and handmade candle currently in the Attic & Ember shop."
+permalink: /shop/
+---
+<section class="shop wrap">
+  <p class="eyebrow">The full collection</p>
+  <h2 class="section-title">Everything in the shop</h2>
+
+  <div class="grid">
+    {% for product in site.products %}
+      {% unless product.draft %}{% include product-card.html product=product %}{% endunless %}
+    {% endfor %}
+  </div>
+
+  {% if site.products.size == 0 %}
+    <p style="text-align:center; color: var(--sage-light);">Nothing on the shelf just yet — check back soon.</p>
+  {% endif %}
+</section>

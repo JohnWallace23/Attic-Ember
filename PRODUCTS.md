@@ -50,6 +50,22 @@ sold: true
 The "Add" button turns into a greyed-out "Sold." To bring it back, delete
 that line (or change `true` to `false`).
 
+### To feature an item on the HOMEPAGE
+
+The homepage shows a small "New arrivals" selection; the **All Items** page
+(`/shop/`) always shows everything. To put an item in the homepage selection,
+add this line to its settings block:
+
+```
+featured: true
+```
+
+Remove the line when it's no longer new. A nice habit: keep roughly 3–6
+items featured at a time — ideally a mix of vintage, reproduction, and
+handmade so the homepage shows your whole range. (If nothing is featured,
+the homepage just shows your most recent items automatically, so it's
+never empty.)
+
 ---
 
 ## Naming your product files

@@ -72,47 +72,24 @@ title: ""
 <div class="scallop"></div>
 
 <section class="shop wrap" id="shop">
-  <p class="eyebrow">Currently in the shop</p>
-  <h2 class="section-title">What's on the shelf</h2>
+  <p class="eyebrow">New arrivals</p>
+  <h2 class="section-title">Fresh on the shelf</h2>
+
+  {%- comment -%}
+    Homepage shows items flagged `featured: true`. If none are flagged
+    yet, fall back to all products so the shelf is never empty.
+  {%- endcomment -%}
+  {% assign featured = site.products | where_exp: "p", "p.featured" %}
+  {% if featured.size == 0 %}{% assign featured = site.products %}{% endif %}
 
   <div class="grid">
-    {% for product in site.products %}
-      {% unless product.draft %}
-      <article class="card">
-        {% include source-badge.html type=product.source_type %}
-        <a href="{{ product.url | relative_url }}" style="color:inherit; text-decoration:none;">
-          <div class="card-photo">
-            {% if product.image %}
-              <img src="{{ product.image | relative_url }}" alt="{{ product.title }}">
-            {% else %}
-              [ photo coming ]
-            {% endif %}
-          </div>
-        </a>
-        <div class="card-body">
-          <a href="{{ product.url | relative_url }}" style="color:inherit; text-decoration:none;">
-            <h3>{{ product.title }}</h3>
-          </a>
-          <p class="card-meta">{{ product.era | default: "Vintage" }} &middot; {{ product.category }}</p>
-          <p class="card-desc">{{ product.excerpt | default: product.description | truncatewords: 16 }}</p>
-          <div class="card-footer">
-            <span class="price">${{ product.price }}</span>
-            <button
-              class="add-btn snipcart-add-item"
-              data-item-id="{{ product.id | default: product.slug }}"
-              data-item-price="{{ product.price }}"
-              data-item-url="{{ product.url | absolute_url }}"
-              data-item-name="{{ product.title }}"
-              data-item-image="{{ product.image | absolute_url }}"
-              {% if product.sold %}disabled{% endif %}
-            >
-              {% if product.sold %}Sold{% else %}Add{% endif %}
-            </button>
-          </div>
-        </div>
-      </article>
-      {% endunless %}
+    {% for product in featured limit: 6 %}
+      {% unless product.draft %}{% include product-card.html product=product %}{% endunless %}
     {% endfor %}
+  </div>
+
+  <div class="shop-all-cta">
+    <a class="btn" href="{{ '/shop/' | relative_url }}">Browse all items &rarr;</a>
   </div>
 </section>
 

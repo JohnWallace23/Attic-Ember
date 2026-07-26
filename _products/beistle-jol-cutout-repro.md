@@ -4,6 +4,7 @@ price: 12.00
 era: "New (1950s design)"
 category: "Paper &amp; die-cuts"
 source_type: "reproduction"
+featured: true
 description: >-
   A brand-new officially licensed Beistle reproduction of their classic
   1950s jack-o-lantern cutout — the same beloved artwork, freshly printed

@@ -4,6 +4,7 @@ price: 28.00
 era: "Made to order"
 category: "Candles"
 source_type: "handmade"
+featured: true
 description: >-
   Hand-poured skull candle in ivory wax with a hidden crimson core — as
   it burns, the "blood" seeps and runs down the sides, so no two ever
