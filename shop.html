@@ -8,6 +8,24 @@ permalink: /shop/
   <p class="eyebrow">The full collection</p>
   <h2 class="section-title">Everything in the shop</h2>
 
+  <div class="shop-controls">
+    <div class="filter-chips" role="group" aria-label="Filter items by category">
+      <button type="button" class="filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" class="filter-chip" data-filter="vintage" aria-pressed="false">Vintage</button>
+      <button type="button" class="filter-chip" data-filter="reproduction" aria-pressed="false">Reproductions</button>
+      <button type="button" class="filter-chip" data-filter="handmade" aria-pressed="false">Handmade</button>
+    </div>
+    <div class="sort-control">
+      <label for="sort-by">Sort</label>
+      <select id="sort-by" class="sort-select">
+        <option value="default">Featured first</option>
+        <option value="price-asc">Price: low to high</option>
+        <option value="price-desc">Price: high to low</option>
+        <option value="name">Name: A&ndash;Z</option>
+      </select>
+    </div>
+  </div>
+
   <div class="grid">
     {% for product in site.products %}
       {% unless product.draft %}{% include product-card.html product=product %}{% endunless %}
@@ -17,4 +35,8 @@ permalink: /shop/
   {% if site.products.size == 0 %}
     <p style="text-align:center; color: var(--sage-light);">Nothing on the shelf just yet — check back soon.</p>
   {% endif %}
+
+  <p class="shop-empty" hidden>Nothing in this category right now — check back soon.</p>
 </section>
+
+<script src="{{ '/assets/js/shop.js' | relative_url }}" defer></script>

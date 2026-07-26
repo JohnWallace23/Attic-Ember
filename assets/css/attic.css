@@ -258,6 +258,74 @@ img { max-width: 100%; display: block; }
 /* ---- product grid ---- */
 .shop { padding: 56px 0 72px; }
 .shop-all-cta { text-align: center; margin-top: 40px; }
+
+/* ---- shop filter + sort controls ---- */
+.shop-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px dashed rgba(185,138,46,0.3);
+}
+.filter-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.filter-chip {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: transparent;
+  border: 2px solid var(--sage);
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.filter-chip:hover { transform: translateY(-1px); border-color: var(--gold); }
+/* active chip fills with that category's badge color (matches the stamps) */
+.filter-chip.is-active { border-color: transparent; box-shadow: 2px 2px 0 rgba(0,0,0,0.25); }
+.filter-chip.is-active[data-filter="all"] { background: var(--gold); color: var(--ink); }
+.filter-chip.is-active[data-filter="vintage"] { background: var(--rust); }
+.filter-chip.is-active[data-filter="reproduction"] { background: var(--sage); }
+.filter-chip.is-active[data-filter="handmade"] { background: var(--pumpkin-deep); }
+
+.sort-control { display: flex; align-items: center; gap: 8px; }
+.sort-control label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sage-light);
+}
+.sort-select {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--paper);
+  background-color: var(--night-soft);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 7px 34px 7px 12px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D9A84E' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+.sort-select option { background: var(--night-soft); color: var(--paper); }
+.shop-empty {
+  text-align: center;
+  font-family: var(--mono);
+  color: var(--sage-light);
+  padding: 48px 0;
+}
+@media (max-width: 560px) {
+  .shop-controls { flex-direction: column; align-items: stretch; }
+  .sort-control { justify-content: space-between; }
+}
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
