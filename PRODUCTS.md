@@ -188,6 +188,25 @@ The **first photo** is the main one (it's what shows on the homepage and
 shop cards). On the product page, the rest appear as little thumbnails a
 shopper can click to swap the big picture. Use as many as you like.
 
+### Adding a video
+
+Great for showing a blow mold lit up or a candle burning. Upload your
+clip to the **`assets/video`** folder (same Upload files steps as photos),
+then add a **`videos:`** list to the product — one line per clip:
+
+```
+videos:
+  - /assets/video/witch-glowing.mp4
+```
+
+The video shows up as a thumbnail with a ▶ play badge next to the photos;
+clicking it plays the clip right in the main window. You can mix photos
+and videos freely — list your `images:` and `videos:` both.
+
+**Keep clips short** (a few seconds, ideally under ~20 MB each). Phone
+videos can be huge; if one's very large, tell John/Claude and it can be
+compressed. Use `.mp4` for the widest device support.
+
 ---
 
 ## Three small rules that keep things from breaking

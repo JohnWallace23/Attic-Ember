@@ -2,28 +2,62 @@
 layout: default
 ---
 {%- comment -%}
-  A product can carry one photo (`image:`) or several (`images:` list).
-  main_img is the first/primary one, used for the card and cart.
+  A product can carry one photo (`image:`) or several (`images:` list),
+  plus optional `videos:` (a `video:` single also works). main_img is the
+  first/primary photo (used for the card + cart); media_count decides
+  whether to show the thumbnail strip.
 {%- endcomment -%}
 {% assign main_img = page.image | default: page.images[0] %}
+{% assign img_count = 0 %}
+{% if page.images %}{% assign img_count = page.images.size %}{% elsif page.image %}{% assign img_count = 1 %}{% endif %}
+{% assign vid_count = 0 %}
+{% if page.videos %}{% assign vid_count = page.videos.size %}{% elsif page.video %}{% assign vid_count = 1 %}{% endif %}
+{% assign media_count = img_count | plus: vid_count %}
 <div class="wrap">
   <div class="product-page">
 
     <div class="product-media">
-      <div class="product-photo{% if main_img %} has-photo{% endif %}">
-        {% if main_img %}
-          <img id="main-photo" src="{{ main_img | relative_url }}" alt="{{ page.title }}">
-        {% else %}
-          [ photo of {{ page.title }} goes here ]
+      <div class="product-stage">
+        <div class="product-photo{% if main_img %} has-photo{% endif %}" id="stage-photo">
+          {% if main_img %}
+            <img id="main-photo" src="{{ main_img | relative_url }}" alt="{{ page.title }}">
+          {% else %}
+            [ photo of {{ page.title }} goes here ]
+          {% endif %}
+        </div>
+        {% if vid_count > 0 %}
+        <video id="main-video" class="product-video" controls playsinline preload="metadata" hidden></video>
         {% endif %}
       </div>
-      {% if page.images.size > 1 %}
+
+      {% if media_count > 1 %}
       <div class="photo-thumbs">
-        {% for src in page.images %}
-          <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-full="{{ src | relative_url }}" aria-label="View photo {{ forloop.index }}">
-            <img src="{{ src | relative_url }}" alt="{{ page.title }} — photo {{ forloop.index }}">
+        {% comment %} photo thumbnails {% endcomment %}
+        {% if page.images %}
+          {% for src in page.images %}
+            <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-type="image" data-full="{{ src | relative_url }}" aria-label="View photo {{ forloop.index }}">
+              <img src="{{ src | relative_url }}" alt="{{ page.title }} — photo {{ forloop.index }}">
+            </button>
+          {% endfor %}
+        {% elsif page.image %}
+          <button type="button" class="thumb is-active" data-type="image" data-full="{{ page.image | relative_url }}" aria-label="View photo 1">
+            <img src="{{ page.image | relative_url }}" alt="{{ page.title }}">
           </button>
-        {% endfor %}
+        {% endif %}
+        {% comment %} video thumbnails {% endcomment %}
+        {% if page.videos %}
+          {% for v in page.videos %}
+            <button type="button" class="thumb thumb--video" data-type="video" data-full="{{ v | relative_url }}" aria-label="Play video {{ forloop.index }}">
+              <video src="{{ v | relative_url }}#t=0.1" preload="metadata" muted playsinline></video>
+              <span class="thumb-play" aria-hidden="true">&#9654;</span>
+            </button>
+          {% endfor %}
+        {% elsif page.video %}
+          <button type="button" class="thumb thumb--video" data-type="video" data-full="{{ page.video | relative_url }}" aria-label="Play video">
+            <video src="{{ page.video | relative_url }}#t=0.1" preload="metadata" muted playsinline></video>
+            <span class="thumb-play" aria-hidden="true">&#9654;</span>
+          </button>
+        {% endif %}
       </div>
       {% endif %}
     </div>
@@ -70,6 +104,6 @@ layout: default
   </div>
 </div>
 
-{% if page.images.size > 1 %}
+{% if media_count > 1 %}
 <script src="{{ '/assets/js/gallery.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 {% endif %}
