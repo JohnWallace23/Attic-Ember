@@ -1,14 +1,30 @@
 ---
 layout: default
 ---
+{%- comment -%}
+  A product can carry one photo (`image:`) or several (`images:` list).
+  main_img is the first/primary one, used for the card and cart.
+{%- endcomment -%}
+{% assign main_img = page.image | default: page.images[0] %}
 <div class="wrap">
   <div class="product-page">
 
-    <div class="product-photo">
-      {% if page.image %}
-        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}">
-      {% else %}
-        [ photo of {{ page.title }} goes here ]
+    <div class="product-media">
+      <div class="product-photo{% if main_img %} has-photo{% endif %}">
+        {% if main_img %}
+          <img id="main-photo" src="{{ main_img | relative_url }}" alt="{{ page.title }}">
+        {% else %}
+          [ photo of {{ page.title }} goes here ]
+        {% endif %}
+      </div>
+      {% if page.images.size > 1 %}
+      <div class="photo-thumbs">
+        {% for src in page.images %}
+          <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-full="{{ src | relative_url }}" aria-label="View photo {{ forloop.index }}">
+            <img src="{{ src | relative_url }}" alt="{{ page.title }} — photo {{ forloop.index }}">
+          </button>
+        {% endfor %}
+      </div>
       {% endif %}
     </div>
 
@@ -38,7 +54,7 @@ layout: default
         data-item-price="{{ page.price }}"
         data-item-url="{{ page.url | absolute_url }}"
         data-item-description="{{ page.description }}"
-        data-item-image="{{ page.image | absolute_url }}"
+        data-item-image="{{ main_img | absolute_url }}"
         data-item-name="{{ page.title }}"
         {% if page.sold %}disabled{% endif %}
         style="font-size:16px; padding:14px 24px;"
@@ -53,3 +69,7 @@ layout: default
 
   </div>
 </div>
+
+{% if page.images.size > 1 %}
+<script src="{{ '/assets/js/gallery.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+{% endif %}

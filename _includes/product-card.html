@@ -3,6 +3,7 @@
   /shop/ All Items page, so the two never drift.
   Usage: {% include product-card.html product=product %}
 {%- endcomment -%}
+{% assign card_img = include.product.image | default: include.product.images[0] %}
 <article class="card"
          data-source="{{ include.product.source_type }}"
          data-price="{{ include.product.price }}"
@@ -11,8 +12,8 @@
   {% include source-badge.html type=include.product.source_type %}
   <a href="{{ include.product.url | relative_url }}" style="color:inherit; text-decoration:none;">
     <div class="card-photo">
-      {% if include.product.image %}
-        <img src="{{ include.product.image | relative_url }}" alt="{{ include.product.title }}">
+      {% if card_img %}
+        <img src="{{ card_img | relative_url }}" alt="{{ include.product.title }}">
       {% else %}
         [ photo coming ]
       {% endif %}
@@ -32,7 +33,7 @@
         data-item-price="{{ include.product.price }}"
         data-item-url="{{ include.product.url | absolute_url }}"
         data-item-name="{{ include.product.title }}"
-        data-item-image="{{ include.product.image | absolute_url }}"
+        data-item-image="{{ card_img | absolute_url }}"
         {% if include.product.sold %}disabled{% endif %}
       >
         {% if include.product.sold %}Sold{% else %}Add{% endif %}

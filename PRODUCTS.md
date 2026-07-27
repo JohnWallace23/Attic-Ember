@@ -171,6 +171,23 @@ When you're ready:
 image: /assets/img/your-photo-name.jpg
 ```
 
+### Multiple photos (a gallery)
+
+Got several angles? Upload all of them to `assets/img`, then instead of the
+single `image:` line, use an **`images:`** list — one line per photo, each
+starting with two spaces and a dash:
+
+```
+images:
+  - /assets/img/witch-front.jpg
+  - /assets/img/witch-back.jpg
+  - /assets/img/witch-label.jpg
+```
+
+The **first photo** is the main one (it's what shows on the homepage and
+shop cards). On the product page, the rest appear as little thumbnails a
+shopper can click to swap the big picture. Use as many as you like.
+
 ---
 
 ## Three small rules that keep things from breaking
