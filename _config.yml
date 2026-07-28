@@ -6,7 +6,7 @@ description: >-
 # baseurl must match the repo name for a GitHub Pages *project* site,
 # so asset links resolve under /Attic-Ember/. When you move to a custom
 # domain later, change this back to "".
-baseurl: "/Attic-Ember"
+baseurl: ""
 url: "https://johnwallace23.github.io"
 
 collections:
