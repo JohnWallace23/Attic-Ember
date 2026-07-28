@@ -97,6 +97,11 @@ price: 48.00
 era: "1950s"
 category: "Paper & die-cuts"
 source_type: "vintage"
+images:
+  - /assets/img/photo-1.jpg
+  - /assets/img/photo-2.jpg
+videos:
+  - /assets/video/clip-1.mp4
 description: >-
   A sentence or two about the piece — what it is, what's special about
   it, and its history. Write like you're telling a customer in person.
@@ -105,6 +110,9 @@ condition: >-
   trust sellers who point out the flaws.
 ---
 ```
+
+*(No video? Delete the two `videos:` lines. Just one photo? Replace the
+whole `images:` block with a single `image: /assets/img/photo-1.jpg`.)*
 
 ### 🟩 Template: Vendor reproduction (new stock)
 
@@ -115,6 +123,11 @@ price: 12.00
 era: "New (1950s design)"
 category: "Paper & die-cuts"
 source_type: "reproduction"
+images:
+  - /assets/img/photo-1.jpg
+  - /assets/img/photo-2.jpg
+videos:
+  - /assets/video/clip-1.mp4
 description: >-
   What it is, and that it's a brand-new reproduction of a classic design.
   Mention the vendor's quality if you like.
@@ -132,6 +145,11 @@ price: 28.00
 era: "Made to order"
 category: "Candles"
 source_type: "handmade"
+images:
+  - /assets/img/photo-1.jpg
+  - /assets/img/photo-2.jpg
+videos:
+  - /assets/video/clip-1.mp4
 description: >-
   Describe the candle — the look, the wax, the scent (or that it's
   unscented), and that you pour it yourself in small batches.
