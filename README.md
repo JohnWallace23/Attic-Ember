@@ -1,107 +1,181 @@
-# Attic & Ember — starter site
+# Attic & Ember
 
-A free-to-host storefront: GitHub Pages (hosting + Jekyll build) + Snipcart
-(cart/checkout) + Stripe or PayPal (payment processing). No monthly platform
-fee — just Snipcart's usage-based cost once you're live.
+Internal maintenance notes for **John & Ashleigh**. Our shop for vintage
+Halloween collectibles, honest reproductions, and handmade candles. This is
+the doc to open when we forget how something works — mostly, how to add and
+edit products.
 
-## 1. Put this on GitHub
+---
 
-1. Create a new **public** repo on GitHub (Pages' free tier requires public,
-   unless you're on GitHub Pro/Team).
-2. Upload everything in this folder to the repo (or `git init`, `git add .`,
-   `git commit -m "first commit"`, `git push`).
-3. In the repo: **Settings → Pages → Build and deployment → Source: Deploy
-   from a branch → Branch: main, folder: / (root)**. Save.
-4. GitHub will build the Jekyll site automatically — no build step to
-   configure. Your site will be live in a minute or two at
-   `https://yourusername.github.io/repo-name`.
+## Hosting & deploys
 
-## 2. Get your domain pointed at it (optional but recommended)
+- **Live site:** https://attic-ember.pages.dev
+- **Host:** Cloudflare Pages, connected to this GitHub repo through Cloudflare's
+  Git integration.
+- **Deploys are automatic.** Every push to the **`main`** branch makes Cloudflare
+  rebuild and redeploy in ~1–2 minutes. No manual deploy step, no publish button.
+- **GitHub is just storage now** — the code, the product files, and the version
+  history. It does *not* serve the site anymore. (We used to be on GitHub Pages;
+  that's turned off.)
+- **Build:** Cloudflare runs Jekyll against the `Gemfile` — plain Jekyll 4.3 +
+  `jekyll-feed`. No `github-pages` gem, no committed `Gemfile.lock`.
 
-Buy a domain (~$12–15/yr, any registrar). In the repo, add a file named
-`CNAME` at the root containing just your domain, e.g. `atticandember.com`.
-Then add a `CNAME` record at your registrar pointing to
-`yourusername.github.io`. GitHub's docs walk through this exactly if you
-search "GitHub Pages custom domain."
+**The whole workflow:** change a file → commit → push → Cloudflare redeploys.
+Editing locally and editing directly on github.com both end up the same place.
 
-## 3. Set up Snipcart
+---
 
-1. Create a free account at snipcart.com — you can build and test
-   everything before you ever pay anything.
-2. Dashboard → **Account → API Keys**, copy the **Public Test API Key**.
-3. Paste it into `_config.yml` as `snipcart_public_api_key`.
-4. Dashboard → **Payment gateways**, connect Stripe or PayPal (you'll need
-   an account with whichever you pick — Stripe is the more common choice
-   and takes about 10 minutes to set up).
-5. Test a purchase using Snipcart's test card numbers (in their docs) to
-   confirm checkout actually works end to end.
-6. When you're ready to take real money: swap in your **Live** API key,
-   and switch your payment gateway from test to live mode.
+## Where things live
 
-## 4. Add your real products
+| Path | What it is |
+| --- | --- |
+| `_products/` | One file per product. **This is what we touch most.** |
+| `assets/img/` | Product photos |
+| `assets/video/` | Product videos |
+| `index.html` | Homepage — hero, featured products, our story |
+| `shop.html` | The All Items page (filter + sort) |
+| `_layouts/`, `_includes/` | Page templates — leave alone unless changing design |
+| `assets/css/attic.css` | All the styling |
+| `_config.yml` | Site-wide settings |
+| `PRODUCTS.md` | Plain-language, copy-paste product guide (companion to this) |
 
-Each product is a file in `_products/`. Copy one of the examples
-(`_products/1950s-jol-diecut.md`) and edit the front matter at the top —
-title, price, era, category, description, condition. The filename becomes
-part of the product's unique ID, so give each one a distinct filename.
+---
 
-> **Not comfortable with the technical side?** See **[PRODUCTS.md](PRODUCTS.md)**
-> — a plain-language, copy-paste guide for adding products, changing
-> prices, and marking items sold, entirely from your web browser. No code.
+## Adding & editing products
 
-Set `sold: true` on an item once it sells to grey out its button instead of
-deleting the listing (nice for showing off what's moved).
+Every product is one text file in `_products/`, e.g. `spooky-tree.md`. The block
+between the `---` lines at the top ("front matter") holds all the settings.
 
-### Product categories — the `source_type` field (required)
+Two rules that bite:
+- **The filename must end in `.md`** or Jekyll ignores the file and the product
+  never appears. (Happened to us once with `spooky-tree`.)
+- The filename becomes the product's web address and unique ID — make it
+  **lowercase-with-hyphens and distinct**, e.g. `monster-mash-book.md`.
 
-Every product **must** declare a `source_type`, so a customer always knows
-at a glance what they're buying. Use exactly one of these three values:
+### Front matter fields
 
-| `source_type`  | Use it for                                                | Badge shown          |
-| -------------- | --------------------------------------------------------- | -------------------- |
-| `vintage`      | Genuine secondhand pieces you personally sourced          | One-of-a-kind find   |
-| `reproduction` | New stock from wholesale vendors (e.g. vintagebeistle.com) | New from our vendors |
-| `handmade`     | Candles and other items you make yourself                 | Handmade by us       |
+| Field | Required? | What it controls |
+| --- | --- | --- |
+| `title` | yes | Name shown everywhere. Keep the quotes. For an inch mark, type `&quot;` (e.g. `24&quot;` → 24″). |
+| `price` | yes | Just the number — `50.00`. **No `$`.** |
+| `source_type` | yes | One of `vintage`, `reproduction`, `handmade`. Sets the colored badge automatically (see below). |
+| `category` | yes | Free-text item type shown under the title — `Housewares`, `Candles`, `Lighted & Animated Decor`, whatever fits. |
+| `era` | optional | Small line by the title — `1980s`, `Made to order`, etc. |
+| `description` | yes | The paragraph shoppers read. |
+| `condition` | vintage / repro | Honest wear note. Skip it for handmade candles. |
+| `image` | optional | A single photo path: `/assets/img/file.jpg`. |
+| `images` | optional | Several photos as a list → a gallery. First one is the main/card photo. Use this **or** `image`, not both. |
+| `videos` | optional | Video clips as a list: `/assets/video/file.mp4`. Show up as a ▶ thumbnail in the gallery. |
+| `featured` | optional | `true` = also feature it on the homepage. Leave off = only on the All Items page. |
+| `sold` | optional | `true` = greys the button to "Sold" instead of deleting the listing. |
 
-The category badge then appears automatically on both the homepage cards
-and the product page — you don't style anything, just set the field.
-Rule of thumb: **if you didn't make it and it isn't genuinely old, it's a
+There is **no separate `badge` field** — the badge comes entirely from
+`source_type`. Setting `badge:` does nothing; don't bother.
+
+### The three `source_type` values
+
+| `source_type` | Badge it shows | Use it for |
+| --- | --- | --- |
+| `vintage` | One-of-a-kind find | Genuine old pieces we sourced |
+| `reproduction` | New from our vendors | New stock from wholesale vendors |
+| `handmade` | Handmade by us | Candles / things we make ourselves |
+
+Rule of thumb: **if we didn't make it and it isn't genuinely old, it's a
 `reproduction`.**
 
-## 5. Add real photos
+### Photos & videos
 
-Drop images into `assets/img/` and reference them in a product's front
-matter as `image: /assets/img/your-photo.jpg`. Until you add a photo, the
-card shows a placeholder pattern instead of a broken image — so it's safe
-to publish products before you've shot them, just don't forget to circle
-back.
+- Upload photos to `assets/img/` and videos to `assets/video/` **first**, then
+  reference them by path.
+- Multiple photos → use the `images:` list; the **first** one is the main photo
+  and the one shown on cards.
+- Keep files small — phone photos/videos are huge. Photos ideally under ~1 MB;
+  clips as **`.mp4`** (not `.MOV`, which some browsers won't play). If something's
+  oversized, it can be compressed.
+- No photo yet? Leave the image lines out entirely — the card shows a placeholder,
+  so it's fine to list a product before shooting it.
 
-## 6. Before you actually launch
+### A full example
 
-- [ ] Swap the placeholder email in the footer for your real one
-- [ ] Write your real "why vintage" story on the homepage (the `#about`
-      section in `index.html`) — this is doing a lot of the selling
-- [ ] Confirm sales tax is configured correctly in Snipcart for Illinois
-- [ ] Set up shipping rates in Snipcart (flat rate is simplest to start)
-- [ ] Test a full purchase in live mode with a real card for $1 before
-      telling anyone the shop is open
-- [ ] Set your LLC name and Illinois sales tax info in Snipcart's
-      dashboard so your invoices are correct
+```
+---
+title: "Spooky Tree by Hallmark"
+price: 40.00
+era: "2000s"
+category: "Lighted & Animated Decor"
+source_type: "vintage"
+images:
+  - /assets/img/Spooky-Tree-Front.jpg
+  - /assets/img/Spooky-Tree-Back.jpg
+videos:
+  - /assets/video/Spooky-Tree.mp4
+featured: true
+description: >-
+  Hallmark Spooky Tree animated plush with the original hang-tag — lights
+  up, sings, and the owls move.
+condition: >-
+  Fully working and in great shape (see video).
+---
+```
+
+---
+
+## Quick walkthrough: add a product
+
+Same result whether you do it on github.com or locally.
+
+**On github.com** (no setup, works from a phone):
+1. Upload the media: open `assets/img` (or `assets/video`) → **Add file → Upload
+   files** → **Commit changes**.
+2. Open `_products` → **Add file → Create new file**.
+3. Name it `something-descriptive.md` — **must end in `.md`**.
+4. Paste the contents of an existing product (open one and copy) or a template
+   from `PRODUCTS.md`, then fill in the fields.
+5. **Commit changes.** Cloudflare redeploys in ~1–2 minutes. Done.
+
+**Locally** (repo cloned on your machine):
+1. Copy an existing file in `_products/`, rename it, edit the fields.
+2. Drop the photos in `assets/img/` (and videos in `assets/video/`).
+3. `git add . && git commit -m "Add <product>" && git push` → Cloudflare redeploys.
+
+To **change a price** or **mark something sold**, just open its file, edit
+`price:` or add `sold: true`, and commit. `PRODUCTS.md` is the friendlier,
+copy-paste version of all this.
+
+> **If both of us are editing:** when you've made changes on github.com, run
+> `git pull` on any local copy before editing there, so the two don't drift.
+
+---
+
+## Checkout is not wired up yet (on purpose)
+
+The templates include a cart button and Snipcart hooks, but **checkout is
+intentionally not connected.** We're building the site itself first — nobody can
+actually buy anything until we set up Snipcart + a payment gateway down the road.
+This is expected, not a bug or a missing step.
+
+---
 
 ## Local preview (optional)
 
-If you want to see changes before pushing, install Ruby + Jekyll and run:
+Not required — Cloudflare builds the real thing. But to preview before pushing:
 
 ```
-bundle exec jekyll serve
+bundle install        # first time, and any time the Gemfile changes
+bundle exec jekyll serve --livereload
 ```
 
-Not required — GitHub will build it for you either way — but useful if
-you want to check something before it's live.
+Then open the local URL it prints. Notes:
+- Needs Ruby + Bundler installed on the machine.
+- `bundle install` creates a `Gemfile.lock` locally. **Leave it uncommitted** —
+  we keep it out of git on purpose (a Windows-pinned lock broke Cloudflare builds
+  before).
+
+---
 
 ## Credits
 
 - Ambient fire sound: *"Fireplace Sound Loop"* by **NenadSimic** via
   [OpenGameArt.org](https://opengameart.org/content/fireplace-sound-loop) —
-  released under **CC0 / public domain** (no attribution required; credited
-  here for our own records). Compressed to a small mono MP3.
+  **CC0 / public domain** (no attribution required; credited here for our own
+  records). Compressed to a small mono MP3.
