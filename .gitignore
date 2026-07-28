@@ -24,6 +24,10 @@ _site/
 .jekyll-metadata
 .sass-cache/
 
+# Bundler lockfile — regenerated locally; kept out of git on purpose
+# (a Windows-pinned lock broke the Cloudflare build once)
+Gemfile.lock
+
 # Dependencies / build output (uncomment as needed)
 # node_modules/
 # dist/

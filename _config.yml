@@ -3,11 +3,10 @@ tagline: Vintage finds, honest reproductions, and handmade treats
 description: >-
   A small Chicago-run shop for real vintage Halloween collectibles —
   die-cuts, chalkware, blow molds, and costumes with some history to them.
-# baseurl must match the repo name for a GitHub Pages *project* site,
-# so asset links resolve under /Attic-Ember/. When you move to a custom
-# domain later, change this back to "".
+# baseurl is empty because Cloudflare Pages serves the site from the
+# domain root (not a GitHub Pages subfolder). Leave it as "".
 baseurl: ""
-url: "https://johnwallace23.github.io"
+url: "https://attic-ember.pages.dev"
 
 collections:
   products:
