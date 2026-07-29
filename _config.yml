@@ -22,6 +22,9 @@ defaults:
 
 # ---- Checkout (manual payment: buyer pays via one of these after checkout) ----
 order_email: "shop@atticandember.com"
+# Public Web3Forms key (web3forms.com) — powers the on-page order form so
+# buyers don't need an email app. Safe to commit; it just routes to order_email.
+web3forms_key: "d1abc445-4121-4cb3-b1e3-31858bc804c3"
 shipping_note: "Shipping is included on U.S. orders — we'll confirm anything unusual by email."
 payments:
   paypal_me: ""   # PayPal.Me username  -> paypal.me/<this>   (leave blank to hide)

@@ -16,6 +16,7 @@
   var VENMO   = (attr("data-venmo", "") || "").trim();
   var CASHAPP = (attr("data-cashapp", "") || "").trim();
   var SHIP_NOTE = attr("data-shipping-note", "");
+  var WEB3KEY = (attr("data-web3forms", "") || "").trim();
 
   function read() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {} }
@@ -122,23 +123,99 @@
     var summary = cart.map(function (i) {
       return '<div class="co-line"><span>' + esc(i.title) + "</span><span>" + money(parseFloat(i.price) || 0) + "</span></div>";
     }).join("");
+
+    var step1;
+    if (WEB3KEY) {
+      // On-page order form — works for everyone, no email app required.
+      step1 =
+        '<form class="order-form" novalidate>' +
+          '<span class="co-step-h">1 &middot; Your shipping details</span>' +
+          '<input type="text" name="name" placeholder="Full name" autocomplete="name" required>' +
+          '<input type="email" name="email" placeholder="Email" autocomplete="email" required>' +
+          '<input type="text" name="address" placeholder="Street address" autocomplete="street-address">' +
+          '<div class="of-row">' +
+            '<input type="text" name="city" placeholder="City" autocomplete="address-level2">' +
+            '<input type="text" name="state" placeholder="State" autocomplete="address-level1">' +
+            '<input type="text" name="zip" placeholder="ZIP" autocomplete="postal-code">' +
+          '</div>' +
+          '<textarea name="note" placeholder="Anything we should know? (optional)"></textarea>' +
+          '<input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px">' +
+          '<button type="submit" class="btn order-submit">Place order request</button>' +
+          '<span class="of-status" role="status" aria-live="polite"></span>' +
+          '<span class="co-hint">Prefer to email us? <button type="button" class="copy-order">Copy order</button> &rarr; <a href="' + mailtoUrl() + '">' + esc(ORDER_EMAIL) + "</a></span>" +
+        "</form>";
+    } else {
+      // Fallback if no form key is configured: mailto + copy.
+      step1 =
+        '<div><span class="co-step-h">1 &middot; Send your order &amp; shipping address</span>' +
+          '<a class="btn email-order" href="' + mailtoUrl() + '">Email your order &rarr;</a>' +
+          '<span class="co-hint">Opens your email with everything filled in — just add your address.</span>' +
+          '<p class="email-fallback">No email app? <button type="button" class="copy-order">Copy order details</button> and send them to <a href="' + mailtoUrl() + '">' + esc(ORDER_EMAIL) + "</a>.</p></div>";
+    }
+
     body.innerHTML =
       '<div class="checkout">' +
         '<div class="co-summary">' + summary +
           '<div class="co-line co-total"><span>Total</span><strong>' + money(subtotal()) + "</strong></div></div>" +
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
-        '<ol class="co-steps">' +
-          '<li><span class="co-step-h">1 &middot; Send your order &amp; shipping address</span>' +
-            '<a class="btn email-order" href="' + mailtoUrl() + '">Email your order &rarr;</a>' +
-            '<span class="co-hint">Opens your email with everything filled in — just add your address.</span>' +
-            '<p class="email-fallback">No email app? <button type="button" class="copy-order">Copy order details</button> and send them to <a href="' + mailtoUrl() + '">' + esc(ORDER_EMAIL) + "</a>.</p></li>" +
-          '<li><span class="co-step-h">2 &middot; Pay your total (' + money(subtotal()) + ")</span>" +
-            payButtons() +
-            '<span class="co-hint">Put your name in the payment note so we can match it to your order.</span></li>' +
-        "</ol>" +
+        step1 +
+        '<div class="pay-step"' + (WEB3KEY ? " hidden" : "") + ">" +
+          '<span class="co-step-h">2 &middot; Pay your total (' + money(subtotal()) + ")</span>" +
+          payButtons() +
+          '<span class="co-hint">Put your name in the payment note so we can match it to your order.</span>' +
+        "</div>" +
         '<button class="checkout-back" type="button">&larr; Back to cart</button>' +
       "</div>";
   }
+
+  // ---- order form submission (Web3Forms — no mail app needed) ----
+  function submitOrder(form) {
+    var status = form.querySelector(".of-status");
+    var btn = form.querySelector(".order-submit");
+    var data = {};
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    if (data.botcheck) return;   // honeypot tripped -> silently ignore
+    if (!data.name || !data.name.trim() || !/.+@.+\..+/.test(data.email || "")) {
+      status.className = "of-status err";
+      status.textContent = "Please add your name and a valid email.";
+      return;
+    }
+    data.access_key = WEB3KEY;
+    data.subject = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
+    data.from_name = data.name;
+    data.order = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n") +
+      "\nTotal: " + money(subtotal());
+    btn.disabled = true;
+    status.className = "of-status";
+    status.textContent = "Sending…";
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      if (res && res.success) orderSent(form, data.name);
+      else throw new Error((res && res.message) || "failed");
+    }).catch(function () {
+      btn.disabled = false;
+      status.className = "of-status err";
+      status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
+    });
+  }
+  function orderSent(form, name) {
+    var wrap = document.createElement("div");
+    wrap.className = "order-sent";
+    wrap.innerHTML = "<strong>Thanks, " + esc(name) + "! Your order request is in.</strong>" +
+      "<p>We’ll email you shortly to confirm it’s still available. Lock it in by paying your total below.</p>";
+    form.parentNode.replaceChild(wrap, form);
+    var pay = body.querySelector(".pay-step");
+    if (pay) pay.hidden = false;
+  }
+  body.addEventListener("submit", function (e) {
+    var form = e.target.closest(".order-form");
+    if (!form) return;
+    e.preventDefault();
+    submitOrder(form);
+  });
 
   // ---- clicks inside the drawer ----
   body.addEventListener("click", function (e) {
