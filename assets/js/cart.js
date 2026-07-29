@@ -209,6 +209,12 @@
     form.parentNode.replaceChild(wrap, form);
     var pay = body.querySelector(".pay-step");
     if (pay) pay.hidden = false;
+    // Request is placed — empty the cart (the receipt + pay step above already
+    // show the captured total, so clearing now won't change what they see).
+    cart = [];
+    save();
+    updateCount();
+    syncButtons();
   }
   body.addEventListener("submit", function (e) {
     var form = e.target.closest(".order-form");
