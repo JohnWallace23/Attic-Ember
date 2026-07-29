@@ -607,6 +607,15 @@ body.cart-open { overflow: hidden; }
 .co-steps li { margin-bottom: 20px; }
 .co-step-h { display: block; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; font-size: 12px; color: var(--paper); margin-bottom: 10px; }
 .co-hint { display: block; font-size: 12px; color: var(--sage-light); margin-top: 8px; }
+.email-fallback { font-size: 12px; color: var(--sage-light); line-height: 1.7; margin: 10px 0 0; }
+.email-fallback a { color: var(--gold-bright); }
+.copy-order {
+  font-family: var(--mono); font-size: 12px;
+  background: transparent; color: var(--paper);
+  border: 1.5px solid var(--sage); border-radius: var(--radius);
+  padding: 3px 8px; cursor: pointer;
+}
+.copy-order:hover { border-color: var(--gold); }
 .pay-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
 .pay { flex: 1 1 auto; text-align: center; text-decoration: none; font-family: var(--mono); font-size: 14px; padding: 11px 12px; border-radius: var(--radius); border: 2px solid var(--ink); color: var(--ink); transition: transform 0.1s ease; }
 .pay-paypal { background: #ffc439; }

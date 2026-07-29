@@ -92,6 +92,22 @@
     var subj = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
     return "mailto:" + ORDER_EMAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(orderBody());
   }
+  // Copy-paste fallback for visitors with no mail app (desktop webmail users):
+  // mailto: silently does nothing for them, so let them grab the order text.
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function copyOrder(btn) {
+    var text = "To: " + ORDER_EMAIL + "\n\n" + orderBody();
+    function done() { var old = btn.textContent; btn.textContent = "Copied ✓"; setTimeout(function () { btn.textContent = old; }, 1800); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    } else { fallbackCopy(text); done(); }
+  }
   function payButtons() {
     var a = amt(), note = encodeURIComponent("Attic & Ember order");
     var out = [];
@@ -114,7 +130,8 @@
         '<ol class="co-steps">' +
           '<li><span class="co-step-h">1 &middot; Send your order &amp; shipping address</span>' +
             '<a class="btn email-order" href="' + mailtoUrl() + '">Email your order &rarr;</a>' +
-            '<span class="co-hint">Opens your email with everything filled in — just add your address.</span></li>' +
+            '<span class="co-hint">Opens your email with everything filled in — just add your address.</span>' +
+            '<p class="email-fallback">No email app? <button type="button" class="copy-order">Copy order details</button> and send them to <a href="' + mailtoUrl() + '">' + esc(ORDER_EMAIL) + "</a>.</p></li>" +
           '<li><span class="co-step-h">2 &middot; Pay your total (' + money(subtotal()) + ")</span>" +
             payButtons() +
             '<span class="co-hint">Put your name in the payment note so we can match it to your order.</span></li>' +
@@ -134,6 +151,8 @@
       showCheckout();
     } else if (e.target.closest(".checkout-back")) {
       showCart();
+    } else if (e.target.closest(".copy-order")) {
+      copyOrder(e.target.closest(".copy-order"));
     }
   });
 
