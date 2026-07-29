@@ -27,17 +27,16 @@
     <p class="card-desc">{{ include.product.excerpt | default: include.product.description | truncatewords: 16 }}</p>
     <div class="card-footer">
       <span class="price">${{ include.product.price }}</span>
-      <button
-        class="add-btn snipcart-add-item"
-        data-item-id="{{ include.product.id | default: include.product.slug }}"
-        data-item-price="{{ include.product.price }}"
-        data-item-url="{{ include.product.url | absolute_url }}"
-        data-item-name="{{ include.product.title }}"
-        data-item-image="{{ card_img | absolute_url }}"
-        {% if include.product.sold %}disabled{% endif %}
-      >
-        {% if include.product.sold %}Sold{% else %}Add{% endif %}
-      </button>
+      {% if include.product.sold %}
+      <button class="add-btn" disabled>Sold</button>
+      {% else %}
+      <button class="add-btn add-to-cart"
+        data-id="{{ include.product.id | default: include.product.slug }}"
+        data-title="{{ include.product.title }}"
+        data-price="{{ include.product.price }}"
+        data-url="{{ include.product.url | absolute_url }}"
+        data-image="{{ card_img | absolute_url }}">Add</button>
+      {% endif %}
     </div>
   </div>
 </article>

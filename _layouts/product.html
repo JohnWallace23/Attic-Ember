@@ -75,26 +75,17 @@ layout: default
       </div>
       {% endif %}
 
-      <!--
-        Snipcart add-to-cart button.
-        data-item-id must be unique per product (the file slug works well).
-        data-item-price must match the number above — Snipcart validates
-        this server-side against your product list once you set that up,
-        so keep it accurate.
-      -->
-      <button
-        class="add-btn snipcart-add-item"
-        data-item-id="{{ page.id | default: page.slug }}"
-        data-item-price="{{ page.price }}"
-        data-item-url="{{ page.url | absolute_url }}"
-        data-item-description="{{ page.description }}"
-        data-item-image="{{ main_img | absolute_url }}"
-        data-item-name="{{ page.title }}"
-        {% if page.sold %}disabled{% endif %}
-        style="font-size:16px; padding:14px 24px;"
-      >
-        {% if page.sold %}Sold{% else %}Add to cart — ${{ page.price }}{% endif %}
-      </button>
+      {% if page.sold %}
+      <button class="add-btn" disabled style="font-size:16px; padding:14px 24px;">Sold</button>
+      {% else %}
+      <button class="add-btn add-to-cart"
+        data-id="{{ page.id | default: page.slug }}"
+        data-title="{{ page.title }}"
+        data-price="{{ page.price }}"
+        data-url="{{ page.url | absolute_url }}"
+        data-image="{{ main_img | absolute_url }}"
+        style="font-size:16px; padding:14px 24px;">Add to cart — ${{ page.price }}</button>
+      {% endif %}
 
       <p class="fine-print" style="margin-top:20px; color: var(--sage-light);">
         One of one. When it's gone, it's gone — this isn't a reprint.

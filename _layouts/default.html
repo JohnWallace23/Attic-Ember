@@ -11,10 +11,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Rye&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ '/assets/css/attic.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-
-  <!-- Snipcart -->
-  <link rel="preconnect" href="https://app.snipcart.com">
-  <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.css" />
 </head>
 <body>
 
@@ -27,8 +23,8 @@
       <div class="header-right">
         <a href="{{ '/shop/' | relative_url }}">Shop</a>
         <a href="{{ '/#about' | relative_url }}">Our story</a>
-        <button class="cart-stamp snipcart-checkout" aria-label="Open cart">
-          Cart (<span class="snipcart-items-count">0</span>)
+        <button class="cart-stamp cart-toggle" type="button" aria-label="Open cart">
+          Cart (<span class="cart-count">0</span>)
         </button>
       </div>
     </div>
@@ -62,8 +58,14 @@
     </div>
   </footer>
 
-  <div hidden id="snipcart" data-api-key="{{ site.snipcart_public_api_key }}"></div>
-  <script async src="https://cdn.snipcart.com/themes/v3.7.1/default/snipcart.js"></script>
+  <!-- Browser cart + manual checkout (PayPal / Venmo / Cash App). No backend;
+       items live in the visitor's browser, orders email the shop. -->
+  <script src="{{ '/assets/js/cart.js' | relative_url }}?v={{ site.time | date: '%s' }}"
+          data-order-email="{{ site.order_email }}"
+          data-paypal="{{ site.payments.paypal_me }}"
+          data-venmo="{{ site.payments.venmo }}"
+          data-cashapp="{{ site.payments.cashapp }}"
+          data-shipping-note="{{ site.shipping_note | escape }}" defer></script>
 
   <!-- Drifting embers atmosphere (progressive enhancement; self-disables
        under prefers-reduced-motion). -->

@@ -6,7 +6,7 @@ description: >-
 # baseurl is empty because Cloudflare Pages serves the site from the
 # domain root (not a GitHub Pages subfolder). Leave it as "".
 baseurl: ""
-url: "https://attic-ember.pages.dev"
+url: "https://atticandember.com"
 
 collections:
   products:
@@ -20,10 +20,13 @@ defaults:
     values:
       layout: product
 
-# ---- Snipcart ----
-# Get your PUBLIC API key from https://app.snipcart.com/dashboard/account/api-keys
-# (use the TEST key while you're building, swap to the LIVE key when you launch)
-snipcart_public_api_key: "YOUR_SNIPCART_PUBLIC_API_KEY"
+# ---- Checkout (manual payment: buyer pays via one of these after checkout) ----
+order_email: "shop@atticandember.com"
+shipping_note: "Shipping is included on U.S. orders — we'll confirm anything unusual by email."
+payments:
+  paypal_me: ""   # PayPal.Me username  -> paypal.me/<this>   (leave blank to hide)
+  venmo: ""       # Venmo username without the @              (leave blank to hide)
+  cashapp: ""     # Cash App $cashtag without the $           (leave blank to hide)
 
 plugins:
   - jekyll-feed
