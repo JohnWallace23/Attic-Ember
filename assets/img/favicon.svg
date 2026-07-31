@@ -1,0 +1,45 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attic & Ember favicon: jack-o-lantern + crescent moon, site palette -->
+  <defs>
+    <radialGradient id="glow" cx="62%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#3a2f1e"/>
+      <stop offset="100%" stop-color="#201C18"/>
+    </radialGradient>
+    <linearGradient id="pumpkin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4703A"/>
+      <stop offset="100%" stop-color="#A94E22"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded ink background -->
+  <rect x="0" y="0" width="512" height="512" rx="104" fill="url(#glow)"/>
+
+  <!-- crescent moon, upper right -->
+  <path d="M392 120
+           a112 112 0 1 0 24 200
+           a88 88 0 1 1 -24 -200 Z"
+        fill="#B98A2E"/>
+
+  <!-- small sparkle -->
+  <path d="M430 300 l7 18 18 7 -18 7 -7 18 -7 -18 -18 -7 18 -7 Z" fill="#EDE3D0" opacity="0.9"/>
+
+  <!-- pumpkin stem -->
+  <rect x="238" y="212" width="26" height="44" rx="8" fill="#5C6B4F" stroke="#201C18" stroke-width="6"/>
+  <path d="M258 218 q28 -14 40 6" fill="none" stroke="#5C6B4F" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- pumpkin body -->
+  <g stroke="#201C18" stroke-width="10">
+    <ellipse cx="250" cy="340" rx="150" ry="120" fill="url(#pumpkin)"/>
+    <path d="M250 226 C210 240 196 290 196 340 C196 388 220 452 250 452" fill="none" opacity="0.35"/>
+    <path d="M250 226 C290 240 304 290 304 340 C304 388 280 452 250 452" fill="none" opacity="0.35"/>
+    <path d="M250 226 C250 226 250 452 250 452" fill="none" opacity="0.2"/>
+  </g>
+
+  <!-- carved face -->
+  <g fill="#F2C14E">
+    <polygon points="196,318 232,318 214,352"/>
+    <polygon points="268,318 304,318 286,352"/>
+    <path d="M188 378 Q250 428 312 378 L296 400 Q250 430 204 400 Z"/>
+    <rect x="240" y="384" width="20" height="20" transform="rotate(45 250 394)"/>
+  </g>
+</svg>
