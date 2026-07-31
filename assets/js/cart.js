@@ -112,7 +112,12 @@
   function payButtons() {
     var a = amt(), note = encodeURIComponent("Attic & Ember order");
     var out = [];
-    if (PAYPAL)  out.push('<a class="pay pay-paypal" target="_blank" rel="noopener" href="https://paypal.me/' + esc(PAYPAL) + "/" + a + '">PayPal</a>');
+    if (PAYPAL) {
+      // PAYPAL may be a full link (business profile / PayPal.Me) or just a
+      // PayPal.Me username. Either way the total is appended to the path.
+      var base = /^https?:\/\//i.test(PAYPAL) ? PAYPAL.replace(/\/+$/, "") : "https://paypal.me/" + PAYPAL;
+      out.push('<a class="pay pay-paypal" target="_blank" rel="noopener" href="' + esc(base) + "/" + a + '">PayPal</a>');
+    }
     if (VENMO)   out.push('<a class="pay pay-venmo" target="_blank" rel="noopener" href="https://venmo.com/' + esc(VENMO) + "?txn=pay&amount=" + a + "&note=" + note + '">Venmo</a>');
     if (CASHAPP) out.push('<a class="pay pay-cashapp" target="_blank" rel="noopener" href="https://cash.app/$' + esc(CASHAPP) + "/" + a + '">Cash&nbsp;App</a>');
     if (out.length === 0) return '<p class="pay-none">Payment options are being set up — just send your order email and we’ll reply with how to pay.</p>';
@@ -162,7 +167,8 @@
         '<div class="pay-step"' + (WEB3KEY ? " hidden" : "") + ">" +
           '<span class="co-step-h">2 &middot; Pay your total (' + money(subtotal()) + ")</span>" +
           payButtons() +
-          '<span class="co-hint">Put your name in the payment note so we can match it to your order.</span>' +
+          '<span class="co-hint">Send <strong>' + money(subtotal()) + "</strong> and put your name in the note so we can match it to your order. " +
+          "If the amount doesn’t fill in automatically, just type it.</span>" +
         "</div>" +
         '<button class="checkout-back" type="button">&larr; Back to cart</button>' +
       "</div>";

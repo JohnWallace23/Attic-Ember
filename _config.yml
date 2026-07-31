@@ -27,9 +27,11 @@ order_email: "shop@atticandember.com"
 web3forms_key: "d1abc445-4121-4cb3-b1e3-31858bc804c3"
 shipping_note: "Shipping is included on U.S. orders — we'll confirm anything unusual by email."
 payments:
-  paypal_me: ""   # PayPal.Me username  -> paypal.me/<this>   (leave blank to hide)
-  venmo: ""       # Venmo username without the @              (leave blank to hide)
-  cashapp: ""     # Cash App $cashtag without the $           (leave blank to hide)
+  # Full PayPal link (business profile or PayPal.Me), or just a PayPal.Me
+  # username. The order total is appended to the URL.
+  paypal_me: "https://www.paypal.biz/atticandember"
+  venmo: "atticandember"   # Venmo username without the @   (blank to hide)
+  cashapp: ""              # Cash App $cashtag without the $ (blank to hide)
 
 plugins:
   - jekyll-feed
