@@ -9,8 +9,9 @@ description: >-
 author: Attic & Ember
 lang: en_US
 logo: /assets/img/favicon-512.png
-# Image shown when a page is shared on social media / in chats.
-image: /assets/img/favicon-512.png
+
+# Link-preview image (Open Graph) is set in the `defaults:` block below —
+# jekyll-seo-tag only reads a *page's* `image`, never a site-level one.
 # baseurl is empty because Cloudflare Pages serves the site from the
 # domain root (not a GitHub Pages subfolder). Leave it as "".
 baseurl: ""
@@ -22,6 +23,13 @@ collections:
     permalink: /shop/:path/
 
 defaults:
+  # Default link-preview image for ordinary pages. Products are excluded on
+  # purpose — they get their own photo from _plugins/product_share_image.rb.
+  - scope:
+      path: ""
+      type: pages
+    values:
+      image: /assets/img/og-default.jpg
   - scope:
       path: ""
       type: products
