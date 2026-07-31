@@ -607,12 +607,28 @@ body.cart-open { overflow: hidden; }
 .co-steps li { margin-bottom: 20px; }
 .co-step-h { display: block; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; font-size: 12px; color: var(--paper); margin-bottom: 10px; }
 .co-hint { display: block; font-size: 12px; color: var(--sage-light); margin-top: 8px; }
-.pay-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-.pay { flex: 1 1 auto; text-align: center; text-decoration: none; font-family: var(--mono); font-size: 14px; padding: 11px 12px; border-radius: var(--radius); border: 2px solid var(--ink); color: var(--ink); transition: transform 0.1s ease; }
-.pay-paypal { background: #ffc439; }
-.pay-venmo { background: #3d95ce; color: var(--paper); }
-.pay-cashapp { background: #00d54b; }
-.pay:hover { transform: translateY(-1px); }
+/* Pay buttons wear the shop's stamp look — mono type, ink outline and a
+   hard offset shadow — rather than each brand's house colors. */
+.pay-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.pay {
+  flex: 1 1 auto;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 2px solid #060504;
+  box-shadow: 3px 3px 0 #060504;
+  color: var(--paper);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.pay-paypal   { background: var(--rust); }
+.pay-venmo    { background: var(--sage); }
+.pay-cashapp  { background: var(--pumpkin-deep); }
+.pay:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 #060504; }
+.pay:active { transform: translate(0, 0); box-shadow: 2px 2px 0 #060504; }
 .pay-none { font-size: 13px; color: var(--sage-light); }
 .checkout-back { background: none; border: 0; color: var(--sage-light); font-family: var(--mono); cursor: pointer; margin-top: 18px; padding: 0; }
 .checkout-back:hover { color: var(--gold-bright); }
