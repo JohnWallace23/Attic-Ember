@@ -707,6 +707,40 @@ body.cart-open { overflow: hidden; }
   text-transform: uppercase; color: var(--sage-light);
 }
 .os-ref strong { font-family: var(--mono); font-size: 16px; color: var(--gold-bright); letter-spacing: 1px; }
+
+/* "last step" panel — instructions sit above the pay button on purpose */
+.os-next {
+  margin: 4px 0 6px;
+  padding: 14px;
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  background: rgba(185,138,46,0.07);
+}
+.os-next-h {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 10px;
+}
+.os-steps { margin: 0 0 14px; padding-left: 20px; font-size: 15px; line-height: 1.75; }
+.os-steps li { margin: 0 0 2px; }
+.os-steps strong { color: var(--gold-bright); font-family: var(--mono); }
+.copy-ref {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase;
+  background: transparent; color: var(--paper);
+  border: 1.5px solid var(--sage); border-radius: var(--radius);
+  padding: 2px 8px; margin-left: 6px; cursor: pointer; vertical-align: 1px;
+  transition: border-color 0.14s ease, color 0.14s ease;
+}
+.copy-ref:hover { border-color: var(--gold); color: var(--gold-bright); }
+.copy-ref.copied { border-color: var(--sage-bright); color: var(--sage-bright); }
+.os-pay { display: block; text-align: center; font-size: 16px; padding: 14px 18px; }
+.os-note { display: block; font-size: 12px; color: var(--sage-light); margin-top: 8px; line-height: 1.6; }
+.os-note strong { color: var(--gold-bright); font-family: var(--mono); }
 .order-sent .pay { display: inline-block; margin-top: 10px; }
 .checkout-back { background: none; border: 0; color: var(--sage-light); font-family: var(--mono); cursor: pointer; margin-top: 18px; padding: 0; }
 .checkout-back:hover { color: var(--gold-bright); }

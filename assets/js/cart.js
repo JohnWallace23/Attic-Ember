@@ -94,8 +94,10 @@
     return "mailto:" + ORDER_EMAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(orderBody());
   }
   // Which payment methods are configured, and where each one sends the buyer.
-  function payMethods() {
-    var a = amt(), note = encodeURIComponent("Attic & Ember order");
+  // `ref` (once we have an order number) is prefilled into the payment note
+  // wherever the service supports it.
+  function payMethods(ref) {
+    var a = amt(), note = encodeURIComponent("Attic & Ember" + (ref ? " " + ref : " order"));
     var out = [];
     if (PAYPAL) {
       // A full link (e.g. a business profile) is used as-is — those don't
@@ -200,10 +202,6 @@
       return;
     }
 
-    // Open the payment tab NOW, while we're still inside the click handler —
-    // browsers block window.open once an async call has started.
-    var payWin = chosen ? window.open("", "_blank") : null;
-
     // Short shared reference so the buyer and the shop can name this order.
     var ref = "AE-" + Date.now().toString(36).slice(-5).toUpperCase();
     var items = cart.slice();
@@ -225,16 +223,20 @@
     }).then(function (r) { return r.json(); }).then(function (res) {
       if (!res || !res.success) throw new Error((res && res.message) || "failed");
       var total = money(subtotal());
-      if (payWin && chosen) payWin.location = chosen.url;   // hand them off to pay
-      orderSent(form, data.name, chosen, total, !payWin, ref, items, data.email);
+      // Re-resolve the method now that we have a ref, so the payment note is
+      // prefilled where the service supports it (Venmo, Cash App).
+      var withRef = payMethods(ref);
+      for (var j = 0; j < withRef.length; j++) {
+        if (chosen && withRef[j].id === chosen.id) { chosen = withRef[j]; break; }
+      }
+      orderSent(form, data.name, chosen, total, ref, items, data.email);
     }).catch(function () {
-      if (payWin) payWin.close();
       btn.disabled = false;
       status.className = "of-status err";
       status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
     });
   }
-  function orderSent(form, name, chosen, total, popupBlocked, ref, items, email) {
+  function orderSent(form, name, chosen, total, ref, items, email) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
     var first = (name || "").trim().split(/\s+/)[0];
@@ -248,12 +250,23 @@
         '<div class="co-line co-total"><span>Total</span><strong>' + total + "</strong></div>" +
       "</div>";
     if (chosen) {
-      html += "<p>" + (popupBlocked
-        ? "Last step — send <strong>" + total + "</strong> with " + esc(chosen.label) + ":"
-        : "We’ve opened " + esc(chosen.label) + " in a new tab — send <strong>" + total +
-          "</strong> and put <strong>" + esc(ref) + "</strong> or your name in the note. Didn’t open?") + "</p>" +
-        '<a class="pay pay-' + chosen.id + '" target="_blank" rel="noopener" href="' + esc(chosen.url) + '">' +
-        "Pay " + total + " with " + esc(chosen.label) + " &rarr;</a>";
+      // Instructions come BEFORE the button on purpose: the payment site opens
+      // in a new tab and takes focus, so anything below it never gets read.
+      html +=
+        '<div class="os-next">' +
+          '<span class="os-next-h">Last step &mdash; send your payment</span>' +
+          '<ol class="os-steps">' +
+            "<li>Tap the button below to open " + esc(chosen.label) + ".</li>" +
+            "<li>Enter <strong>" + total + "</strong> as the amount.</li>" +
+            "<li>Put <strong>" + esc(ref) + "</strong> in the note " +
+              '<button type="button" class="copy-ref" data-ref="' + esc(ref) + '">Copy</button></li>' +
+          "</ol>" +
+          '<a class="pay pay-' + chosen.id + ' os-pay" target="_blank" rel="noopener" ' +
+            'data-ref="' + esc(ref) + '" href="' + esc(chosen.url) + '">' +
+            "Pay " + total + " with " + esc(chosen.label) + " &rarr;</a>" +
+          '<span class="os-note">Opens in a new tab &mdash; we’ll copy <strong>' + esc(ref) +
+            "</strong> for you so you can paste it.</span>" +
+        "</div>";
     } else {
       html += "<p>We’ll email you shortly with how to pay.</p>";
     }
@@ -275,6 +288,33 @@
     if (!form) return;
     e.preventDefault();
     submitOrder(form);
+  });
+  // Copy the order reference so it can be pasted into the payment note.
+  function copyRef(ref, btn) {
+    function flash() {
+      if (!btn) return;
+      var old = btn.textContent;
+      btn.textContent = "Copied ✓";
+      btn.classList.add("copied");
+      setTimeout(function () { btn.textContent = old; btn.classList.remove("copied"); }, 1800);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ref).then(flash, function () {});
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = ref; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); flash(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+  body.addEventListener("click", function (e) {
+    var c = e.target.closest(".copy-ref");
+    if (c) { copyRef(c.getAttribute("data-ref"), c); return; }
+    // Clicking through to pay: put the reference on the clipboard first, so
+    // pasting it into the payment note is one tap on the other side.
+    var p = e.target.closest(".os-pay");
+    if (p && p.getAttribute("data-ref")) copyRef(p.getAttribute("data-ref"), null);
   });
   // Picking a payment method clears the "please select one" warning.
   body.addEventListener("change", function (e) {
