@@ -97,10 +97,12 @@
     var a = amt(), note = encodeURIComponent("Attic & Ember order");
     var out = [];
     if (PAYPAL) {
-      // PAYPAL may be a full link (business profile / PayPal.Me) or just a
-      // PayPal.Me username. Either way the total is appended to the path.
-      var base = /^https?:\/\//i.test(PAYPAL) ? PAYPAL.replace(/\/+$/, "") : "https://paypal.me/" + PAYPAL;
-      out.push('<a class="pay pay-paypal" target="_blank" rel="noopener" href="' + esc(base) + "/" + a + '">PayPal</a>');
+      // A full link (e.g. a business profile) is used as-is — those don't
+      // accept an amount in the path. Only PayPal.Me usernames get /amount.
+      var href = /^https?:\/\//i.test(PAYPAL)
+        ? PAYPAL.replace(/\/+$/, "")
+        : "https://paypal.me/" + PAYPAL + "/" + a;
+      out.push('<a class="pay pay-paypal" target="_blank" rel="noopener" href="' + esc(href) + '">PayPal</a>');
     }
     if (VENMO)   out.push('<a class="pay pay-venmo" target="_blank" rel="noopener" href="https://venmo.com/' + esc(VENMO) + "?txn=pay&amount=" + a + "&note=" + note + '">Venmo</a>');
     if (CASHAPP) out.push('<a class="pay pay-cashapp" target="_blank" rel="noopener" href="https://cash.app/$' + esc(CASHAPP) + "/" + a + '">Cash&nbsp;App</a>');
@@ -118,7 +120,7 @@
       // On-page order form — works for everyone, no email app required.
       step1 =
         '<form class="order-form" novalidate>' +
-          '<span class="co-step-h">1 &middot; Your shipping details</span>' +
+          '<span class="co-step-h">1 &middot; Where should we ship it?</span>' +
           '<input type="text" name="name" placeholder="Full name" autocomplete="name" required>' +
           '<input type="email" name="email" placeholder="Email" autocomplete="email" required>' +
           '<input type="text" name="address" placeholder="Street address" autocomplete="street-address">' +
@@ -129,7 +131,7 @@
           '</div>' +
           '<textarea name="note" placeholder="Anything we should know? (optional)"></textarea>' +
           '<input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px">' +
-          '<button type="submit" class="btn order-submit">Place order request</button>' +
+          '<button type="submit" class="btn order-submit">Send shipping info</button>' +
           '<span class="of-status" role="status" aria-live="polite"></span>' +
         "</form>";
     } else {
@@ -146,7 +148,7 @@
           '<div class="co-line co-total"><span>Total</span><strong>' + money(subtotal()) + "</strong></div></div>" +
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
         step1 +
-        '<div class="pay-step"' + (WEB3KEY ? " hidden" : "") + ">" +
+        '<div class="pay-step">' +
           '<span class="co-step-h">2 &middot; Pay your total (' + money(subtotal()) + ")</span>" +
           payButtons() +
           '<span class="co-hint">Send <strong>' + money(subtotal()) + "</strong> and put your name in the note so we can match it to your order. " +
@@ -192,13 +194,11 @@
   function orderSent(form, name) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
-    wrap.innerHTML = "<strong>Thanks, " + esc(name) + "! Your order request is in.</strong>" +
-      "<p>We’ll email you shortly to confirm it’s still available. Lock it in by paying your total below.</p>";
+    wrap.innerHTML = "<strong>Thanks, " + esc(name) + "! We’ve got your shipping details.</strong>" +
+      "<p>Send your payment below and we’ll confirm by email and get it packed.</p>";
     form.parentNode.replaceChild(wrap, form);
-    var pay = body.querySelector(".pay-step");
-    if (pay) pay.hidden = false;
-    // Request is placed — empty the cart (the receipt + pay step above already
-    // show the captured total, so clearing now won't change what they see).
+    // Empty the cart (the receipt + pay step above already show the captured
+    // total, so clearing now won't change what they see).
     cart = [];
     save();
     updateCount();
