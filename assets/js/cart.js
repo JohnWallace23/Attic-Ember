@@ -149,10 +149,11 @@
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
         step1 +
         '<div class="pay-step">' +
-          '<span class="co-step-h">2 &middot; Pay your total (' + money(subtotal()) + ")</span>" +
+          '<span class="co-step-h">2 &middot; Pay your total</span>' +
+          '<div class="pay-amount"><span>Amount to send</span><strong>' + money(subtotal()) + "</strong></div>" +
           payButtons() +
-          '<span class="co-hint">Send <strong>' + money(subtotal()) + "</strong> and put your name in the note so we can match it to your order. " +
-          "If the amount doesn’t fill in automatically, just type it.</span>" +
+          '<span class="co-hint">Enter <strong>' + money(subtotal()) + "</strong> at checkout and put your name in the payment note, " +
+          "so we can match it to your order.</span>" +
         "</div>" +
         '<button class="checkout-back" type="button">&larr; Back to cart</button>' +
       "</div>";
