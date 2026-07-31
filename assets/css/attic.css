@@ -630,6 +630,39 @@ body.cart-open { overflow: hidden; }
 .pay:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 #060504; }
 .pay:active { transform: translate(0, 0); box-shadow: 2px 2px 0 #060504; }
 .pay-none { font-size: 13px; color: var(--sage-light); }
+
+/* payment picker — themed radio "stamps" inside the order form */
+.pay-choices { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.pay-choice { flex: 1 1 auto; cursor: pointer; }
+.pay-choice input {
+  position: absolute; opacity: 0; width: 0; height: 0;   /* keep focusable */
+}
+.pay-choice span {
+  display: block;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 2px solid var(--sage);
+  color: var(--paper);
+  background: transparent;
+  transition: background 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+.pay-choice:hover span { border-color: var(--gold); }
+/* selected: fills with that method's color, like the badge stamps */
+.pay-choice input:checked + span {
+  border-color: #060504;
+  box-shadow: 3px 3px 0 #060504;
+}
+.pay-paypal  input:checked + span { background: var(--rust); }
+.pay-venmo   input:checked + span { background: var(--sage); }
+.pay-cashapp input:checked + span { background: var(--pumpkin-deep); }
+/* keyboard focus stays visible */
+.pay-choice input:focus-visible + span { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+.os-foot { font-size: 13px; color: var(--sage-light); margin-top: 10px; }
+.order-sent .pay { display: inline-block; margin-top: 10px; }
 .checkout-back { background: none; border: 0; color: var(--sage-light); font-family: var(--mono); cursor: pointer; margin-top: 18px; padding: 0; }
 .checkout-back:hover { color: var(--gold-bright); }
 .add-btn.in-cart { background: var(--sage); }

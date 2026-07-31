@@ -93,21 +93,32 @@
     var subj = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
     return "mailto:" + ORDER_EMAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(orderBody());
   }
-  function payButtons() {
+  // Which payment methods are configured, and where each one sends the buyer.
+  function payMethods() {
     var a = amt(), note = encodeURIComponent("Attic & Ember order");
     var out = [];
     if (PAYPAL) {
       // A full link (e.g. a business profile) is used as-is — those don't
       // accept an amount in the path. Only PayPal.Me usernames get /amount.
-      var href = /^https?:\/\//i.test(PAYPAL)
+      out.push({ id: "paypal", label: "PayPal", url: /^https?:\/\//i.test(PAYPAL)
         ? PAYPAL.replace(/\/+$/, "")
-        : "https://paypal.me/" + PAYPAL + "/" + a;
-      out.push('<a class="pay pay-paypal" target="_blank" rel="noopener" href="' + esc(href) + '">PayPal</a>');
+        : "https://paypal.me/" + PAYPAL + "/" + a });
     }
-    if (VENMO)   out.push('<a class="pay pay-venmo" target="_blank" rel="noopener" href="https://venmo.com/' + esc(VENMO) + "?txn=pay&amount=" + a + "&note=" + note + '">Venmo</a>');
-    if (CASHAPP) out.push('<a class="pay pay-cashapp" target="_blank" rel="noopener" href="https://cash.app/$' + esc(CASHAPP) + "/" + a + '">Cash&nbsp;App</a>');
-    if (out.length === 0) return '<p class="pay-none">Payment options are being set up — just send your order email and we’ll reply with how to pay.</p>';
-    return '<div class="pay-buttons">' + out.join("") + "</div>";
+    if (VENMO) out.push({ id: "venmo", label: "Venmo",
+      url: "https://venmo.com/" + VENMO + "?txn=pay&amount=" + a + "&note=" + note });
+    if (CASHAPP) out.push({ id: "cashapp", label: "Cash App",
+      url: "https://cash.app/$" + CASHAPP + "/" + a });
+    return out;
+  }
+  function payChoices() {
+    var m = payMethods();
+    if (m.length === 0) return "";
+    return '<span class="co-step-h">How would you like to pay?</span>' +
+      '<div class="pay-choices">' + m.map(function (p, i) {
+        return '<label class="pay-choice pay-' + p.id + '">' +
+          '<input type="radio" name="pay_with" value="' + p.id + '"' + (i === 0 ? " checked" : "") + ">" +
+          "<span>" + p.label + "</span></label>";
+      }).join("") + "</div>";
   }
   function showCheckout() {
     titleEl.textContent = "Checkout";
@@ -117,10 +128,11 @@
 
     var step1;
     if (WEB3KEY) {
-      // On-page order form — works for everyone, no email app required.
+      // One flow: shipping details, payment choice, and a single button that
+      // sends the order and opens the buyer's payment app.
       step1 =
         '<form class="order-form" novalidate>' +
-          '<span class="co-step-h">1 &middot; Where should we ship it?</span>' +
+          '<span class="co-step-h">Where should we ship it?</span>' +
           '<input type="text" name="name" placeholder="Full name" autocomplete="name" required>' +
           '<input type="email" name="email" placeholder="Email" autocomplete="email" required>' +
           '<input type="text" name="address" placeholder="Street address" autocomplete="street-address">' +
@@ -131,7 +143,11 @@
           '</div>' +
           '<textarea name="note" placeholder="Anything we should know? (optional)"></textarea>' +
           '<input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px">' +
-          '<button type="submit" class="btn order-submit">Send shipping info</button>' +
+          payChoices() +
+          '<div class="pay-amount"><span>Amount to send</span><strong>' + money(subtotal()) + "</strong></div>" +
+          '<button type="submit" class="btn order-submit">Place order &amp; pay ' + money(subtotal()) + " &rarr;</button>" +
+          '<span class="co-hint">We’ll open your payment app — enter <strong>' + money(subtotal()) +
+            "</strong> and put your name in the note.</span>" +
           '<span class="of-status" role="status" aria-live="polite"></span>' +
         "</form>";
     } else {
@@ -148,13 +164,6 @@
           '<div class="co-line co-total"><span>Total</span><strong>' + money(subtotal()) + "</strong></div></div>" +
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
         step1 +
-        '<div class="pay-step">' +
-          '<span class="co-step-h">2 &middot; Pay your total</span>' +
-          '<div class="pay-amount"><span>Amount to send</span><strong>' + money(subtotal()) + "</strong></div>" +
-          payButtons() +
-          '<span class="co-hint">Enter <strong>' + money(subtotal()) + "</strong> at checkout and put your name in the payment note, " +
-          "so we can match it to your order.</span>" +
-        "</div>" +
         '<button class="checkout-back" type="button">&larr; Back to cart</button>' +
       "</div>";
   }
@@ -171,9 +180,22 @@
       status.textContent = "Please add your name and a valid email.";
       return;
     }
+    // Which payment app they picked (first one is preselected).
+    var methods = payMethods();
+    var chosen = null;
+    for (var i = 0; i < methods.length; i++) {
+      if (methods[i].id === data.pay_with) { chosen = methods[i]; break; }
+    }
+    if (!chosen && methods.length) chosen = methods[0];
+
+    // Open the payment tab NOW, while we're still inside the click handler —
+    // browsers block window.open once an async call has started.
+    var payWin = chosen ? window.open("", "_blank") : null;
+
     data.access_key = WEB3KEY;
     data.subject = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
     data.from_name = data.name;
+    data.paying_with = chosen ? chosen.label : "(not selected)";
     data.order = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n") +
       "\nTotal: " + money(subtotal());
     btn.disabled = true;
@@ -184,19 +206,33 @@
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify(data)
     }).then(function (r) { return r.json(); }).then(function (res) {
-      if (res && res.success) orderSent(form, data.name);
-      else throw new Error((res && res.message) || "failed");
+      if (!res || !res.success) throw new Error((res && res.message) || "failed");
+      var total = money(subtotal());
+      if (payWin && chosen) payWin.location = chosen.url;   // hand them off to pay
+      orderSent(form, data.name, chosen, total, !payWin);
     }).catch(function () {
+      if (payWin) payWin.close();
       btn.disabled = false;
       status.className = "of-status err";
       status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
     });
   }
-  function orderSent(form, name) {
+  function orderSent(form, name, chosen, total, popupBlocked) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
-    wrap.innerHTML = "<strong>Thanks, " + esc(name) + "! We’ve got your shipping details.</strong>" +
-      "<p>Send your payment below and we’ll confirm by email and get it packed.</p>";
+    var html = "<strong>Thanks, " + esc(name) + "! Your order is in.</strong>";
+    if (chosen) {
+      html += "<p>" + (popupBlocked
+        ? "Last step — send <strong>" + total + "</strong> with " + esc(chosen.label) + ":"
+        : "We’ve opened " + esc(chosen.label) + " in a new tab — send <strong>" + total +
+          "</strong> with your name in the note. Didn’t open?") + "</p>" +
+        '<a class="pay pay-' + chosen.id + '" target="_blank" rel="noopener" href="' + esc(chosen.url) + '">' +
+        "Pay " + total + " with " + esc(chosen.label) + " &rarr;</a>";
+    } else {
+      html += "<p>We’ll email you shortly with how to pay.</p>";
+    }
+    html += "<p class=\"os-foot\">We’ll confirm by email and get it packed.</p>";
+    wrap.innerHTML = html;
     form.parentNode.replaceChild(wrap, form);
     // Empty the cart (the receipt + pay step above already show the captured
     // total, so clearing now won't change what they see).
