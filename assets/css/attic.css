@@ -688,6 +688,25 @@ body.cart-open { overflow: hidden; }
 /* keyboard focus stays visible */
 .pay-choice input:focus-visible + span { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
 .os-foot { font-size: 13px; color: var(--sage-light); margin-top: 10px; }
+.os-foot a { color: var(--gold-bright); }
+/* receipt block inside the confirmation */
+.os-receipt {
+  margin: 12px 0 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(185,138,46,0.35);
+  border-radius: var(--radius);
+  background: rgba(0,0,0,0.22);
+}
+.os-ref {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; margin-bottom: 8px; padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(185,138,46,0.35);
+}
+.os-ref span {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--sage-light);
+}
+.os-ref strong { font-family: var(--mono); font-size: 16px; color: var(--gold-bright); letter-spacing: 1px; }
 .order-sent .pay { display: inline-block; margin-top: 10px; }
 .checkout-back { background: none; border: 0; color: var(--sage-light); font-family: var(--mono); cursor: pointer; margin-top: 18px; padding: 0; }
 .checkout-back:hover { color: var(--gold-bright); }

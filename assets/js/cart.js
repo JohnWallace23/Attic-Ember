@@ -204,8 +204,13 @@
     // browsers block window.open once an async call has started.
     var payWin = chosen ? window.open("", "_blank") : null;
 
+    // Short shared reference so the buyer and the shop can name this order.
+    var ref = "AE-" + Date.now().toString(36).slice(-5).toUpperCase();
+    var items = cart.slice();
+
     data.access_key = WEB3KEY;
-    data.subject = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
+    data.order_ref = ref;
+    data.subject = "Attic & Ember order " + ref + " — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
     data.from_name = data.name;
     data.paying_with = chosen ? chosen.label : "(not selected)";
     data.order = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n") +
@@ -221,7 +226,7 @@
       if (!res || !res.success) throw new Error((res && res.message) || "failed");
       var total = money(subtotal());
       if (payWin && chosen) payWin.location = chosen.url;   // hand them off to pay
-      orderSent(form, data.name, chosen, total, !payWin);
+      orderSent(form, data.name, chosen, total, !payWin, ref, items, data.email);
     }).catch(function () {
       if (payWin) payWin.close();
       btn.disabled = false;
@@ -229,21 +234,33 @@
       status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
     });
   }
-  function orderSent(form, name, chosen, total, popupBlocked) {
+  function orderSent(form, name, chosen, total, popupBlocked, ref, items, email) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
-    var html = "<strong>Thanks, " + esc(name) + "! Your order is in.</strong>";
+    var first = (name || "").trim().split(/\s+/)[0];
+    var html = "<strong>Thanks, " + esc(first) + "! Your order is in.</strong>" +
+      '<div class="os-receipt">' +
+        '<div class="os-ref"><span>Order</span><strong>' + esc(ref) + "</strong></div>" +
+        (items || []).map(function (i) {
+          return '<div class="co-line"><span>' + esc(i.title) + "</span><span>" +
+            money(parseFloat(i.price) || 0) + "</span></div>";
+        }).join("") +
+        '<div class="co-line co-total"><span>Total</span><strong>' + total + "</strong></div>" +
+      "</div>";
     if (chosen) {
       html += "<p>" + (popupBlocked
         ? "Last step — send <strong>" + total + "</strong> with " + esc(chosen.label) + ":"
         : "We’ve opened " + esc(chosen.label) + " in a new tab — send <strong>" + total +
-          "</strong> with your name in the note. Didn’t open?") + "</p>" +
+          "</strong> and put <strong>" + esc(ref) + "</strong> or your name in the note. Didn’t open?") + "</p>" +
         '<a class="pay pay-' + chosen.id + '" target="_blank" rel="noopener" href="' + esc(chosen.url) + '">' +
         "Pay " + total + " with " + esc(chosen.label) + " &rarr;</a>";
     } else {
       html += "<p>We’ll email you shortly with how to pay.</p>";
     }
-    html += "<p class=\"os-foot\">We’ll confirm by email and get it packed.</p>";
+    html += '<p class="os-foot">We’ll email ' + (email ? "<strong>" + esc(email) + "</strong>" : "you") +
+      " to confirm it’s yours and let you know when it ships. " +
+      "Questions? Just reply to that email or write us at " +
+      '<a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.</p>";
     wrap.innerHTML = html;
     form.parentNode.replaceChild(wrap, form);
     // Empty the cart (the receipt + pay step above already show the captured
