@@ -16,6 +16,7 @@
   --gold-bright: #D9A84E;  /* readable gold for headings/links on night */
   --sage:       #5C6B4F;
   --sage-light: #93A184;   /* moonlit sage for text on dark */
+  --sage-bright: #A9C98A;  /* lit green for selected states */
   --rust:       #7A3B2E;
 
   --display: "Rye", serif;
@@ -651,14 +652,39 @@ body.cart-open { overflow: hidden; }
   transition: background 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
 }
 .pay-choice:hover span { border-color: var(--gold); }
-/* selected: fills with that method's color, like the badge stamps */
+/* Selected: a bright ring + glow in that method's own accent, so the two
+   options read as clearly different colors (not a dark outline). */
 .pay-choice input:checked + span {
-  border-color: #060504;
-  box-shadow: 3px 3px 0 #060504;
+  font-weight: 600;
+  color: var(--ink);
 }
-.pay-paypal  input:checked + span { background: var(--rust); }
-.pay-venmo   input:checked + span { background: var(--sage); }
-.pay-cashapp input:checked + span { background: var(--pumpkin-deep); }
+.pay-choice input:checked + span::before { content: "\2713\00a0"; }
+.pay-paypal input:checked + span {
+  background: var(--gold-bright);
+  border-color: #F3D18A;
+  box-shadow: 0 0 0 3px rgba(217,168,78,0.30), 0 0 16px rgba(217,168,78,0.45);
+}
+.pay-venmo input:checked + span {
+  background: var(--sage-bright);
+  border-color: #D2E7B8;
+  box-shadow: 0 0 0 3px rgba(169,201,138,0.30), 0 0 16px rgba(169,201,138,0.45);
+}
+.pay-cashapp input:checked + span {
+  background: var(--pumpkin);
+  border-color: #F0A171;
+  box-shadow: 0 0 0 3px rgba(201,98,45,0.32), 0 0 16px rgba(201,98,45,0.50);
+  color: var(--paper);
+}
+/* nudge when they try to submit without picking one */
+.pay-choices.needs-pick span { border-color: var(--pumpkin); }
+.pay-choices.needs-pick { animation: pick-nudge 0.4s ease; }
+@keyframes pick-nudge {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pay-choices.needs-pick { animation: none; }
+}
 /* keyboard focus stays visible */
 .pay-choice input:focus-visible + span { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
 .os-foot { font-size: 13px; color: var(--sage-light); margin-top: 10px; }

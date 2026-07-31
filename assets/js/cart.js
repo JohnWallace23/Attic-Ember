@@ -114,9 +114,10 @@
     var m = payMethods();
     if (m.length === 0) return "";
     return '<span class="co-step-h">How would you like to pay?</span>' +
-      '<div class="pay-choices">' + m.map(function (p, i) {
+      '<div class="pay-choices">' + m.map(function (p) {
+        // No default selection — the buyer has to pick one deliberately.
         return '<label class="pay-choice pay-' + p.id + '">' +
-          '<input type="radio" name="pay_with" value="' + p.id + '"' + (i === 0 ? " checked" : "") + ">" +
+          '<input type="radio" name="pay_with" value="' + p.id + '">' +
           "<span>" + p.label + "</span></label>";
       }).join("") + "</div>";
   }
@@ -180,13 +181,24 @@
       status.textContent = "Please add your name and a valid email.";
       return;
     }
-    // Which payment app they picked (first one is preselected).
+    // Which payment app they picked — required, no silent default.
     var methods = payMethods();
     var chosen = null;
     for (var i = 0; i < methods.length; i++) {
       if (methods[i].id === data.pay_with) { chosen = methods[i]; break; }
     }
-    if (!chosen && methods.length) chosen = methods[0];
+    if (methods.length && !chosen) {
+      status.className = "of-status err";
+      status.textContent = "Please select a payment method.";
+      var choices = form.querySelector(".pay-choices");
+      if (choices) {
+        choices.classList.remove("needs-pick");
+        void choices.offsetWidth;          // restart the nudge animation
+        choices.classList.add("needs-pick");
+        choices.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+      return;
+    }
 
     // Open the payment tab NOW, while we're still inside the click handler —
     // browsers block window.open once an async call has started.
@@ -246,6 +258,16 @@
     if (!form) return;
     e.preventDefault();
     submitOrder(form);
+  });
+  // Picking a payment method clears the "please select one" warning.
+  body.addEventListener("change", function (e) {
+    if (!e.target || e.target.name !== "pay_with") return;
+    var form = e.target.closest(".order-form");
+    if (!form) return;
+    var choices = form.querySelector(".pay-choices");
+    if (choices) choices.classList.remove("needs-pick");
+    var st = form.querySelector(".of-status");
+    if (st && st.classList.contains("err")) { st.className = "of-status"; st.textContent = ""; }
   });
 
   // ---- clicks inside the drawer ----
