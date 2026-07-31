@@ -13,6 +13,38 @@ layout: default
 {% assign vid_count = 0 %}
 {% if page.videos %}{% assign vid_count = page.videos.size %}{% elsif page.video %}{% assign vid_count = 1 %}{% endif %}
 {% assign media_count = img_count | plus: vid_count %}
+
+{%- comment -%}
+  Product structured data, so search engines can show the price and whether
+  it's still available. Condition maps to schema.org's itemCondition.
+{%- endcomment -%}
+{% if page.source_type == "handmade" or page.source_type == "reproduction" %}
+  {% assign item_condition = "NewCondition" %}
+{% else %}
+  {% assign item_condition = "UsedCondition" %}
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ page.title | strip_html | jsonify }},
+  "description": {{ page.description | default: site.description | strip_html | normalize_whitespace | jsonify }},
+  {% if main_img %}"image": [{% for src in page.images %}{{ src | absolute_url | jsonify }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% if page.images == nil %}{{ main_img | absolute_url | jsonify }}{% endif %}],{% endif %}
+  "sku": {{ page.slug | jsonify }},
+  "category": {{ page.category | strip_html | jsonify }},
+  "itemCondition": "https://schema.org/{{ item_condition }}",
+  "brand": { "@type": "Brand", "name": "Attic & Ember" },
+  "offers": {
+    "@type": "Offer",
+    "url": {{ page.url | absolute_url | jsonify }},
+    "priceCurrency": "USD",
+    "price": "{{ page.price }}",
+    "availability": "https://schema.org/{% if page.sold %}SoldOut{% else %}InStock{% endif %}",
+    "itemCondition": "https://schema.org/{{ item_condition }}",
+    "seller": { "@type": "Organization", "name": "Attic & Ember" }
+  }
+}
+</script>
 <div class="wrap">
   <div class="product-page">
 

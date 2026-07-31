@@ -202,8 +202,13 @@
       return;
     }
 
-    // Short shared reference so the buyer and the shop can name this order.
-    var ref = "AE-" + Date.now().toString(36).slice(-5).toUpperCase();
+    // Short shared reference so the buyer and the shop can name this order:
+    // AE-MMDD-XXX — the date makes orders sortable and easy to place, and the
+    // random tail keeps two orders on the same day from ever colliding.
+    var now = new Date();
+    function pad2(n) { return (n < 10 ? "0" : "") + n; }
+    var ref = "AE-" + pad2(now.getMonth() + 1) + pad2(now.getDate()) + "-" +
+      Math.random().toString(36).slice(2, 5).toUpperCase();
     var items = cart.slice();
 
     data.access_key = WEB3KEY;

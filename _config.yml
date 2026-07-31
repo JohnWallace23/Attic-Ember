@@ -1,8 +1,16 @@
 title: Attic & Ember
 tagline: Vintage finds, honest reproductions, and handmade treats
 description: >-
-  A small Chicago-run shop for real vintage Halloween collectibles —
-  die-cuts, chalkware, blow molds, and costumes with some history to them.
+  A small Chicago shop for genuine vintage Halloween collectibles, honest
+  reproductions, and hand-poured candles. Die-cuts, chalkware, blow molds,
+  and costumes with real history — every piece labeled for what it is.
+
+# --- SEO / social sharing (used by jekyll-seo-tag) ---
+author: Attic & Ember
+lang: en_US
+logo: /assets/img/favicon-512.png
+# Image shown when a page is shared on social media / in chats.
+image: /assets/img/favicon-512.png
 # baseurl is empty because Cloudflare Pages serves the site from the
 # domain root (not a GitHub Pages subfolder). Leave it as "".
 baseurl: ""
@@ -35,3 +43,5 @@ payments:
 
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
