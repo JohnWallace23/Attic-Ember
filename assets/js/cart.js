@@ -107,9 +107,15 @@
         : "https://paypal.me/" + PAYPAL + "/" + a });
     }
     if (VENMO) out.push({ id: "venmo", label: "Venmo",
-      url: "https://venmo.com/" + VENMO + "?txn=pay&amount=" + a + "&note=" + note });
+      // account.venmo.com is Venmo's own canonical destination — linking
+      // straight to it skips the venmo.com redirect, which iOS Safari can
+      // mishandle as a universal link ("the address is invalid").
+      url: "https://account.venmo.com/payment-link?txn=pay&recipients=" +
+        encodeURIComponent(VENMO) + "&amount=" + a + "&note=" + note,
+      handle: "@" + VENMO });
     if (CASHAPP) out.push({ id: "cashapp", label: "Cash App",
-      url: "https://cash.app/$" + CASHAPP + "/" + a });
+      url: "https://cash.app/$" + CASHAPP + "/" + a,
+      handle: "$" + CASHAPP });
     return out;
   }
   function payChoices() {
@@ -270,7 +276,12 @@
             'data-ref="' + esc(ref) + '" href="' + esc(chosen.url) + '">' +
             "Pay " + total + " with " + esc(chosen.label) + " &rarr;</a>" +
           '<span class="os-note">Opens in a new tab &mdash; we’ll copy <strong>' + esc(ref) +
-            "</strong> for you so you can paste it.</span>" +
+            "</strong> for you so you can paste it." +
+            (chosen.handle
+              ? " Button not working? Open the " + esc(chosen.label) + " app and pay <strong>" +
+                esc(chosen.handle) + "</strong> directly."
+              : "") +
+          "</span>" +
         "</div>";
     } else {
       html += "<p>We’ll email you shortly with how to pay.</p>";
