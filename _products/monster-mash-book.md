@@ -11,7 +11,7 @@ images:
   - /assets/img/Monster-Mash-Book-Side.jpg
   - /assets/img/Monster-Mash-Book-Top.jpg
 videos:
-  - /assets/video/Monster-Mash-Book
+  - /assets/video/Monster-Mash-Book.mp4
 featured: true
 description: >-
   Blue Ridge "Monster Mash Book" in the original box—opens to play the Monster Mash song with flashing lights and a haunted-house scene.
