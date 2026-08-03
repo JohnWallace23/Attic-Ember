@@ -79,11 +79,16 @@ title: ""
     Homepage shows items flagged `featured: true`. If none are flagged
     yet, fall back to all products so the shelf is never empty.
   {%- endcomment -%}
-  {% assign featured = site.products | where_exp: "p", "p.featured" %}
+  {%- comment -%}
+    Homepage shows up to 3 items marked `featured: true`. Optional
+    `featured_order` (a number, lowest first) controls which ones win when
+    more than 3 are flagged; anything without it falls to the end.
+  {%- endcomment -%}
+  {% assign featured = site.products | where_exp: "p", "p.featured" | sort: "featured_order" %}
   {% if featured.size == 0 %}{% assign featured = site.products %}{% endif %}
 
   <div class="grid">
-    {% for product in featured limit: 6 %}
+    {% for product in featured limit: 3 %}
       {% unless product.draft %}{% include product-card.html product=product %}{% endunless %}
     {% endfor %}
   </div>

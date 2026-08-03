@@ -50,6 +50,24 @@ sold: true
 The "Add" button turns into a greyed-out "Sold." To bring it back, delete
 that line (or change `true` to `false`).
 
+### To control the order of homepage features
+
+The homepage shows **3 items**, picked by `featured_order` (lowest number
+first). To put something in the top spot, give it `featured_order: 1`:
+
+```
+featured: true
+featured_order: 1
+```
+
+Current order: 1 Which Witch · 2 Ghosty Guys · 3 Monster Mash ·
+4 Spooky Tree · 5 Cookie Jar. When you list something new and want it up
+front, give it `featured_order: 1` and bump the others down — or just
+give the new item `0`, which is simplest.
+
+Everything marked `featured: true` beyond the top 3 stays on the
+**All Items** page, so nothing disappears from the shop.
+
 ### To feature an item on the HOMEPAGE
 
 The homepage shows a small "New arrivals" selection; the **All Items** page

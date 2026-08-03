@@ -10,6 +10,7 @@ images:
 videos:
   - /assets/video/Spooky-Tree.mp4
 featured: true
+featured_order: 4
 description: >-
   Hallmark Spooky Tree animated plush with the original hang-tag—lights up, sings a Halloween version of the Addams Family theme, and the owls move.
 condition: >-

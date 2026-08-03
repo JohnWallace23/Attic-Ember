@@ -11,6 +11,7 @@ images:
   - /assets/img/Haunted-Hideaway-House-LidOff.jpg
   - /assets/img/Haunted-Hideaway-House-Bottom.jpg
 featured: true
+featured_order: 5
 description: >-
     Charming Sakura haunted house cookie jar—a collectible Halloween ceramic with spooky details and zero chips or cracks. Perfect for a seasonal display or year-round for the Halloween-obsessed.
 condition: >-
