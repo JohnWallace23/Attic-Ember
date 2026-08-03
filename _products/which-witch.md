@@ -6,8 +6,8 @@ category: "Games"
 source_type: "vintage"
 images:
   - /assets/img/Which-Witch-Game.jpg
-  - /assets/img/Which-Witchy-Full-Game.jpg
-  - /assets/img/Which-Wichy-Front.jpg
+  - /assets/img/Which-Witch-Full-Game.jpg
+  - /assets/img/Which-Witch-Front.jpg
   - /assets/img/Which-Witch-Broom-Room.jpg
   - /assets/img/Which-Witch-Witchin-Kitchen.jpg
   - /assets/img/Which-Witch-Bats-Ballroom.jpg
