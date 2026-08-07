@@ -15,7 +15,7 @@ videos:
 featured: true
 featured_order: 3
 description: >-
-  Blue Ridge "Monster Mash Book" in the original box—opens to play the Monster Mash song with flashing lights and a haunted-house scene.
+  Crack open this creepy old spellbook and it's a graveyard smash—the Monster Mash plays while lights flicker and the little scene comes to life. A wonderfully theatrical piece of nostalgic Halloween that steals the show on any shelf. Even better: it still has its original box. Fully working, animation and all.
 condition: >-
-  Fully working: song, lights, and animation all function.
+  Fully working—song, flashing lights, and animation all function. In original box (light shelf wear to box, see photos).
 ---
