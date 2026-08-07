@@ -1,5 +1,5 @@
 ---
-title: "Which Witch? Board Game — 1971 Milton Bradley"
+title: "Which Witch? Board Game — 1970 Milton Bradley"
 price: 175.00
 era: "1970s"
 category: "Games"
@@ -18,7 +18,7 @@ images:
 featured: true
 featured_order: 1
 description: >-
-  Complete original 1971 Milton Bradley "Which Witch?" board game (#4012) — the classic 3D haunted house game where players race through the house and drop the whammy ball down the chimney to trigger the moving parts. This is a genuinely complete example, which is hard to find: includes the steel whammy ball, the broom mechanism, all 4 pawns and all 4 matching mice, all three card decks (Ghoulish Gerty, Wanda the Wicked, Glenda the Good), the 3-D house/witch works assembly pieces, and the instructions. The game board is in excellent, near-mint condition with bright color and no tears or stains. See photos for full contents laid out. A true vintage Halloween collectible and a centerpiece for any collection.
+  The holy grail of vintage Halloween board games. Milton Bradley's 1970 "Which Witch?" is a 3-D haunted house where you race through the rooms and drop the whammy ball down the chimney to spring the traps—the game every kid of a certain era remembers and almost nobody kept complete. This one is complete, right down to the steel whammy ball, and the board is beautiful. A true centerpiece.
 condition: >-
-  Box shows light shelf wear consistent with age — see photo.
+  Complete and excellent. Includes steel whammy ball, broom mechanism, all 4 pawns + 4 mice, all 3 card decks, 3-D house pieces, and instructions. Board near-mint, no tears or stains. Box shows light age wear (see photos).
 ---
