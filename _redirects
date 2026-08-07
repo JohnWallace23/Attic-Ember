@@ -1,0 +1,7 @@
+# Cloudflare Pages redirects. One rule per line:
+#   <old path>  <new path>  <status>
+# Keep old product URLs working after a rename so links already shared
+# (Instagram, texts, search results) don't 404.
+
+/shop/ghosty-guys/  /shop/ghostly-guys/  301
+/shop/ghosty-guys   /shop/ghostly-guys/  301

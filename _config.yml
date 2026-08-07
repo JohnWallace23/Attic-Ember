@@ -17,6 +17,11 @@ logo: /assets/img/favicon-512.png
 baseurl: ""
 url: "https://atticandember.com"
 
+# Jekyll skips files starting with "_", but Cloudflare Pages needs
+# _redirects in the built site, so include it explicitly.
+include:
+  - _redirects
+
 collections:
   products:
     output: true
