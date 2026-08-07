@@ -57,7 +57,8 @@
       </div>
       <div>
         <h4>Shipping</h4>
-        <p>Ships within 3 business days.<br>Fragile items double-boxed with care.</p>
+        <p><strong>${{ site.shipping_flat_rate }} flat shipping on all U.S. orders.</strong><br>
+        Ships within 3 business days.<br>Fragile items double-boxed with care.</p>
       </div>
       <div>
         <h4>Get in touch</h4>
@@ -77,7 +78,8 @@
           data-venmo="{{ site.payments.venmo }}"
           data-cashapp="{{ site.payments.cashapp }}"
           data-web3forms="{{ site.web3forms_key }}"
-          data-shipping-note="{{ site.shipping_note | escape }}" defer></script>
+          data-shipping-note="{{ site.shipping_note | escape }}"
+          data-shipping-rate="{{ site.shipping_flat_rate }}" defer></script>
 
   <!-- Drifting embers atmosphere (progressive enhancement; self-disables
        under prefers-reduced-motion). -->

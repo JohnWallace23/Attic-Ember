@@ -16,6 +16,7 @@
   var VENMO   = (attr("data-venmo", "") || "").trim();
   var CASHAPP = (attr("data-cashapp", "") || "").trim();
   var SHIP_NOTE = attr("data-shipping-note", "");
+  var SHIP_RATE = parseFloat(attr("data-shipping-rate", "0")) || 0;
   var WEB3KEY = (attr("data-web3forms", "") || "").trim();
 
   function read() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
@@ -24,8 +25,25 @@
 
   function has(id) { return cart.some(function (i) { return i.id === id; }); }
   function subtotal() { return cart.reduce(function (s, i) { return s + (parseFloat(i.price) || 0); }, 0); }
+  // Flat shipping: charged once per order, on U.S. orders only. International
+  // is quoted by hand (the flat rate wouldn't cover it), so it adds nothing
+  // here and the buyer is told we'll follow up before any payment.
+  function shipping() {
+    if (cart.length === 0 || !domestic) return 0;
+    return SHIP_RATE;
+  }
+  function grandTotal() { return subtotal() + shipping(); }
   function money(n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); }
-  function amt() { return (Math.round(subtotal() * 100) / 100).toFixed(2); }
+  // Amount handed to the payment app — always the grand total, never subtotal.
+  function amt() { return (Math.round(grandTotal() * 100) / 100).toFixed(2); }
+
+  // Is the shipping address in the U.S.? Blank counts as domestic.
+  var domestic = true;
+  function isDomestic(country) {
+    var c = String(country || "").trim().toLowerCase().replace(/\./g, "");
+    if (c === "") return true;
+    return /^(us|usa|u s a?|united states( of america)?|america)$/.test(c);
+  }
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
@@ -77,7 +95,11 @@
     body.innerHTML =
       '<div class="cart-items">' + rows + "</div>" +
       '<div class="cart-foot">' +
-        '<div class="cart-subtotal"><span>Subtotal</span><strong>' + money(subtotal()) + "</strong></div>" +
+        '<div class="cart-subtotal"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
+        (SHIP_RATE > 0
+          ? '<div class="cart-subtotal"><span>Shipping (U.S. flat)</span><span>' + money(SHIP_RATE) + "</span></div>"
+          : "") +
+        '<div class="cart-subtotal cart-grand"><span>Total</span><strong>' + money(grandTotal()) + "</strong></div>" +
         '<button class="btn cart-checkout" type="button">Checkout &rarr;</button>' +
       "</div>";
   }
@@ -86,11 +108,13 @@
   function orderBody() {
     var lines = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n");
     return "Hi Attic & Ember,\n\nI'd like to order:\n" + lines +
-      "\n\nTotal: " + money(subtotal()) +
+      "\n\nSubtotal: " + money(subtotal()) +
+      "\nShipping: " + money(shipping()) +
+      "\nTotal: " + money(grandTotal()) +
       "\n\nMy shipping details:\nName:\nAddress:\nCity / State / ZIP:\n\nI'll send payment by PayPal / Venmo / Cash App. Thanks!";
   }
   function mailtoUrl() {
-    var subj = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
+    var subj = "Attic & Ember order — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(grandTotal());
     return "mailto:" + ORDER_EMAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(orderBody());
   }
   // Which payment methods are configured, and where each one sends the buyer.
@@ -150,12 +174,18 @@
             '<input type="text" name="state" placeholder="State" autocomplete="address-level1">' +
             '<input type="text" name="zip" placeholder="ZIP" autocomplete="postal-code">' +
           '</div>' +
+          '<input type="text" name="country" placeholder="Country (leave blank if U.S.)" autocomplete="country-name">' +
+          '<p class="intl-note" hidden>Shipping outside the U.S. isn’t covered by the flat rate — ' +
+            'place your order and we’ll email you a shipping quote before you pay anything.</p>' +
           '<textarea name="note" placeholder="Anything we should know? (optional)"></textarea>' +
           '<input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px">' +
-          payChoices() +
-          '<div class="pay-amount"><span>Amount to send</span><strong>' + money(subtotal()) + "</strong></div>" +
-          '<button type="submit" class="btn order-submit">Place order &amp; pay ' + money(subtotal()) + " &rarr;</button>" +
-          '<span class="co-hint">We’ll open your payment app — enter <strong>' + money(subtotal()) +
+          '<div class="pay-block">' +
+            payChoices() +
+            '<div class="pay-amount"><span>Amount to send</span><strong class="pay-total">' + money(grandTotal()) + "</strong></div>" +
+          "</div>" +
+          '<button type="submit" class="btn order-submit">Place order &amp; pay <span class="btn-total">' +
+            money(grandTotal()) + "</span> &rarr;</button>" +
+          '<span class="co-hint pay-hint">We’ll open your payment app — enter <strong class="pay-total">' + money(grandTotal()) +
             "</strong> and put your name in the note.</span>" +
           '<span class="of-status" role="status" aria-live="polite"></span>' +
         "</form>";
@@ -170,12 +200,54 @@
     body.innerHTML =
       '<div class="checkout">' +
         '<div class="co-summary">' + summary +
-          '<div class="co-line co-total"><span>Total</span><strong>' + money(subtotal()) + "</strong></div></div>" +
+          '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
+          '<div class="co-line co-ship"><span>Shipping' +
+            '<em class="ship-dom"> (U.S. flat)</em>' +
+            '<em class="ship-intl" hidden> (international)</em></span>' +
+            '<span class="ship-amount">' + money(shipping()) + "</span></div>" +
+          '<div class="co-line co-total"><span>Total</span><strong class="pay-total">' + money(grandTotal()) + "</strong></div></div>" +
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
         step1 +
         '<button class="checkout-back" type="button">&larr; Back to cart</button>' +
       "</div>";
   }
+
+  // Re-render the money on screen after the country changes. International
+  // orders can't be quoted from the flat rate, so we hide the payment step
+  // entirely rather than show a total we'd have to correct later.
+  function refreshTotals() {
+    var intl = !domestic;
+    Array.prototype.forEach.call(body.querySelectorAll(".pay-total"), function (el) {
+      el.textContent = money(grandTotal());
+    });
+    var btnTotal = body.querySelector(".btn-total");
+    if (btnTotal) btnTotal.textContent = money(grandTotal());
+    var shipAmt = body.querySelector(".ship-amount");
+    if (shipAmt) shipAmt.textContent = intl ? "We’ll quote it" : money(shipping());
+    var domEm = body.querySelector(".ship-dom");
+    var intlEm = body.querySelector(".ship-intl");
+    if (domEm) domEm.hidden = intl;
+    if (intlEm) intlEm.hidden = !intl;
+    var note = body.querySelector(".intl-note");
+    if (note) note.hidden = !intl;
+    var payBlock = body.querySelector(".pay-block");
+    if (payBlock) payBlock.hidden = intl;
+    var hint = body.querySelector(".pay-hint");
+    if (hint) hint.hidden = intl;
+    var submit = body.querySelector(".order-submit");
+    if (submit) {
+      submit.innerHTML = intl
+        ? "Place order &amp; get a shipping quote &rarr;"
+        : 'Place order &amp; pay <span class="btn-total">' + money(grandTotal()) + "</span> &rarr;";
+    }
+  }
+  body.addEventListener("input", function (e) {
+    if (!e.target || e.target.name !== "country") return;
+    var next = isDomestic(e.target.value);
+    if (next === domestic) return;
+    domestic = next;
+    refreshTotals();
+  });
 
   // ---- order form submission (Web3Forms — no mail app needed) ----
   function submitOrder(form) {
@@ -189,8 +261,10 @@
       status.textContent = "Please add your name and a valid email.";
       return;
     }
+    // International orders skip payment entirely — we quote shipping first.
+    domestic = isDomestic(data.country);
     // Which payment app they picked — required, no silent default.
-    var methods = payMethods();
+    var methods = domestic ? payMethods() : [];
     var chosen = null;
     for (var i = 0; i < methods.length; i++) {
       if (methods[i].id === data.pay_with) { chosen = methods[i]; break; }
@@ -219,11 +293,17 @@
 
     data.access_key = WEB3KEY;
     data.order_ref = ref;
-    data.subject = "Attic & Ember order " + ref + " — " + cart.length + " item" + (cart.length > 1 ? "s" : "") + ", " + money(subtotal());
+    data.subject = "Attic & Ember order " + ref + " — " + cart.length + " item" +
+      (cart.length > 1 ? "s" : "") + ", " + (domestic ? money(grandTotal()) : money(subtotal()) + " + intl shipping");
     data.from_name = data.name;
-    data.paying_with = chosen ? chosen.label : "(not selected)";
+    data.paying_with = domestic ? (chosen ? chosen.label : "(not selected)") : "(international — quote shipping first)";
+    data.shipping = domestic ? money(shipping()) + " (U.S. flat rate)" : "TO QUOTE — international address";
+    data.order_total = domestic ? money(grandTotal()) : money(subtotal()) + " + shipping (to be quoted)";
     data.order = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n") +
-      "\nTotal: " + money(subtotal());
+      "\nSubtotal: " + money(subtotal()) +
+      (domestic
+        ? "\nShipping: " + money(shipping()) + " (U.S. flat rate)\nTOTAL DUE: " + money(grandTotal())
+        : "\nShipping: TO QUOTE (international)\nTOTAL DUE: " + money(subtotal()) + " + shipping — quote before payment");
     btn.disabled = true;
     status.className = "of-status";
     status.textContent = "Sending…";
@@ -233,21 +313,23 @@
       body: JSON.stringify(data)
     }).then(function (r) { return r.json(); }).then(function (res) {
       if (!res || !res.success) throw new Error((res && res.message) || "failed");
-      var total = money(subtotal());
+      var total = money(grandTotal());
+      var ship = shipping();
+      var sub = subtotal();
       // Re-resolve the method now that we have a ref, so the payment note is
       // prefilled where the service supports it (Venmo, Cash App).
       var withRef = payMethods(ref);
       for (var j = 0; j < withRef.length; j++) {
         if (chosen && withRef[j].id === chosen.id) { chosen = withRef[j]; break; }
       }
-      orderSent(form, data.name, chosen, total, ref, items, data.email);
+      orderSent(form, data.name, chosen, total, ref, items, data.email, sub, ship, domestic);
     }).catch(function () {
       btn.disabled = false;
       status.className = "of-status err";
       status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
     });
   }
-  function orderSent(form, name, chosen, total, ref, items, email) {
+  function orderSent(form, name, chosen, total, ref, items, email, sub, ship, isDom) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
     var first = (name || "").trim().split(/\s+/)[0];
@@ -258,9 +340,23 @@
           return '<div class="co-line"><span>' + esc(i.title) + "</span><span>" +
             money(parseFloat(i.price) || 0) + "</span></div>";
         }).join("") +
-        '<div class="co-line co-total"><span>Total</span><strong>' + total + "</strong></div>" +
+        '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(sub || 0) + "</span></div>" +
+        '<div class="co-line co-ship"><span>Shipping</span><span>' +
+          (isDom ? money(ship || 0) : "We’ll quote it") + "</span></div>" +
+        '<div class="co-line co-total"><span>Total</span><strong>' +
+          (isDom ? total : money(sub || 0) + " + shipping") + "</strong></div>" +
       "</div>";
-    if (chosen) {
+    if (!isDom) {
+      // International: never quote a total we can't honour — we email a
+      // shipping price first, and they pay after that.
+      html +=
+        '<div class="os-next">' +
+          '<span class="os-next-h">Don’t send payment yet</span>' +
+          "<p>You’re shipping outside the U.S., so we’ll work out the real " +
+          "postage and email you a quote with the full total. Once you’re happy " +
+          "with it, we’ll send payment details.</p>" +
+        "</div>";
+    } else if (chosen) {
       // Instructions come BEFORE the button on purpose: the payment site opens
       // in a new tab and takes focus, so anything below it never gets read.
       html +=

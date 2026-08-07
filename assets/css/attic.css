@@ -601,6 +601,20 @@ body.cart-open { overflow: hidden; }
 
 .co-summary { border: 1px solid rgba(185,138,46,0.25); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 14px; }
 .co-line { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 4px 0; }
+/* subtotal / shipping / total breakdown */
+.co-line.co-sub { border-top: 1px solid rgba(185,138,46,0.25); padding-top: 8px; margin-top: 4px; }
+.co-line.co-sub, .co-line.co-ship { color: var(--sage-light); }
+.co-ship em { font-style: normal; opacity: 0.75; }
+.cart-subtotal.cart-grand { border-top: 1px solid rgba(185,138,46,0.25); padding-top: 10px; }
+.cart-subtotal span { font-size: 14px; color: var(--sage-light); }
+.cart-subtotal.cart-grand span:first-child { color: var(--paper); font-size: 15px; }
+.intl-note {
+  font-size: 13px; line-height: 1.6;
+  color: var(--paper);
+  background: rgba(201,98,45,0.12);
+  border-left: 3px solid var(--pumpkin);
+  padding: 10px 12px; margin: 0; border-radius: var(--radius);
+}
 .co-total { border-top: 1px solid rgba(185,138,46,0.25); margin-top: 6px; padding-top: 8px; font-family: var(--mono); }
 .co-total strong { color: var(--gold-bright); font-size: 18px; }
 .ship-note { font-size: 13px; color: var(--sage-light); font-style: italic; margin: 0 0 16px; }
