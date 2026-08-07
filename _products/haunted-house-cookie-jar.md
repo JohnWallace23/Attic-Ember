@@ -13,7 +13,7 @@ images:
 featured: true
 featured_order: 5
 description: >-
-    Charming Sakura haunted house cookie jar—a collectible Halloween ceramic with spooky details and zero chips or cracks. Perfect for a seasonal display or year-round for the Halloween-obsessed.
+   A haunted house you're allowed to keep cookies in. This Sakura ceramic jar is all crooked charm and spooky-cute detail—the kind of piece that anchors a Halloween kitchen and somehow ends up staying out year-round because you can't bear to pack it away. A sought-after seasonal collectible from a beloved maker.
 condition: >-
-  Very good. No chips or cracks.
+  Excellent—no chips, no cracks. Lid fits correctly.
 ---
