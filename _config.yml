@@ -5,6 +5,10 @@ description: >-
   reproductions, and hand-poured candles. Die-cuts, chalkware, blow molds,
   and costumes with real history — every piece labeled for what it is.
 
+# Instagram handle (without the @). Drives the footer button and the
+# social profile link in structured data. Blank hides the button.
+instagram: atticandember
+
 # --- SEO / social sharing (used by jekyll-seo-tag) ---
 author: Attic & Ember
 lang: en_US
