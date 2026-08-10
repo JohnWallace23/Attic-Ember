@@ -558,22 +558,28 @@ img { max-width: 100%; display: block; }
 .ig-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 8px 14px;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 10px 18px;
   font-family: var(--mono);
   font-size: 13px;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  line-height: 1;
   color: var(--gold-bright);
-  text-decoration: none;
   background: transparent;
   border: 2px solid var(--gold);
   border-radius: var(--radius);
   transition: background 0.15s ease, color 0.15s ease,
               border-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
 }
+/* .site-footer a sets colour and would otherwise re-underline this link,
+   so the button's own styles are pinned at matching specificity. */
+.site-footer .ig-btn,
+.site-footer .ig-btn:hover,
+.ig-btn { text-decoration: none; }
 .site-footer .ig-btn { color: var(--gold-bright); }
 .ig-btn svg { display: block; flex: none; }
+.ig-btn span { display: block; text-decoration: none; }
 .ig-btn:hover,
 .site-footer .ig-btn:hover {
   background: var(--pumpkin);
