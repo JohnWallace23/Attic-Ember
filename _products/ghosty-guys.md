@@ -1,5 +1,5 @@
 ---
-title: "Ghostly Guys Night Light by Artmark"
+title: "Ghosty Guys Night Light by Artmark"
 price: 50.00
 era: "1980s"
 category: "Lighted & Animated Decor"
