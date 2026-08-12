@@ -10,7 +10,7 @@ images:
 videos:
   - /assets/video/Spooky-Tree.mp4
 featured: true
-featured_order: 4
+featured_order: 6
 description: >-
   Flip the switch and this gnarled old tree lights up, the little owls bob, and it breaks into a delightfully spooky rendition of the Addams Family theme. Pure turn-of-the-millennium Hallmark nostalgia—the kind of thing that lived on a mantel every October and made the whole room feel like Halloween. Fully working and still wearing its original hang-tag.
 condition: >-
