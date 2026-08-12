@@ -5,11 +5,11 @@ era: "1980s"
 category: "Housewares"
 source_type: "vintage"
 images:
-  - /assets/img/Haunted-Hideaway-House-Front.jpg
-  - /assets/img/Haunted-Hideaway-House-Side.jpg
-  - /assets/img/Haunted-Hideaway-House-Back.jpg
-  - /assets/img/Haunted-Hideaway-House-LidOff.jpg
-  - /assets/img/Haunted-Hideaway-House-Bottom.jpg
+  - /assets/img/haunted-house-cookie-jar/front.jpg
+  - /assets/img/haunted-house-cookie-jar/side.jpg
+  - /assets/img/haunted-house-cookie-jar/back.jpg
+  - /assets/img/haunted-house-cookie-jar/lid-off.jpg
+  - /assets/img/haunted-house-cookie-jar/bottom.jpg
 featured: true
 featured_order: 5
 description: >-

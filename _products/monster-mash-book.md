@@ -5,11 +5,11 @@ era: "1990s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
 images:
-  - /assets/img/Monster-Mash-Book-Front.jpg
-  - /assets/img/Monster-Mash-Book-Open.jpg
-  - /assets/img/Monster-Mash-Book-Back.jpg
-  - /assets/img/Monster-Mash-Book-Side.jpg
-  - /assets/img/Monster-Mash-Book-Top.jpg
+  - /assets/img/monster-mash-book/front.jpg
+  - /assets/img/monster-mash-book/open.jpg
+  - /assets/img/monster-mash-book/back.jpg
+  - /assets/img/monster-mash-book/side.jpg
+  - /assets/img/monster-mash-book/top.jpg
 videos:
   - /assets/video/Monster-Mash-Book.mp4
 featured: true

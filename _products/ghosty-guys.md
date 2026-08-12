@@ -5,10 +5,10 @@ era: "1980s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
 images:
-  - /assets/img/Ghosty-Guys-Front.jpg
-  - /assets/img/Ghosty-Guys-Lit.jpg
-  - /assets/img/Ghosty-Guys-Back.jpg
-  - /assets/img/Ghosty-Guys-Box.jpg
+  - /assets/img/ghosty-guys/front.jpg
+  - /assets/img/ghosty-guys/lit.jpg
+  - /assets/img/ghosty-guys/back.jpg
+  - /assets/img/ghosty-guys/box.jpg
 featured: true
 featured_order: 2
 description: >-

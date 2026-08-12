@@ -5,8 +5,8 @@ era: "2000s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
 images:
-  - /assets/img/Spooky-Tree-Front.jpg
-  - /assets/img/Spooky-Tree-Back.jpg
+  - /assets/img/spooky-tree/front.jpg
+  - /assets/img/spooky-tree/back.jpg
 videos:
   - /assets/video/Spooky-Tree.mp4
 featured: true

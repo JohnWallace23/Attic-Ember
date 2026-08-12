@@ -5,16 +5,16 @@ era: "1970s"
 category: "Games"
 source_type: "vintage"
 images:
-  - /assets/img/Which-Witch-Game.jpg
-  - /assets/img/Which-Witch-Full-Game.jpg
-  - /assets/img/Which-Witch-Front.jpg
-  - /assets/img/Which-Witch-Broom-Room.jpg
-  - /assets/img/Which-Witch-Witchin-Kitchen.jpg
-  - /assets/img/Which-Witch-Bats-Ballroom.jpg
-  - /assets/img/Which-Witch-Spell-Cell.jpg
-  - /assets/img/Which-Witch-Cards.jpg
-  - /assets/img/Which-Witch-Directions.jpg
-  - /assets/img/Which-Witch-Box-Damage.jpg
+  - /assets/img/which-witch/game.jpg
+  - /assets/img/which-witch/full-game.jpg
+  - /assets/img/which-witch/front.jpg
+  - /assets/img/which-witch/broom-room.jpg
+  - /assets/img/which-witch/witchin-kitchen.jpg
+  - /assets/img/which-witch/bats-ballroom.jpg
+  - /assets/img/which-witch/spell-cell.jpg
+  - /assets/img/which-witch/cards.jpg
+  - /assets/img/which-witch/directions.jpg
+  - /assets/img/which-witch/box-damage.jpg
 featured: true
 featured_order: 1
 description: >-

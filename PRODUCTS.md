@@ -116,8 +116,8 @@ era: "1950s"
 category: "Paper & die-cuts"
 source_type: "vintage"
 images:
-  - /assets/img/photo-1.jpg
-  - /assets/img/photo-2.jpg
+  - /assets/img/your-item-name/front.jpg
+  - /assets/img/your-item-name/back.jpg
 videos:
   - /assets/video/clip-1.mp4
 description: >-
@@ -130,7 +130,8 @@ condition: >-
 ```
 
 *(No video? Delete the two `videos:` lines. Just one photo? Replace the
-whole `images:` block with a single `image: /assets/img/photo-1.jpg`.)*
+whole `images:` block with a single
+`image: /assets/img/your-item-name/front.jpg`.)*
 
 ### 🟩 Template: Vendor reproduction (new stock)
 
@@ -142,8 +143,8 @@ era: "New (1950s design)"
 category: "Paper & die-cuts"
 source_type: "reproduction"
 images:
-  - /assets/img/photo-1.jpg
-  - /assets/img/photo-2.jpg
+  - /assets/img/your-item-name/front.jpg
+  - /assets/img/your-item-name/back.jpg
 videos:
   - /assets/video/clip-1.mp4
 description: >-
@@ -164,8 +165,8 @@ era: "Made to order"
 category: "Candles"
 source_type: "handmade"
 images:
-  - /assets/img/photo-1.jpg
-  - /assets/img/photo-2.jpg
+  - /assets/img/your-item-name/front.jpg
+  - /assets/img/your-item-name/back.jpg
 videos:
   - /assets/video/clip-1.mp4
 description: >-
@@ -200,24 +201,26 @@ it's totally fine to publish first and add the picture later.
 
 When you're ready:
 
-1. Put your photo in the `assets/img` folder (Add file → Upload files on GitHub).
+1. Put your photos in **`assets/img/your-item-name/`** — one folder per item,
+   named to match the product file (Add file → Upload files on GitHub; type the
+   folder name followed by `/` to create it).
 2. Add this line to the product's settings block, matching your filename:
 
 ```
-image: /assets/img/your-photo-name.jpg
+image: /assets/img/your-item-name/front.jpg
 ```
 
 ### Multiple photos (a gallery)
 
-Got several angles? Upload all of them to `assets/img`, then instead of the
+Got several angles? Upload all of them to `assets/img/your-item-name/`, then instead of the
 single `image:` line, use an **`images:`** list — one line per photo, each
 starting with two spaces and a dash:
 
 ```
 images:
-  - /assets/img/witch-front.jpg
-  - /assets/img/witch-back.jpg
-  - /assets/img/witch-label.jpg
+  - /assets/img/which-witch/front.jpg
+  - /assets/img/which-witch/back.jpg
+  - /assets/img/which-witch/box-damage.jpg
 ```
 
 The **first photo** is the main one (it's what shows on the homepage and
