@@ -5,11 +5,11 @@ era: "1980s"
 category: "Paper & Die-Cuts"
 source_type: "vintage"
 images:
-  - /assets/img/beistle-frankenstein-front.jpg
-  - /assets/img/beistle-frankenstein-back.jpg
-  - /assets/img/beistle-frankenstein-right-damage.jpg
-  - /assets/img/beistle-frankenstein-left-damage.jpg
-  - /assets/img/beistle-frankenstein-shoe-damage.jpg
+  - /assets/img/beistle-frankenstein/front.jpg
+  - /assets/img/beistle-frankenstein/back.jpg
+  - /assets/img/beistle-frankenstein/right-damage.jpg
+  - /assets/img/beistle-frankenstein/left-damage.jpg
+  - /assets/img/beistle-frankenstein/shoe-damage.jpg
 featured: true
 featured_order: 1
 description: >-
