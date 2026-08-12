@@ -5,3 +5,8 @@
 
 /shop/ghostly-guys/  /shop/ghosty-guys/  301
 /shop/ghostly-guys   /shop/ghosty-guys/  301
+
+# Apostrophe dropped from the slug — apostrophes percent-encode to %27
+# and get mangled by some apps when auto-linking.
+/shop/beistle-jack-o%27-lantern-man/  /shop/beistle-jack-o-lantern-man/  301
+/shop/beistle-jack-o%27-lantern-man   /shop/beistle-jack-o-lantern-man/  301

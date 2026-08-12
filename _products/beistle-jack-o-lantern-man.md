@@ -5,8 +5,8 @@ era: "1960s"
 category: "Die-Cuts"
 source_type: "vintage"
 images:
-  - /assets/img/beistle-jack-o'-lantern-man_front.jpg
-  - /assets/img/beistle-jack-o'-lantern-man_back.jpg
+  - /assets/img/beistle-jack-o-lantern-man/front.jpg
+  - /assets/img/beistle-jack-o-lantern-man/back.jpg
 featured: true
 featured_order: 2
 description: >-
