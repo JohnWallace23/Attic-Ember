@@ -44,6 +44,11 @@ defaults:
       type: products
     values:
       layout: product
+      # jekyll-seo-tag labels these BlogPosting by default, which misreads a
+      # shop listing as an article. WebPage is neutral and correct — the real
+      # product data lives in the Product JSON-LD in _layouts/product.html.
+      seo:
+        type: WebPage
 
 # ---- Checkout (manual payment: buyer pays via one of these after checkout) ----
 order_email: "shop@atticandember.com"

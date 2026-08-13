@@ -23,6 +23,21 @@ layout: default
 {% else %}
   {% assign item_condition = "UsedCondition" %}
 {% endif %}
+{%- comment -%}
+  Breadcrumbs let search results show "atticandember.com › Shop › Item"
+  instead of a bare URL.
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ "/" | absolute_url | jsonify }} },
+    { "@type": "ListItem", "position": 2, "name": "Shop", "item": {{ "/shop/" | absolute_url | jsonify }} },
+    { "@type": "ListItem", "position": 3, "name": {{ page.title | strip_html | jsonify }} }
+  ]
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -68,7 +83,13 @@ layout: default
         {% if page.images %}
           {% for src in page.images %}
             <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-type="image" data-full="{{ src | relative_url }}" aria-label="View photo {{ forloop.index }}">
-              <img src="{{ src | relative_url }}" alt="{{ page.title }} — photo {{ forloop.index }}">
+              {%- comment -%}
+                Alt text comes from the filename (front.jpg -> "front",
+                box-damage.jpg -> "box damage") so each photo is described
+                rather than numbered — that's what image search reads.
+              {%- endcomment -%}
+              {%- assign shot = src | split: "/" | last | split: "." | first | replace: "-", " " -%}
+              <img src="{{ src | relative_url }}" alt="{{ page.title }} — {{ shot }}">
             </button>
           {% endfor %}
         {% elsif page.image %}
