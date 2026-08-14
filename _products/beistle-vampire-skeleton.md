@@ -1,5 +1,5 @@
 ---
-title: "Beistle Vampire Skull Die-Cut"
+title: "Vintage Beistle Vampire Skull Die-Cut"
 price: 45.00
 era: "1980s"
 category: "Paper & Die-Cuts"
