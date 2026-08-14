@@ -67,7 +67,12 @@ layout: default
       <div class="product-stage">
         <div class="product-photo{% if main_img %} has-photo{% endif %}" id="stage-photo">
           {% if main_img %}
-            <img id="main-photo" src="{{ main_img | relative_url }}" alt="{{ page.title }}">
+            {%- comment -%}
+            The main photo is the page's hero — load it eagerly and at high
+            priority. Everything below it is lazy.
+          {%- endcomment -%}
+          <img id="main-photo" src="{{ main_img | relative_url }}" alt="{{ page.title }}"
+               fetchpriority="high" decoding="async">
           {% else %}
             [ photo of {{ page.title }} goes here ]
           {% endif %}
@@ -89,7 +94,8 @@ layout: default
                 rather than numbered — that's what image search reads.
               {%- endcomment -%}
               {%- assign shot = src | split: "/" | last | split: "." | first | replace: "-", " " -%}
-              <img src="{{ src | relative_url }}" alt="{{ page.title }} — {{ shot }}">
+              <img src="{{ src | relative_url }}" alt="{{ page.title }} — {{ shot }}"
+                   loading="lazy" decoding="async">
             </button>
           {% endfor %}
         {% elsif page.image %}

@@ -13,7 +13,8 @@
   <a href="{{ include.product.url | relative_url }}" style="color:inherit; text-decoration:none;">
     <div class="card-photo">
       {% if card_img %}
-        <img src="{{ card_img | relative_url }}" alt="{{ include.product.title }}">
+        <img src="{{ card_img | relative_url }}" alt="{{ include.product.title }}"
+             loading="lazy" decoding="async">
       {% else %}
         [ photo coming ]
       {% endif %}
