@@ -1,5 +1,5 @@
 ---
-title: "Beistle Jointed Frankenstein Die-Cut"
+title: "Vintage Beistle Jointed Frankenstein Die-Cut"
 price: 65.00
 era: "1980s"
 category: "Paper & Die-Cuts"
