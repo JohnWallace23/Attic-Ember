@@ -7,7 +7,7 @@ source_type: "vintage"
 images:
   - /assets/img/pumpkin-bumpkins/Front.jpg
   - /assets/img/pumpkin-bumpkins/Back.jpg
-  - /assets/img/pumpkin-bumpkins/Pumpkins-Bumpkinss.jpg
+  - /assets/img/pumpkin-bumpkins/Pumpkins-Bumpkins.jpg
 featured: true
 featured_order: 8
 description: >-
