@@ -1,5 +1,5 @@
 ---
-title: "Vintage Disney Store "102 Dalmatians" Plush Toddler Costume"
+title: 'Vintage Disney Store "102 Dalmatians" Plush Toddler Costume'
 price: 40.00
 era: "2000s"
 category: "Costumes"
@@ -11,7 +11,7 @@ images:
   - /assets/img/102-dalmatians-costume/Tag.jpg
   - /assets/img/102-dalmatians-costume/Stain.jpg
 videos:
-  - /assets/video/speaker.mov
+  - /assets/video/speaker.mp4
 featured: true
 featured_order: 9
 description: >-
