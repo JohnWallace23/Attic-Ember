@@ -248,14 +248,48 @@ compressed. Use `.mp4` for the widest device support.
 
 ---
 
-## Three small rules that keep things from breaking
+## Rules that keep things from breaking
 
 1. **Keep the two `---` lines** at the very top and bottom of the settings
    block. They tell the site where the settings start and end.
 2. **Prices are just numbers** — `165.00`, never `$165` or `165 dollars`.
-3. **To put an inch mark (") in a title**, type `&quot;` instead, because
-   real quotes are used to wrap the title. Example:
-   `title: "Witch Blow Mold, 24&quot;"` shows as `Witch Blow Mold, 24"`.
+3. **Quotes inside a title** — see below. This is the one that actually
+   breaks the build.
+4. **Capital letters matter in filenames.** The live site runs on Linux,
+   which treats `Front.jpg` and `front.jpg` as two different files (your
+   Windows PC does not). If a photo doesn't show up, check that the name
+   in the settings block matches the uploaded file *exactly*, capitals
+   and all.
+
+### ⚠️ Quotes in a title (the #1 thing that breaks the site)
+
+The title is wrapped in quotes, so a quote *inside* it ends the title
+early and the whole page fails to build with a message like
+*"did not find expected key"*.
+
+**If the title contains double quotes, wrap it in single quotes:**
+
+```
+❌  title: "Halloween Works "Pumpkin Bumpkins" Scarecrow Costume"
+✅  title: 'Halloween Works "Pumpkin Bumpkins" Scarecrow Costume'
+```
+
+**If the title contains an apostrophe, wrap it in double quotes:**
+
+```
+❌  title: 'Beistle Jack-o'-Lantern Man'
+✅  title: "Beistle Jack-o'-Lantern Man"
+```
+
+**If it contains both**, use double quotes outside and `&quot;` for the
+inner ones:
+
+```
+✅  title: "Jack-o'-Lantern Man, 24&quot; tall"
+```
+
+Simple rule of thumb: **whichever quote mark is inside your title, use
+the other one to wrap it.**
 
 That's everything. When in doubt, open an existing product in `_products/`
-and copy how it's set up — the four examples are there as working models.
+and copy how it's set up — they're all there as working models.
