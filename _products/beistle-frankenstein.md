@@ -1,5 +1,6 @@
 ---
 title: "Vintage Beistle Jointed Frankenstein Die-Cut"
+date: 2026-08-12
 price: 65.00
 era: "1980s"
 category: "Paper & Die-Cuts"
@@ -11,7 +12,6 @@ images:
   - /assets/img/beistle-frankenstein/left-damage.jpg
   - /assets/img/beistle-frankenstein/shoe-damage.jpg
 featured: true
-featured_order: 2
 description: >-
   It's alive! Beistle's classic jointed Frankenstein monster, dated 1980 and ready to lumber across your wall—poseable arms and legs, that unmistakable green mug, and those glorious yellow platform boots. A genuine vintage Beistle monster, the kind that anchors a proper Halloween haunt.
 condition: >-

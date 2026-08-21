@@ -1,5 +1,6 @@
 ---
 title: 'Halloween Works "Pumpkin Bumpkins" Scarecrow Costume'
+date: 2026-08-14
 price: 15.00
 era: "2000s"
 category: "Decor"
@@ -9,7 +10,6 @@ images:
   - /assets/img/pumpkin-bumpkins/Back.jpg
   - /assets/img/pumpkin-bumpkins/Pumpkin-Bumpkins.jpg
 featured: true
-featured_order: 9
 description: >-
   Turn any pumpkin into a grinning scarecrow! This Halloween Works "Pumpkin Bumpkins" costume kit dresses your jack-o'-lantern in full scarecrow getup. Stands over 2 ft tall. Carving pattern included. A fun bit of 2000s Halloween nostalgia.
 condition: >-

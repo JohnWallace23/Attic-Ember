@@ -18,7 +18,7 @@ permalink: /shop/
     <div class="sort-control">
       <label for="sort-by">Sort</label>
       <select id="sort-by" class="sort-select">
-        <option value="default">Featured first</option>
+        <option value="default">Newest first</option>
         <option value="price-asc">Price: low to high</option>
         <option value="price-desc">Price: high to low</option>
         <option value="name">Name: A&ndash;Z</option>
@@ -26,8 +26,13 @@ permalink: /shop/
     </div>
   </div>
 
+  {%- comment -%}
+    Newest listing first. `date` is set per product; nothing has to be
+    renumbered when something new goes up.
+  {%- endcomment -%}
+  {% assign shelf = site.products | sort: "date" | reverse %}
   <div class="grid">
-    {% for product in site.products %}
+    {% for product in shelf %}
       {% unless product.draft %}{% include product-card.html product=product %}{% endunless %}
     {% endfor %}
   </div>

@@ -1,5 +1,6 @@
 ---
 title: "Monster Mash Book by Blue Ridge Designs"
+date: 2026-07-27
 price: 125.00
 era: "1990s"
 category: "Lighted & Animated Decor"
@@ -13,7 +14,6 @@ images:
 videos:
   - /assets/video/Monster-Mash-Book.mp4
 featured: true
-featured_order: 4
 description: >-
   Crack open this creepy old spellbook and it's a graveyard smash—the Monster Mash plays while lights flicker and the little scene comes to life. A wonderfully theatrical piece of nostalgic Halloween that steals the show on any shelf. Even better: it still has its original box. Fully working, animation and all.
 condition: >-

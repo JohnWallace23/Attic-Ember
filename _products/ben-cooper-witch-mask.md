@@ -1,5 +1,6 @@
 ---
 title: "Vintage Ben Cooper Witch Mask — Zest Soap Promotional"
+date: 2026-08-21
 price: 45.00
 era: "1960s"
 category: "Costumes"
@@ -9,7 +10,6 @@ images:
   - /assets/img/ben-cooper-witch-mask/back.jpg
   - /assets/img/ben-cooper-witch-mask/zest-giveaway.jpg
 featured: true
-featured_order: 0
 description: >-
   A groovy piece of 1960s Halloween history! This neon witch mask was a Zest soap store premium. "FREE when you buy 2 Bath Size Zest Bars" is printed right on the back. Vivid, almost black-light-ready colors, a snaggle-tooth grin, and bat-pumpkin earrings. A fun crossover for vintage Halloween AND advertising-premium collectors.
 condition: >-

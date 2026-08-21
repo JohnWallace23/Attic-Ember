@@ -26,7 +26,6 @@
   function price(c) { return parseFloat(c.getAttribute("data-price")) || 0; }
   function name(c) { return (c.getAttribute("data-name") || "").toLowerCase(); }
   function order(c) { return parseInt(c.getAttribute("data-i"), 10) || 0; }
-  function featuredRank(c) { return c.getAttribute("data-featured") === "true" ? 0 : 1; }
 
   function apply() {
     var mode = sortSel ? sortSel.value : "default";
@@ -35,9 +34,9 @@
       if (mode === "price-asc") return price(a) - price(b);
       if (mode === "price-desc") return price(b) - price(a);
       if (mode === "name") return name(a).localeCompare(name(b));
-      // default: featured items first, then original order
-      var f = featuredRank(a) - featuredRank(b);
-      return f !== 0 ? f : order(a) - order(b);
+      // default: document order, which the template already emits
+      // newest-listed first.
+      return order(a) - order(b);
     });
     ordered.forEach(function (c) { grid.appendChild(c); });
 

@@ -1,5 +1,6 @@
 ---
 title: "Which Witch? Board Game — 1970 Milton Bradley"
+date: 2026-08-03
 price: 175.00
 era: "1970s"
 category: "Games"
@@ -16,7 +17,6 @@ images:
   - /assets/img/which-witch/directions.jpg
   - /assets/img/which-witch/box-damage.jpg
 featured: true
-featured_order: 5
 description: >-
   The holy grail of vintage Halloween board games. Milton Bradley's 1970 "Which Witch?" is a 3-D haunted house where you race through the rooms and drop the whammy ball down the chimney to spring the traps—the game every kid of a certain era remembers and almost nobody kept complete. This one is complete, right down to the steel whammy ball, and the board is beautiful. A true centerpiece.
 condition: >-

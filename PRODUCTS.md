@@ -50,23 +50,18 @@ sold: true
 The "Add" button turns into a greyed-out "Sold." To bring it back, delete
 that line (or change `true` to `false`).
 
-### To control the order of homepage features
+### How the shop is ordered
 
-The homepage shows **3 items**, picked by `featured_order` (lowest number
-first). To put something in the top spot, give it `featured_order: 1`:
+Both the homepage and the **All Items** page sort by the `date` line in
+each listing — **newest first**. So a new piece automatically goes to the
+top, and you never have to renumber anything.
 
 ```
-featured: true
-featured_order: 1
+date: 2026-08-21
 ```
 
-Current order: 1 Which Witch · 2 Ghosty Guys · 3 Monster Mash ·
-4 Spooky Tree · 5 Cookie Jar. When you list something new and want it up
-front, give it `featured_order: 1` and bump the others down — or just
-give the new item `0`, which is simplest.
-
-Everything marked `featured: true` beyond the top 3 stays on the
-**All Items** page, so nothing disappears from the shop.
+Use the day you listed it (`YYYY-MM-DD`). If two items share a date they
+just group together, which is fine.
 
 ### To feature an item on the HOMEPAGE
 
@@ -78,7 +73,8 @@ add this line to its settings block:
 featured: true
 ```
 
-Remove the line when it's no longer new. A nice habit: keep roughly 3–6
+The homepage shows the **3 most recent** featured items. Remove the line
+when something's no longer new. A nice habit: keep several
 items featured at a time — ideally a mix of vintage, reproduction, and
 handmade so the homepage shows your whole range. (If nothing is featured,
 the homepage just shows your most recent items automatically, so it's
@@ -111,6 +107,7 @@ lines**, into your new file. Then just replace the words. Keep the quotes
 ```
 ---
 title: "Your Item Name Here"
+date: 2026-08-21
 price: 48.00
 era: "1950s"
 category: "Paper & die-cuts"
@@ -138,6 +135,7 @@ whole `images:` block with a single
 ```
 ---
 title: "Your Item Name Here"
+date: 2026-08-21
 price: 12.00
 era: "New (1950s design)"
 category: "Paper & die-cuts"
@@ -160,6 +158,7 @@ condition: >-
 ```
 ---
 title: "Your Candle Name Here"
+date: 2026-08-21
 price: 28.00
 era: "Made to order"
 category: "Candles"
