@@ -10,7 +10,7 @@ images:
   - /assets/img/relpo-pumpkin-planter/back.jpg
   - /assets/img/relpo-pumpkin-planter/small-crack.jpg
 featured: true
-featured_order: 5
+featured_order: 1
 description: >-
   Glowing straight out of 1966—this Relpo (Samson Import) ceramic jack-o'-lantern lights up with that warm amber grin that says mid-century Halloween. Still wearing its original gold Relpo foil label, with the year and mold #5375 right on the base. The kind of vintage piece collectors actually hunt for.
 condition: >-
