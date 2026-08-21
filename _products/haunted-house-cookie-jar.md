@@ -11,7 +11,7 @@ images:
   - /assets/img/haunted-house-cookie-jar/lid-off.jpg
   - /assets/img/haunted-house-cookie-jar/bottom.jpg
 featured: true
-featured_order: 6
+featured_order: 7
 description: >-
    A haunted house you're allowed to keep cookies in. This Sakura ceramic jar is all crooked charm and spooky-cute detail—the kind of piece that anchors a Halloween kitchen and somehow ends up staying out year-round because you can't bear to pack it away. A sought-after seasonal collectible from a beloved maker.
 condition: >-

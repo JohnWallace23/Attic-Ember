@@ -11,7 +11,7 @@ images:
   - /assets/img/beistle-frankenstein/left-damage.jpg
   - /assets/img/beistle-frankenstein/shoe-damage.jpg
 featured: true
-featured_order: 1
+featured_order: 2
 description: >-
   It's alive! Beistle's classic jointed Frankenstein monster, dated 1980 and ready to lumber across your wall—poseable arms and legs, that unmistakable green mug, and those glorious yellow platform boots. A genuine vintage Beistle monster, the kind that anchors a proper Halloween haunt.
 condition: >-

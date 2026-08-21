@@ -13,7 +13,7 @@ images:
 videos:
   - /assets/video/speaker.mp4
 featured: true
-featured_order: 9
+featured_order: 10
 description: >-
   From the Disney Store's "102 Dalmatians" era. This plush dalmatian costume is pure puppy-dog charm. Cozy sherpa jumpsuit with black spots, floppy-ear hood, and a speaker that barks. A sweet bit of turn-of-the-millennium Disney nostalgia for a little one's Halloween (or a Disney collector's shelf).
 condition: >-
