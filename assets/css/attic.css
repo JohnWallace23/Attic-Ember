@@ -362,10 +362,45 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   color: var(--ink);
+  /* Dims the "[ photo coming ]" placeholder only. A real photo overrides
+     this below — a faded thumbnail reads as "sold out" to shoppers, which
+     is the last thing an available piece should signal. */
   opacity: 0.55;
   font-family: var(--mono);
   font-size: 13px;
   border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+/* A real photo shows at full strength. The aged look comes from a gentle
+   warm grade instead of transparency, so it still feels like the shop
+   without looking unavailable. */
+.card-photo.has-photo {
+  opacity: 1;
+  filter: sepia(0.12) saturate(1.06) contrast(1.02);
+  transition: filter 0.18s ease;
+}
+.card:hover .card-photo.has-photo { filter: none; }
+
+/* Dimming now means one thing only: this piece is gone. */
+.card.is-sold .card-photo.has-photo {
+  opacity: 0.5;
+  filter: grayscale(0.55) sepia(0.15);
+}
+.card.is-sold:hover .card-photo.has-photo { filter: grayscale(0.55) sepia(0.15); }
+.sold-ribbon {
+  position: absolute;
+  top: 14px;
+  right: -6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  transform: rotate(6deg);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+  border-radius: 2px;
 }
 .badge {
   position: absolute;

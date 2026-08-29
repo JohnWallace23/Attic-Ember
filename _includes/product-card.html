@@ -4,20 +4,21 @@
   Usage: {% include product-card.html product=product %}
 {%- endcomment -%}
 {% assign card_img = include.product.image | default: include.product.images[0] %}
-<article class="card"
+<article class="card{% if include.product.sold %} is-sold{% endif %}"
          data-source="{{ include.product.source_type }}"
          data-price="{{ include.product.price }}"
          data-name="{{ include.product.title }}"
          data-featured="{{ include.product.featured }}">
   {% include source-badge.html type=include.product.source_type %}
   <a href="{{ include.product.url | relative_url }}" style="color:inherit; text-decoration:none;">
-    <div class="card-photo">
+    <div class="card-photo{% if card_img %} has-photo{% endif %}">
       {% if card_img %}
         <img src="{{ card_img | relative_url }}" alt="{{ include.product.title }}"
              loading="lazy" decoding="async">
       {% else %}
         [ photo coming ]
       {% endif %}
+      {% if include.product.sold %}<span class="sold-ribbon">Sold</span>{% endif %}
     </div>
   </a>
   <div class="card-body">
