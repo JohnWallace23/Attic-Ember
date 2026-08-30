@@ -406,6 +406,9 @@ img { max-width: 100%; display: block; }
   position: absolute;
   top: 10px;
   left: -6px;
+  /* .card-photo is positioned (for the Sold ribbon) and comes later in the
+     markup, so without this the photo paints over the stamp. */
+  z-index: 2;
   background: var(--sage);
   color: var(--paper);
   font-family: var(--mono);
