@@ -1,7 +1,7 @@
 ---
 title: "Which Witch? Board Game — 1970 Milton Bradley"
 date: 2026-08-03
-price: 175.00
+price: 165.00
 era: "1970s"
 category: "Games"
 source_type: "vintage"
