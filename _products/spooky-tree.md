@@ -1,7 +1,7 @@
 ---
 title: "Spooky Tree by Hallmark"
 date: 2026-07-27
-price: 40.00
+price: 20.00
 era: "2000s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
