@@ -124,6 +124,7 @@ layout: default
     <div class="product-info">
       {% include source-badge.html type=page.source_type inline=true %}
       <h1>{{ page.title }}</h1>
+      <p class="product-meta">{{ page.era | default: "Vintage" }}{% if page.category %} &middot; {{ page.category }}{% endif %}</p>
       <p class="product-price">${{ page.price }}</p>
 
       <p class="product-desc">{{ page.description }}</p>

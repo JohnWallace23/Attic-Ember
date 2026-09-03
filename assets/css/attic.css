@@ -566,6 +566,16 @@ img { max-width: 100%; display: block; }
   color: var(--gold-bright);
   margin: 0 0 8px;
 }
+/* Era · category, same line the cards carry — but sage reads too dim on
+   the dark product page, so it uses the lighter moonlit sage. */
+.product-meta {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sage-light);
+  margin: 0 0 12px;
+}
 .product-price { font-family: var(--mono); font-size: 24px; margin: 0 0 18px; }
 .product-desc { font-size: 16px; margin: 0 0 24px; }
 .condition-note {
