@@ -11,7 +11,7 @@ images:
   - /assets/img/hallmark-pumpkin/front.jpg
   - /assets/img/hallmark-pumpkin/copyright.jpg
 videos:
-  - /assets/video/hallmark-pumpkin.MOV
+  - /assets/video/hallmark-pumpkin.mp4
 description: >-
  A little pumpkin that can't make up its mind. Glossy orange ceramic with a carved grin and a small black spider crawling up the side, sitting on an LED base that cycles slow and steady through the colors. Set it on a shelf, kill the lights, and let it do its thing all evening. Two pieces, still in the original box. Battery operated.
 condition: >-
