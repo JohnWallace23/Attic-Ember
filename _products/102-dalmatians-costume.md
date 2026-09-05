@@ -1,7 +1,7 @@
 ---
 title: 'Vintage Disney Store "102 Dalmatians" Plush Toddler Costume'
 date: 2026-08-14
-price: 40.00
+price: 30.00
 era: "2000s"
 category: "Costumes"
 source_type: "vintage"
@@ -13,7 +13,6 @@ images:
   - /assets/img/102-dalmatians-costume/Stain.jpg
 videos:
   - /assets/video/speaker.mp4
-featured: true
 description: >-
   From the Disney Store's "102 Dalmatians" era. This plush dalmatian costume is pure puppy-dog charm. Cozy sherpa jumpsuit with black spots, floppy-ear hood, and a speaker that barks. A sweet bit of turn-of-the-millennium Disney nostalgia for a little one's Halloween (or a Disney collector's shelf).
 condition: >-
