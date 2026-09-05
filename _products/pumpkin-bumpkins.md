@@ -9,7 +9,6 @@ images:
   - /assets/img/pumpkin-bumpkins/Front.jpg
   - /assets/img/pumpkin-bumpkins/Back.jpg
   - /assets/img/pumpkin-bumpkins/Pumpkin-Bumpkins.jpg
-featured: true
 description: >-
   Turn any pumpkin into a grinning scarecrow! This Halloween Works "Pumpkin Bumpkins" costume kit dresses your jack-o'-lantern in full scarecrow getup. Stands over 2 ft tall. Carving pattern included. A fun bit of 2000s Halloween nostalgia.
 condition: >-
