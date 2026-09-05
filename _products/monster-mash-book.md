@@ -1,7 +1,7 @@
 ---
 title: "Monster Mash Book by Blue Ridge Designs"
 date: 2026-07-27
-price: 125.00
+price: 115.00
 era: "1990s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
