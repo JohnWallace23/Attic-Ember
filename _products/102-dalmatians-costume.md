@@ -5,6 +5,7 @@ price: 30.00
 era: "2000s"
 category: "Costumes"
 source_type: "vintage"
+sold: true
 images:
   - /assets/img/102-dalmatians-costume/Full.jpg
   - /assets/img/102-dalmatians-costume/Collar.jpg
