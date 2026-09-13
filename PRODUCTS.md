@@ -50,6 +50,20 @@ sold: true
 The "Add" button turns into a greyed-out "Sold." To bring it back, delete
 that line (or change `true` to `false`).
 
+### To offer FREE SHIPPING on an item
+
+If you've rolled postage into the price, add this line:
+
+```
+free_shipping: true
+```
+
+The item gets a "Free shipping" tag on its card and a note on its page.
+At checkout, shipping drops to **Free** — but only if **everything** in the
+cart ships free. If someone adds a free-shipping item alongside a regular
+one, the normal $8 still applies once (the box ships either way). It's
+U.S.-only, same as the flat rate; international orders are still quoted.
+
 ### How the shop is ordered
 
 Both the homepage and the **All Items** page sort by the `date` line in

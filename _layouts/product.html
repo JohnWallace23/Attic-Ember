@@ -126,6 +126,7 @@ layout: default
       <h1>{{ page.title }}</h1>
       <p class="product-meta">{{ page.era | default: "Vintage" }}{% if page.category %} &middot; {{ page.category }}{% endif %}</p>
       <p class="product-price">${{ page.price }}</p>
+      {% if page.free_shipping %}<p class="free-ship free-ship--page">Free U.S. shipping — postage is included in the price</p>{% endif %}
 
       <p class="product-desc">{{ page.description }}</p>
 
@@ -144,6 +145,7 @@ layout: default
         data-price="{{ page.price }}"
         data-url="{{ page.url | absolute_url }}"
         data-image="{{ main_img | absolute_url }}"
+        data-free-ship="{{ page.free_shipping }}"
         style="font-size:16px; padding:14px 24px;">Add to cart — ${{ page.price }}</button>
       {% endif %}
 

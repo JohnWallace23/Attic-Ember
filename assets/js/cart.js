@@ -28,9 +28,21 @@
   // Flat shipping: charged once per order, on U.S. orders only. International
   // is quoted by hand (the flat rate wouldn't cover it), so it adds nothing
   // here and the buyer is told we'll follow up before any payment.
+  // Some listings roll postage into the price (`free_shipping: true`). The
+  // flat rate is waived only when EVERY item in the cart ships free — if
+  // one regular item is in there the box goes out anyway, so the rate still
+  // applies once. Stops a free-ship item waiving postage on everything else.
+  function allFreeShip() {
+    return cart.length > 0 && cart.every(function (i) { return i.freeShip === true; });
+  }
   function shipping() {
-    if (cart.length === 0 || !domestic) return 0;
+    if (cart.length === 0 || !domestic || allFreeShip()) return 0;
     return SHIP_RATE;
+  }
+  // What to print on the domestic shipping line.
+  function shipLabel() { return allFreeShip() ? "Free" : money(shipping()); }
+  function shipEmailText() {
+    return allFreeShip() ? "FREE (included in item price)" : money(shipping()) + " (U.S. flat rate)";
   }
   function grandTotal() { return subtotal() + shipping(); }
   function money(n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); }
@@ -97,7 +109,7 @@
       '<div class="cart-foot">' +
         '<div class="cart-subtotal"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
         (SHIP_RATE > 0
-          ? '<div class="cart-subtotal"><span>Shipping (U.S. flat)</span><span>' + money(SHIP_RATE) + "</span></div>"
+          ? '<div class="cart-subtotal"><span>Shipping (U.S.' + (allFreeShip() ? "" : " flat") + ')</span><span>' + shipLabel() + "</span></div>"
           : "") +
         '<div class="cart-subtotal cart-grand"><span>Total</span><strong>' + money(grandTotal()) + "</strong></div>" +
         '<button class="btn cart-checkout" type="button">Checkout &rarr;</button>' +
@@ -109,7 +121,7 @@
     var lines = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n");
     return "Hi Attic & Ember,\n\nI'd like to order:\n" + lines +
       "\n\nSubtotal: " + money(subtotal()) +
-      "\nShipping: " + money(shipping()) +
+      "\nShipping: " + shipLabel() +
       "\nTotal: " + money(grandTotal()) +
       "\n\nMy shipping details:\nName:\nAddress:\nCity / State / ZIP:\n\nI'll send payment by PayPal / Venmo / Cash App. Thanks!";
   }
@@ -202,9 +214,9 @@
         '<div class="co-summary">' + summary +
           '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
           '<div class="co-line co-ship"><span>Shipping' +
-            '<em class="ship-dom"> (U.S. flat)</em>' +
+            '<em class="ship-dom"> (U.S.' + (allFreeShip() ? "" : " flat") + ')</em>' +
             '<em class="ship-intl" hidden> (international)</em></span>' +
-            '<span class="ship-amount">' + money(shipping()) + "</span></div>" +
+            '<span class="ship-amount">' + shipLabel() + "</span></div>" +
           '<div class="co-line co-total"><span>Total</span><strong class="pay-total">' + money(grandTotal()) + "</strong></div></div>" +
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
         step1 +
@@ -223,7 +235,7 @@
     var btnTotal = body.querySelector(".btn-total");
     if (btnTotal) btnTotal.textContent = money(grandTotal());
     var shipAmt = body.querySelector(".ship-amount");
-    if (shipAmt) shipAmt.textContent = intl ? "We’ll quote it" : money(shipping());
+    if (shipAmt) shipAmt.textContent = intl ? "We’ll quote it" : shipLabel();
     var domEm = body.querySelector(".ship-dom");
     var intlEm = body.querySelector(".ship-intl");
     if (domEm) domEm.hidden = intl;
@@ -297,12 +309,12 @@
       (cart.length > 1 ? "s" : "") + ", " + (domestic ? money(grandTotal()) : money(subtotal()) + " + intl shipping");
     data.from_name = data.name;
     data.paying_with = domestic ? (chosen ? chosen.label : "(not selected)") : "(international — quote shipping first)";
-    data.shipping = domestic ? money(shipping()) + " (U.S. flat rate)" : "TO QUOTE — international address";
+    data.shipping = domestic ? shipEmailText() : "TO QUOTE — international address";
     data.order_total = domestic ? money(grandTotal()) : money(subtotal()) + " + shipping (to be quoted)";
     data.order = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n") +
       "\nSubtotal: " + money(subtotal()) +
       (domestic
-        ? "\nShipping: " + money(shipping()) + " (U.S. flat rate)\nTOTAL DUE: " + money(grandTotal())
+        ? "\nShipping: " + shipEmailText() + "\nTOTAL DUE: " + money(grandTotal())
         : "\nShipping: TO QUOTE (international)\nTOTAL DUE: " + money(subtotal()) + " + shipping — quote before payment");
     btn.disabled = true;
     status.className = "of-status";
@@ -333,6 +345,8 @@
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
     var first = (name || "").trim().split(/\s+/)[0];
+    var shipFree = (items || []).length > 0 &&
+      items.every(function (i) { return i.freeShip === true; });
     var html = "<strong>Thanks, " + esc(first) + "! Your order is in.</strong>" +
       '<div class="os-receipt">' +
         '<div class="os-ref"><span>Order</span><strong>' + esc(ref) + "</strong></div>" +
@@ -342,7 +356,7 @@
         }).join("") +
         '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(sub || 0) + "</span></div>" +
         '<div class="co-line co-ship"><span>Shipping</span><span>' +
-          (isDom ? money(ship || 0) : "We’ll quote it") + "</span></div>" +
+          (isDom ? (shipFree ? "Free" : money(ship || 0)) : "We’ll quote it") + "</span></div>" +
         '<div class="co-line co-total"><span>Total</span><strong>' +
           (isDom ? total : money(sub || 0) + " + shipping") + "</strong></div>" +
       "</div>";
@@ -465,7 +479,8 @@
         title: btn.getAttribute("data-title"),
         price: btn.getAttribute("data-price"),
         url: btn.getAttribute("data-url"),
-        image: btn.getAttribute("data-image")
+        image: btn.getAttribute("data-image"),
+        freeShip: btn.getAttribute("data-free-ship") === "true"
       });
       save(); updateCount(); syncButtons();
     }

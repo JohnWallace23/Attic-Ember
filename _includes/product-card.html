@@ -28,7 +28,7 @@
     <p class="card-meta">{{ include.product.era | default: "Vintage" }} &middot; {{ include.product.category }}</p>
     <p class="card-desc">{{ include.product.excerpt | default: include.product.description | truncatewords: 16 }}</p>
     <div class="card-footer">
-      <span class="price">${{ include.product.price }}</span>
+      <span class="price">${{ include.product.price }}{% if include.product.free_shipping %}<span class="free-ship">Free shipping</span>{% endif %}</span>
       {% if include.product.sold %}
       <button class="add-btn" disabled>Sold</button>
       {% else %}
@@ -37,7 +37,8 @@
         data-title="{{ include.product.title }}"
         data-price="{{ include.product.price }}"
         data-url="{{ include.product.url | absolute_url }}"
-        data-image="{{ card_img | absolute_url }}">Add</button>
+        data-image="{{ card_img | absolute_url }}"
+        data-free-ship="{{ include.product.free_shipping }}">Add</button>
       {% endif %}
     </div>
   </div>

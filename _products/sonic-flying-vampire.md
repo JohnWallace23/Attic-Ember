@@ -5,6 +5,7 @@ price: 45.00
 era: "1980s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
+free_shipping: true
 images:
   - /assets/img/sonic-flying-vampire/front.jpg
   - /assets/img/sonic-flying-vampire/face.jpg

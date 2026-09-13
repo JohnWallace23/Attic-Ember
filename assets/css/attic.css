@@ -577,6 +577,27 @@ img { max-width: 100%; display: block; }
   margin: 0 0 12px;
 }
 .product-price { font-family: var(--mono); font-size: 24px; margin: 0 0 18px; }
+
+/* "Free shipping" — for listings with postage rolled into the price. On a
+   card it tucks under the price; on the product page it's a short note. */
+.free-ship {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-top: 2px;
+}
+.free-ship--page {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--sage-bright);
+  border: 1.5px dashed var(--sage-light);
+  border-radius: var(--radius);
+  padding: 5px 10px;
+  margin: -8px 0 18px;
+}
 .product-desc { font-size: 16px; margin: 0 0 24px; }
 .condition-note {
   background: rgba(147,161,132,0.10);
