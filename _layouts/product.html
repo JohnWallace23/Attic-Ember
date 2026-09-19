@@ -157,6 +157,45 @@ layout: default
   </div>
 </div>
 
+{%- comment -%}
+  An item page used to dead-end — the only way onward was back to /shop/.
+  A few more doors keeps people browsing, and gives every listing more
+  than the one internal link pointing at it, which is what crawlers
+  follow. Newest first, skipping this item and anything already sold.
+{%- endcomment -%}
+{%- comment -%}
+  Rather than showing the four newest on every page — which would pile
+  every internal link onto the same four items — this walks forward from
+  the current item and wraps around the end. Each listing then gets
+  linked from exactly four other pages, so none is left stranded.
+{%- endcomment -%}
+{% assign shelf = site.products | where_exp: "p", "p.sold != true and p.draft != true" | sort: "date" | reverse %}
+{% assign n = shelf.size %}
+{% assign here = 0 %}
+{% for p in shelf %}{% if p.url == page.url %}{% assign here = forloop.index0 %}{% endif %}{% endfor %}
+{% assign picks = 4 %}
+{% if n < 5 %}{% assign picks = n | minus: 1 %}{% endif %}
+{% if picks > 0 %}
+<div class="scallop"></div>
+
+<section class="shop wrap">
+  <p class="eyebrow">Still browsing?</p>
+  <h2 class="section-title">Keep looking</h2>
+
+  <div class="grid grid--more">
+    {% for step in (1..picks) %}
+      {% assign j = here | plus: step | modulo: n %}
+      {% assign nxt = shelf[j] %}
+      {% include product-card.html product=nxt %}
+    {% endfor %}
+  </div>
+
+  <div class="shop-all-cta">
+    <a class="btn" href="{{ '/shop/' | relative_url }}">Browse all items &rarr;</a>
+  </div>
+</section>
+{% endif %}
+
 {% if media_count > 1 %}
 <script src="{{ '/assets/js/gallery.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 {% endif %}

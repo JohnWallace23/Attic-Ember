@@ -1032,3 +1032,22 @@ body.cart-open { overflow: hidden; }
   body::before { animation: none; }
   .page-cat, .page-cat * { animation: none !important; }
 }
+
+/* ---- "keep looking" strip at the foot of an item page ---- */
+.grid--more { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1000px) { .grid--more { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  /* A side-scrolling row instead of four stacked cards, so an item page
+     doesn't run on forever on a phone. Bleeds into the wrap's 24px
+     gutter so the row reads as scrollable. */
+  .grid--more {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -24px;
+    padding: 0 24px 8px;
+  }
+  .grid--more .card { flex: 0 0 76%; scroll-snap-align: start; }
+}
