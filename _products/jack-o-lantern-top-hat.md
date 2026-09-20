@@ -5,6 +5,7 @@ price: 50.00
 era: "1970s"
 category: "Blow Molds"
 source_type: "vintage"
+shipping: 15
 images:
   - /assets/img/jack-o-lantern-top-hat/front.jpg
   - /assets/img/jack-o-lantern-top-hat/back.jpg
