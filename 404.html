@@ -1,0 +1,42 @@
+---
+layout: default
+title: "Page not found"
+description: "That page isn't here — but the shop is just through the door."
+permalink: /404.html
+sitemap: false
+---
+{%- comment -%}
+  Cloudflare Pages serves this automatically for any unmatched URL, with a
+  real 404 status. Without the file it handed back the homepage marked
+  "200 OK", which told search engines every mistyped link was a genuine
+  page, and left shoppers wondering why their link went to the front door.
+
+  A few of the newest pieces are shown below so a dead end still lands
+  somebody in front of something worth having.
+{%- endcomment -%}
+<section class="wrap not-found">
+  <p class="eyebrow">404</p>
+  <h1 class="not-found-title">This one's gone missing from the attic</h1>
+  <p class="not-found-copy">
+    We can't find that page. It may have sold and been packed up, or the link
+    picked up a typo somewhere along the way. Nothing's broken on your end.
+  </p>
+  <div class="not-found-actions">
+    <a class="btn" href="{{ '/shop/' | relative_url }}">Browse the shop &rarr;</a>
+    <a class="btn ghost" href="{{ '/' | relative_url }}">Back to the front porch</a>
+  </div>
+</section>
+
+{% assign shelf = site.products | where_exp: "p", "p.sold != true and p.draft != true" | sort: "date" | reverse %}
+{% if shelf.size > 0 %}
+<div class="scallop"></div>
+
+<section class="shop wrap">
+  <p class="eyebrow">While you're here</p>
+  <h2 class="section-title">Fresh on the shelf</h2>
+
+  <div class="grid">
+    {% for p in shelf limit: 3 %}{% include product-card.html product=p %}{% endfor %}
+  </div>
+</section>
+{% endif %}
