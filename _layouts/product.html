@@ -127,7 +127,7 @@ layout: default
       <h1>{{ page.title }}</h1>
       <p class="product-meta">{{ page.era | default: "Vintage" }}{% if page.category %} &middot; {{ page.category }}{% endif %}</p>
       <p class="product-price">${{ page.price }}</p>
-      {% if page.free_shipping %}<p class="free-ship free-ship--page">Free U.S. shipping — postage is included in the price</p>{% endif %}
+      {% if page.free_shipping %}<p class="free-ship free-ship--page">Free U.S. shipping — postage is included in the price</p>{% elsif page.shipping %}<p class="free-ship free-ship--page ship-extra">${{ page.shipping }} U.S. shipping — this one needs an oversize box</p>{% endif %}
 
       <p class="product-desc">{{ page.description }}</p>
 
@@ -147,6 +147,7 @@ layout: default
         data-url="{{ page.url | absolute_url }}"
         data-image="{{ main_img | absolute_url }}"
         data-free-ship="{{ page.free_shipping }}"
+        data-ship="{{ page.shipping }}"
         style="font-size:16px; padding:14px 24px;">Add to cart — ${{ page.price }}</button>
       {% endif %}
 

@@ -64,6 +64,23 @@ cart ships free. If someone adds a free-shipping item alongside a regular
 one, the normal $8 still applies once (the box ships either way). It's
 U.S.-only, same as the flat rate; international orders are still quoted.
 
+### If an item costs more to ship
+
+Most items ride on the $8 flat rate. Something bulky — a blow mold, say —
+needs its own line:
+
+```
+shipping: 15
+```
+
+The card shows "+$15 shipping" and the item page explains it needs an
+oversize box, so nobody meets the number for the first time at checkout.
+
+An order pays the **highest** rate in the cart, once — not the sum. Blinky
+($15) plus a regular item still ships for $15, because it's one box priced
+by the most awkward thing in it. Pair it with a free-shipping item and it's
+still $15. Use any number you like; it doesn't have to be 15.
+
 ### How the shop is ordered
 
 Both the homepage and the **All Items** page sort by the `date` line in

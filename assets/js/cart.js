@@ -32,17 +32,34 @@
   // flat rate is waived only when EVERY item in the cart ships free — if
   // one regular item is in there the box goes out anyway, so the rate still
   // applies once. Stops a free-ship item waiving postage on everything else.
+  // A listing can also need a bigger box than the flat rate covers
+  // (`shipping: 15` — blow molds, mostly). The order pays the highest rate
+  // in the cart, once: it's one box, priced by the most awkward thing in it.
+  function itemShip(i) {
+    if (i.freeShip === true) return 0;
+    var r = parseFloat(i.ship);
+    return isNaN(r) ? SHIP_RATE : r;
+  }
   function allFreeShip() {
-    return cart.length > 0 && cart.every(function (i) { return i.freeShip === true; });
+    return cart.length > 0 && cart.every(function (i) { return itemShip(i) === 0; });
   }
   function shipping() {
-    if (cart.length === 0 || !domestic || allFreeShip()) return 0;
-    return SHIP_RATE;
+    if (cart.length === 0 || !domestic) return 0;
+    var top = 0;
+    for (var i = 0; i < cart.length; i++) top = Math.max(top, itemShip(cart[i]));
+    return top;
+  }
+  // "flat" only when the order is actually paying the flat rate.
+  function shipNote() {
+    if (allFreeShip()) return "";
+    return shipping() === SHIP_RATE ? " flat" : "";
   }
   // What to print on the domestic shipping line.
   function shipLabel() { return allFreeShip() ? "Free" : money(shipping()); }
   function shipEmailText() {
-    return allFreeShip() ? "FREE (included in item price)" : money(shipping()) + " (U.S. flat rate)";
+    if (allFreeShip()) return "FREE (included in item price)";
+    var s = shipping();
+    return money(s) + (s === SHIP_RATE ? " (U.S. flat rate)" : " (U.S. — oversize item)");
   }
   function grandTotal() { return subtotal() + shipping(); }
   function money(n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); }
@@ -109,7 +126,7 @@
       '<div class="cart-foot">' +
         '<div class="cart-subtotal"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
         (SHIP_RATE > 0
-          ? '<div class="cart-subtotal"><span>Shipping (U.S.' + (allFreeShip() ? "" : " flat") + ')</span><span>' + shipLabel() + "</span></div>"
+          ? '<div class="cart-subtotal"><span>Shipping (U.S.' + shipNote() + ')</span><span>' + shipLabel() + "</span></div>"
           : "") +
         '<div class="cart-subtotal cart-grand"><span>Total</span><strong>' + money(grandTotal()) + "</strong></div>" +
         '<button class="btn cart-checkout" type="button">Checkout &rarr;</button>' +
@@ -214,7 +231,7 @@
         '<div class="co-summary">' + summary +
           '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
           '<div class="co-line co-ship"><span>Shipping' +
-            '<em class="ship-dom"> (U.S.' + (allFreeShip() ? "" : " flat") + ')</em>' +
+            '<em class="ship-dom"> (U.S.' + shipNote() + ')</em>' +
             '<em class="ship-intl" hidden> (international)</em></span>' +
             '<span class="ship-amount">' + shipLabel() + "</span></div>" +
           '<div class="co-line co-total"><span>Total</span><strong class="pay-total">' + money(grandTotal()) + "</strong></div></div>" +
@@ -346,7 +363,7 @@
     wrap.className = "order-sent";
     var first = (name || "").trim().split(/\s+/)[0];
     var shipFree = (items || []).length > 0 &&
-      items.every(function (i) { return i.freeShip === true; });
+      items.every(function (i) { return itemShip(i) === 0; });
     var html = "<strong>Thanks, " + esc(first) + "! Your order is in.</strong>" +
       '<div class="os-receipt">' +
         '<div class="os-ref"><span>Order</span><strong>' + esc(ref) + "</strong></div>" +
@@ -480,7 +497,8 @@
         price: btn.getAttribute("data-price"),
         url: btn.getAttribute("data-url"),
         image: btn.getAttribute("data-image"),
-        freeShip: btn.getAttribute("data-free-ship") === "true"
+        freeShip: btn.getAttribute("data-free-ship") === "true",
+        ship: btn.getAttribute("data-ship")
       });
       save(); updateCount(); syncButtons();
     }

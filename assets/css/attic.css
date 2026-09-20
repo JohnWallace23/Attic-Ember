@@ -1089,3 +1089,8 @@ body.cart-open { overflow: hidden; }
 }
 .not-found-copy { font-size: 18px; margin: 0 0 30px; color: var(--paper); }
 .not-found-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; }
+
+/* An oversize rate is honest information, not a selling point — same shape
+   as the free-shipping tag, in the muted sage rather than the lit one. */
+.free-ship.ship-extra { color: var(--sage-light); }
+.free-ship--page.ship-extra { color: var(--sage-light); border-color: var(--sage); }
