@@ -6,9 +6,9 @@ era: "1990s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
 images:
-  - /assets/img/ghost-blowmold-light/lit.jpg
-  - /assets/img/ghost-blowmold-light/front.jpg
-  - /assets/img/ghost-blowmold-light/crack.jpg
+  - /assets/img/ghost-blowmold-lights/lit.jpg
+  - /assets/img/ghost-blowmold-lights/front.jpg
+  - /assets/img/ghost-blowmold-lights/crack.jpg
 videos:
   - /assets/video/ghost-blowmold-lights.mp4
 description: >-
