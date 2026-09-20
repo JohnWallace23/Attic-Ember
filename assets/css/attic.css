@@ -387,20 +387,32 @@ img { max-width: 100%; display: block; }
   filter: grayscale(0.55) sepia(0.15);
 }
 .card.is-sold:hover .card-photo.has-photo { filter: grayscale(0.55) sepia(0.15); }
+/* A sold piece gets an auction-house stamp across the middle of the photo
+   instead of a small corner tag — the dimmed photo alone read as "faded",
+   not "gone". The category stamp is hidden on these so the two aren't
+   fighting for the same photo. */
+.card.is-sold .badge { display: none; }
 .sold-ribbon {
   position: absolute;
-  top: 14px;
-  right: -6px;
-  background: var(--ink);
-  color: var(--paper);
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  background: rgba(237,227,208,0.92);
+  color: var(--rust);
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 2px;
+  /* scales with the card, so it still fits in the narrow phone column */
+  font-size: clamp(18px, 4.4vw, 27px);
+  letter-spacing: 6px;
+  /* letter-spacing pads the right edge; pull it back so it reads centered */
+  text-indent: 6px;
   text-transform: uppercase;
-  padding: 5px 12px;
-  transform: rotate(6deg);
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-  border-radius: 2px;
+  padding: 8px 20px;
+  border: 3px solid var(--rust);
+  border-radius: var(--radius);
+  /* second, inset ring — the double edge of a real rubber stamp */
+  box-shadow: inset 0 0 0 2px rgba(237,227,208,0.92), inset 0 0 0 5px var(--rust);
+  white-space: nowrap;
 }
 .badge {
   position: absolute;
@@ -473,6 +485,9 @@ img { max-width: 100%; display: block; }
 .product-page { padding: 48px 0 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
 @media (max-width: 760px) { .product-page { grid-template-columns: 1fr; } }
 .product-photo {
+  /* anchors the Sold stamp; the page's category badge is inline, not
+     absolute, so this can't paint over it the way the card's did */
+  position: relative;
   aspect-ratio: 1 / 1;
   background:
     repeating-linear-gradient(45deg, rgba(32,28,24,0.06) 0 2px, transparent 2px 14px),
@@ -1051,3 +1066,13 @@ body.cart-open { overflow: hidden; }
   }
   .grid--more .card { flex: 0 0 76%; scroll-snap-align: start; }
 }
+
+/* the item page's own photo is far bigger than a card's, so the stamp grows with it */
+.sold-ribbon--page {
+  font-size: clamp(24px, 5vw, 40px);
+  letter-spacing: 9px;
+  text-indent: 9px;
+  padding: 12px 30px;
+  border-width: 4px;
+}
+.product-photo.is-sold img { opacity: 0.5; filter: grayscale(0.55) sepia(0.15); }

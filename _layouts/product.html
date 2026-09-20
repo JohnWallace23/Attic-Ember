@@ -65,7 +65,7 @@ layout: default
 
     <div class="product-media">
       <div class="product-stage">
-        <div class="product-photo{% if main_img %} has-photo{% endif %}" id="stage-photo">
+        <div class="product-photo{% if main_img %} has-photo{% endif %}{% if page.sold %} is-sold{% endif %}" id="stage-photo">
           {% if main_img %}
             {%- comment -%}
             The main photo is the page's hero — load it eagerly and at high
@@ -76,6 +76,7 @@ layout: default
           {% else %}
             [ photo of {{ page.title }} goes here ]
           {% endif %}
+          {% if page.sold %}<span class="sold-ribbon sold-ribbon--page">Sold</span>{% endif %}
         </div>
         {% if vid_count > 0 %}
         <video id="main-video" class="product-video" controls playsinline preload="metadata" hidden></video>
