@@ -3,7 +3,7 @@ title: "Vintage Beistle Jointed Pumpkin Goblin"
 date: 2026-08-11
 price: 75.00
 era: "1960s"
-category: "Die-Cuts"
+category: "Paper & Die-Cuts"
 source_type: "vintage"
 images:
   - /assets/img/beistle-jack-o-lantern-man/front.jpg

@@ -9,12 +9,14 @@ permalink: /shop/
   <h2 class="section-title">Everything in the shop</h2>
 
   <div class="shop-controls">
-    <div class="filter-chips" role="group" aria-label="Filter items by category">
+    <div class="filter-chips" role="group" aria-label="Filter items by type">
+      <span class="chip-label">Type</span>
       <button type="button" class="filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
       <button type="button" class="filter-chip" data-filter="vintage" aria-pressed="false">Vintage</button>
       <button type="button" class="filter-chip" data-filter="reproduction" aria-pressed="false">Reproductions</button>
       <button type="button" class="filter-chip" data-filter="handmade" aria-pressed="false">Handmade</button>
     </div>
+
     <div class="sort-control">
       <label for="sort-by">Sort</label>
       <select id="sort-by" class="sort-select">
@@ -24,6 +26,22 @@ permalink: /shop/
         <option value="name">Name: A&ndash;Z</option>
       </select>
     </div>
+
+    {%- comment -%}
+      Kind chips are generated from the listings, so a category invented in
+      a new product file turns up here on its own — nothing to maintain in
+      two places.
+    {%- endcomment -%}
+    {% assign kinds = site.products | map: "category" | compact | uniq | sort %}
+    {% if kinds.size > 1 %}
+    <div class="filter-chips filter-chips--kind" role="group" aria-label="Filter items by kind">
+      <span class="chip-label">Kind</span>
+      <button type="button" class="filter-chip is-active" data-kind="all" aria-pressed="true">All</button>
+      {% for k in kinds %}
+      <button type="button" class="filter-chip" data-kind="{{ k }}" aria-pressed="false">{{ k }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
 
   {%- comment -%}

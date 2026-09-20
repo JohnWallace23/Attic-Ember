@@ -1094,3 +1094,17 @@ body.cart-open { overflow: hidden; }
    as the free-shipping tag, in the muted sage rather than the lit one. */
 .free-ship.ship-extra { color: var(--sage-light); }
 .free-ship--page.ship-extra { color: var(--sage-light); border-color: var(--sage); }
+
+/* ---- shop: second filter row, by kind ---- */
+.filter-chips { align-items: center; }
+.chip-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sage-light);
+  margin-right: 2px;
+}
+/* its own full-width row under the type chips and the sort control */
+.filter-chips--kind { flex-basis: 100%; }
+.filter-chip.is-active[data-kind] { background: var(--gold); color: var(--ink); }

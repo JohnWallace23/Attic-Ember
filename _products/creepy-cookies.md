@@ -3,7 +3,7 @@ title: "Reader's Digest Creepy Cookies Recipe Book & Cookie Cutter Set"
 date: 2026-08-29
 price: 25.00
 era: "1990s"
-category: "Kitchen"
+category: "Kitchen & Housewares"
 source_type: "vintage"
 images:
   - /assets/img/creepy-cookies/front.jpg

@@ -13,7 +13,10 @@
   var controls = section.querySelector(".shop-controls");
   if (!grid || !controls) return;
 
-  var chips = Array.prototype.slice.call(controls.querySelectorAll(".filter-chip"));
+  // two independent groups: what a piece IS (source_type) and what KIND of
+  // thing it is (category). They narrow together.
+  var chips = Array.prototype.slice.call(controls.querySelectorAll("[data-filter]"));
+  var kindChips = Array.prototype.slice.call(controls.querySelectorAll("[data-kind]"));
   var sortSel = controls.querySelector(".sort-select");
   var empty = section.querySelector(".shop-empty");
   var cards = Array.prototype.slice.call(grid.querySelectorAll(".card"));
@@ -22,6 +25,7 @@
   cards.forEach(function (c, i) { c.setAttribute("data-i", i); });
 
   var activeFilter = "all";
+  var activeKind = "all";
 
   function price(c) { return parseFloat(c.getAttribute("data-price")) || 0; }
   function name(c) { return (c.getAttribute("data-name") || "").toLowerCase(); }
@@ -42,24 +46,30 @@
 
     var shown = 0;
     cards.forEach(function (c) {
-      var ok = activeFilter === "all" || c.getAttribute("data-source") === activeFilter;
+      var ok =
+        (activeFilter === "all" || c.getAttribute("data-source") === activeFilter) &&
+        (activeKind === "all" || c.getAttribute("data-category") === activeKind);
       c.style.display = ok ? "" : "none";
       if (ok) shown++;
     });
     if (empty) empty.hidden = shown > 0;
   }
 
-  chips.forEach(function (chip) {
-    chip.addEventListener("click", function () {
-      activeFilter = chip.getAttribute("data-filter");
-      chips.forEach(function (x) {
-        var on = x === chip;
-        x.classList.toggle("is-active", on);
-        x.setAttribute("aria-pressed", on ? "true" : "false");
+  function wire(group, attr, set) {
+    group.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        set(chip.getAttribute(attr));
+        group.forEach(function (x) {
+          var on = x === chip;
+          x.classList.toggle("is-active", on);
+          x.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        apply();
       });
-      apply();
     });
-  });
+  }
+  wire(chips, "data-filter", function (v) { activeFilter = v; });
+  wire(kindChips, "data-kind", function (v) { activeKind = v; });
 
   if (sortSel) sortSel.addEventListener("change", apply);
 

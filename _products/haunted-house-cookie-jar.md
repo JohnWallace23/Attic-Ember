@@ -3,7 +3,7 @@ title: "Halloween Haunted Hideaway House Cookie Jar Ceramic by Sakura"
 date: 2026-07-27
 price: 45.00
 era: "1980s"
-category: "Housewares"
+category: "Kitchen & Housewares"
 source_type: "vintage"
 images:
   - /assets/img/haunted-house-cookie-jar/front.jpg

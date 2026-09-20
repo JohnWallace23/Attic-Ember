@@ -8,6 +8,7 @@
          data-source="{{ include.product.source_type }}"
          data-price="{{ include.product.price }}"
          data-name="{{ include.product.title }}"
+         data-category="{{ include.product.category }}"
          data-featured="{{ include.product.featured }}">
   {% include source-badge.html type=include.product.source_type %}
   <a href="{{ include.product.url | relative_url }}" style="color:inherit; text-decoration:none;">
