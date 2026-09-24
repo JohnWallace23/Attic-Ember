@@ -1,7 +1,7 @@
 ---
 title: 'Halloween Works "Pumpkin Bumpkins" Scarecrow Costume'
 date: 2026-08-14
-price: 15.00
+price: 8.00
 era: "2000s"
 category: "Decor"
 source_type: "vintage"
