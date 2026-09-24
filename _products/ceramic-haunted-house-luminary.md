@@ -13,6 +13,7 @@ images:
   - /assets/img/ceramic-haunted-house-luminary/left.jpg
   - /assets/img/ceramic-haunted-house-luminary/box.jpg
   - /assets/img/ceramic-haunted-house-luminary/label.jpg
+featured: true
 description: >-
   Put a candle inside and the whole house wakes up! Orange light through every window, a jack-o'-lantern grinning down from the attic, a black cat sitting in the open doorway. There's a little ghost hanging off one eave and a bat off the other, both still on their original cords. 11" of hand-painted, glossy, genuinely atmospheric once the room goes dark.
 condition: >-
