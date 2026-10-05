@@ -1,0 +1,13 @@
+{%- comment -%}
+  YAML reads `price: 30.00` as a number, so Liquid hands it back as "30.0"
+  and every price on the site read like a measurement instead of money.
+  Liquid has no sprintf, so rebuild the cents by hand.
+
+  Usage: {% include money.html amount=page.price %}   ->   30.00
+         (prints the number only — put the $ in the caller)
+{%- endcomment -%}
+{%- assign cents = include.amount | times: 100.0 | round -%}
+{%- assign whole = cents | divided_by: 100 -%}
+{%- assign part = cents | modulo: 100 -%}
+{%- if part < 10 -%}{%- assign part = part | prepend: "0" -%}{%- endif -%}
+{{- whole }}.{{ part -}}
