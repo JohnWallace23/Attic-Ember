@@ -55,10 +55,11 @@ order_email: "shop@atticandember.com"
 # Public Web3Forms key (web3forms.com) — powers the on-page order form so
 # buyers don't need an email app. Safe to commit; it just routes to order_email.
 web3forms_key: "d1abc445-4121-4cb3-b1e3-31858bc804c3"
-# Flat shipping fee added to every U.S. order. Change it here and it
-# updates the cart, checkout, order emails, and the footer note.
+# Default U.S. shipping. A listing can override it with `shipping: 15`
+# or waive it with `free_shipping: true`. Change it here and it
+# updates the cart, checkout, and order emails.
 shipping_flat_rate: 8
-shipping_note: "$8 flat shipping on all U.S. orders. International orders — we'll email you a quote before any payment."
+shipping_note: "Shipping is included in the total above. International orders — we'll email you a quote before any payment."
 payments:
   # Full PayPal link (business profile or PayPal.Me), or just a PayPal.Me
   # username. The order total is appended to the URL.
