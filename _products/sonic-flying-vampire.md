@@ -1,5 +1,5 @@
 ---
-title: 'Halloween 24" Sonic Vampire'
+title: 'Halloween 24″ Sonic Vampire'
 date: 2026-09-12
 price: 45.00
 era: "1980s"

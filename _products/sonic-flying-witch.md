@@ -1,11 +1,12 @@
 ---
-title: 'Halloween 24" Sonic Witch'
+title: 'Halloween 24″ Sonic Witch'
 date: 2026-09-12
 price: 40.00
 free_shipping: true
 era: "1980s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
+sold: true
 images:
   - /assets/img/sonic-flying-witch/front.jpg
   - /assets/img/sonic-flying-witch/face.jpg
