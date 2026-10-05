@@ -25,33 +25,53 @@
 
   function has(id) { return cart.some(function (i) { return i.id === id; }); }
   function subtotal() { return cart.reduce(function (s, i) { return s + (parseFloat(i.price) || 0); }, 0); }
-  // Flat shipping: charged once per order, on U.S. orders only. International
-  // is quoted by hand (the flat rate wouldn't cover it), so it adds nothing
-  // here and the buyer is told we'll follow up before any payment.
-  // Some listings roll postage into the price (`free_shipping: true`). The
-  // flat rate is waived only when EVERY item in the cart ships free — if
-  // one regular item is in there the box goes out anyway, so the rate still
-  // applies once. Stops a free-ship item waiving postage on everything else.
-  // A listing can also need a bigger box than the flat rate covers
-  // (`shipping: 15` — blow molds, mostly). The order pays the highest rate
-  // in the cart, once: it's one box, priced by the most awkward thing in it.
+  // Shipping, U.S. only — international is quoted by hand (no rate here
+  // would cover it) and the buyer is told we'll follow up before paying.
+  //
+  // Three kinds of item:
+  //   `free_shipping: true`  postage is in the price; adds nothing
+  //   `shipping: 15`         too big for the flat-rate box, so it needs its
+  //                          own and adds its own cost
+  //   anything else          shares one flat-rate box with the others
+  //
+  // So the order pays: every oversize rate summed, plus the flat rate once
+  // if there are any ordinary items. Two blow molds are two boxes and cost
+  // two rates — charging the higher of the two, as this used to, left us
+  // paying the difference.
   function itemShip(i) {
     if (i.freeShip === true) return 0;
     var r = parseFloat(i.ship);
     return isNaN(r) ? SHIP_RATE : r;
   }
+  function isOversize(i) { return i.freeShip !== true && !isNaN(parseFloat(i.ship)); }
   function allFreeShip() {
     return cart.length > 0 && cart.every(function (i) { return itemShip(i) === 0; });
   }
   function shipping() {
     if (cart.length === 0 || !domestic) return 0;
-    var top = 0;
-    for (var i = 0; i < cart.length; i++) top = Math.max(top, itemShip(cart[i]));
-    return top;
+    var total = 0;
+    var ordinary = false;
+    for (var i = 0; i < cart.length; i++) {
+      if (cart[i].freeShip === true) continue;
+      if (isOversize(cart[i])) total += itemShip(cart[i]);
+      else ordinary = true;
+    }
+    return total + (ordinary ? SHIP_RATE : 0);
   }
-  // "flat" only when the order is actually paying the flat rate.
+  // How many separate boxes the buyer is being charged for.
+  function boxCount() {
+    var n = 0, ordinary = false;
+    for (var i = 0; i < cart.length; i++) {
+      if (cart[i].freeShip === true) continue;
+      if (isOversize(cart[i])) n++;
+      else ordinary = true;
+    }
+    return n + (ordinary ? 1 : 0);
+  }
+  // "flat" only when the order is actually paying the plain flat rate.
   function shipNote() {
     if (allFreeShip()) return "";
+    if (boxCount() > 1) return " — " + boxCount() + " boxes";
     return shipping() === SHIP_RATE ? " flat" : "";
   }
   // What to print on the domestic shipping line.
@@ -59,6 +79,7 @@
   function shipEmailText() {
     if (allFreeShip()) return "FREE (included in item price)";
     var s = shipping();
+    if (boxCount() > 1) return money(s) + " (U.S. — " + boxCount() + " boxes)";
     return money(s) + (s === SHIP_RATE ? " (U.S. flat rate)" : " (U.S. — oversize item)");
   }
   function grandTotal() { return subtotal() + shipping(); }

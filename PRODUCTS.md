@@ -76,10 +76,11 @@ shipping: 15
 The card shows "+$15 shipping" and the item page explains it needs an
 oversize box, so nobody meets the number for the first time at checkout.
 
-An order pays the **highest** rate in the cart, once — not the sum. Blinky
-($15) plus a regular item still ships for $15, because it's one box priced
-by the most awkward thing in it. Pair it with a free-shipping item and it's
-still $15. Use any number you like; it doesn't have to be 15.
+Each piece with its own rate adds that rate — it needs its own box.
+Everything else shares one $8 box. So the luminary ($15) plus the top hat
+($15) ships for $30, two boxes; the top hat plus an ordinary item is $23.
+Free-shipping items add nothing. Use any number you like; it doesn't have
+to be 15.
 
 ### How the shop is ordered
 
