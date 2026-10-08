@@ -1,28 +1,30 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Attic & Ember favicon: the shop cat sitting in the moon.
+<svg width="512" height="512" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attic & Ember favicon: the jack-o'-lantern from the homepage hero.
 
-       The homepage moon is a crescent, and this started as one. It doesn't
-       survive a browser tab: a cat small enough to sit inside a crescent is
-       about two pixels across at 16px, and a black cat on the near-black
-       ground vanishes entirely. A full moon gives the silhouette a field of
-       gold to sit on, so the cat still reads at tab size — which is the one
-       size that has to work. -->
-  <rect width="512" height="512" rx="104" fill="#201C18"/>
-  <circle cx="256" cy="262" r="186" fill="#D9A84E"/>
+       The pumpkin alone, filling the square — the icon this replaced tried to
+       carry a pumpkin, a moon and two sparkles at once, and at 16px they
+       collapsed into each other. One shape survives a tab; four don't.
 
-  <!-- sitting cat, silhouette only — whiskers and a nose turn to mud small -->
-  <g transform="translate(-20 -43)">
-    <path d="M256 430 C214 430 198 384 208 344 C216 312 234 296 256 296
-             C278 296 296 312 304 344 C314 384 298 430 256 430 Z" fill="#17120E"/>
-    <circle cx="256" cy="286" r="50" fill="#17120E"/>
-    <path d="M212 258 L220 206 L250 244 Z" fill="#17120E"/>
-    <path d="M300 258 L292 206 L262 244 Z" fill="#17120E"/>
-    <path d="M304 420 C352 416 366 374 344 342" fill="none" stroke="#17120E"
-          stroke-width="22" stroke-linecap="round"/>
-    <ellipse cx="238" cy="284" rx="9" ry="11" fill="#EDB94F"/>
-    <ellipse cx="274" cy="284" rx="9" ry="11" fill="#EDB94F"/>
+       The ridge strokes are the same ink as the ground, so the outer ones
+       read as the silhouette's edge rather than an outline drawn around it. -->
+  <rect width="1024" height="1024" rx="208" fill="#201C18"/>
+  <g transform="translate(512 512) scale(5.2903) translate(-195.0 -210.3)">
+    <g fill="#C9622D" stroke="#201C18" stroke-width="5">
+    <ellipse cx="148" cy="228" rx="28" ry="46"/>
+    <ellipse cx="242" cy="228" rx="28" ry="46"/>
+    <ellipse cx="167" cy="226" rx="36" ry="54"/>
+    <ellipse cx="223" cy="226" rx="36" ry="54"/>
+    <ellipse cx="195" cy="224" rx="42" ry="58"/>
   </g>
-
-  <path d="M96 128 l4.5 13.5 13.5 4.5 -13.5 4.5 -4.5 13.5 -4.5 -13.5 -13.5 -4.5 13.5 -4.5 Z"
-        fill="#EDE3D0" opacity="0.7"/>
+  <path d="M186 170 C184 154 190 142 202 139 C210 137 214 142 212 149 C210 156 205 161 203 168 Z"
+        fill="#5C6B4F" stroke="#201C18" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M212 146 C222 140 230 144 229 152 C228 158 222 159 220 155"
+        fill="none" stroke="#5C6B4F" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="156,214 178,214 167,192" fill="#201C18"/>
+  <polygon points="212,214 234,214 223,192" fill="#201C18"/>
+  <polygon points="188,232 202,232 195,218" fill="#201C18"/>
+  <path d="M148 238 Q195 272 242 238 Q195 312 148 238 Z" fill="#201C18"/>
+  <rect x="180" y="252" width="12" height="10" rx="1.5" fill="#C9622D"/>
+  <rect x="200" y="264" width="12" height="10" rx="1.5" fill="#C9622D"/>
+  </g>
 </svg>
