@@ -1,11 +1,11 @@
 ---
 title: 'Halloween 24″ Sonic Vampire'
 date: 2026-09-12
-price: 45.00
+price: 55.00
 era: "1980s"
 category: "Lighted & Animated Decor"
 source_type: "vintage"
-free_shipping: true
+shipping: 20
 images:
   - /assets/img/sonic-flying-vampire/front.jpg
   - /assets/img/sonic-flying-vampire/face.jpg
