@@ -1,30 +1,47 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <!-- Attic & Ember profile picture — Instagram, PayPal, Venmo, anywhere a
-       square avatar is wanted. Same cat in the moon as the favicon, with two
-       changes that matter off-site:
+       square avatar is wanted.
 
-       The ground is a plain square, not a rounded one. Every one of those
-       services crops an avatar to a circle, so rounded corners would be cut
-       away regardless, and a square file crops cleanly.
+       This is the homepage scene itself: the same crescent, the same five-lobe
+       pumpkin and curled stem, the same cat, lifted from the hero SVG in
+       index.html. A favicon can't carry this much (see favicon.svg), but an
+       avatar is shown big enough to hold all three.
 
-       The moon is pulled in to leave a ring of night inside that circular
-       crop, so the gold never touches the edge and the art doesn't look
-       jammed into its own frame. -->
-  <rect width="1024" height="1024" fill="#201C18"/>
-
-  <!-- a faint warm glow, so the ground doesn't read as flat black -->
+       The ground is a plain square, not a rounded one — every one of these
+       services crops to a circle, so rounded corners would be cut away
+       regardless. The scene is scaled to sit inside that circle with room to
+       spare, so nothing important meets the edge. -->
   <defs>
-    <radialGradient id="glow" cx="50%" cy="48%" r="56%">
-      <stop offset="0%" stop-color="#D9A84E" stop-opacity="0.18"/>
-      <stop offset="62%" stop-color="#D9A84E" stop-opacity="0.05"/>
+    <radialGradient id="moon-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D9A84E" stop-opacity="0.26"/>
+      <stop offset="45%" stop-color="#D9A84E" stop-opacity="0.11"/>
       <stop offset="100%" stop-color="#D9A84E" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <circle cx="512" cy="500" r="430" fill="url(#glow)"/>
 
-  <g transform="translate(512 512) scale(1.62) translate(-256 -262)">
-    <circle cx="256" cy="262" r="186" fill="#D9A84E"/>
-    <g transform="translate(-20 -43)">
+  <rect width="1024" height="1024" fill="#201C18"/>
+
+  <!-- hero coords are 400x340; this centres that scene in the square -->
+  <g transform="translate(512 512) scale(2.35) translate(-217 -153)">
+
+    <circle cx="270" cy="140" r="132" fill="url(#moon-glow)"/>
+
+    <!-- crescent moon, straight from the hero -->
+    <path d="M310 35 A105 105 0 1 0 310 245 A118 118 0 0 1 310 35 Z"
+          fill="#D9A84E" transform="rotate(-14 310 140)"/>
+
+    <!-- sparkles in the crescent's opening; the two the cat would have sat on
+         are gone, the rest kept where the hero has them -->
+    <path d="M336 80 l2.4 6.6 6.6 2.4 -6.6 2.4 -2.4 6.6 -2.4 -6.6 -6.6 -2.4 6.6 -2.4 Z"
+          fill="#EDE3D0" opacity="0.7"/>
+    <circle cx="238" cy="28" r="1.6" fill="#EDE3D0" opacity="0.5"/>
+    <path d="M118 62 l2.1 5.8 5.8 2.1 -5.8 2.1 -2.1 5.8 -2.1 -5.8 -5.8 -2.1 5.8 -2.1 Z"
+          fill="#EDE3D0" opacity="0.55"/>
+
+    <!-- the cat, perched on the crescent's lower horn the way it does on the
+         homepage. Silhouette and two gold eyes — the whiskers and nose the
+         live cat has are noise at avatar size. -->
+    <g transform="translate(300 236) scale(0.55) translate(-276 -430)">
       <path d="M256 430 C214 430 198 384 208 344 C216 312 234 296 256 296
                C278 296 296 312 304 344 C314 384 298 430 256 430 Z" fill="#17120E"/>
       <circle cx="256" cy="286" r="50" fill="#17120E"/>
@@ -35,10 +52,27 @@
       <ellipse cx="238" cy="284" rx="9" ry="11" fill="#EDB94F"/>
       <ellipse cx="274" cy="284" rx="9" ry="11" fill="#EDB94F"/>
     </g>
-  </g>
 
-  <path d="M214 250 l9 27 27 9 -27 9 -9 27 -9 -27 -27 -9 27 -9 Z"
-        fill="#EDE3D0" opacity="0.7"/>
-  <path d="M812 742 l6 18 18 6 -18 6 -6 18 -6 -18 -18 -6 18 -6 Z"
-        fill="#EDE3D0" opacity="0.5"/>
+    <!-- pumpkin, tucked beside the moon. Five lobes back-to-front so the
+         overlapping strokes become the ridges. -->
+    <g transform="translate(-30 0)">
+      <g fill="#C9622D" stroke="#201C18" stroke-width="5">
+        <ellipse cx="148" cy="228" rx="28" ry="46"/>
+        <ellipse cx="242" cy="228" rx="28" ry="46"/>
+        <ellipse cx="167" cy="226" rx="36" ry="54"/>
+        <ellipse cx="223" cy="226" rx="36" ry="54"/>
+        <ellipse cx="195" cy="224" rx="42" ry="58"/>
+      </g>
+      <path d="M186 170 C184 154 190 142 202 139 C210 137 214 142 212 149 C210 156 205 161 203 168 Z"
+            fill="#5C6B4F" stroke="#201C18" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M212 146 C222 140 230 144 229 152 C228 158 222 159 220 155"
+            fill="none" stroke="#5C6B4F" stroke-width="3" stroke-linecap="round"/>
+      <polygon points="156,214 178,214 167,192" fill="#201C18"/>
+      <polygon points="212,214 234,214 223,192" fill="#201C18"/>
+      <polygon points="188,232 202,232 195,218" fill="#201C18"/>
+      <path d="M148 238 Q195 272 242 238 Q195 312 148 238 Z" fill="#201C18"/>
+      <rect x="180" y="252" width="12" height="10" rx="1.5" fill="#C9622D"/>
+      <rect x="200" y="264" width="12" height="10" rx="1.5" fill="#C9622D"/>
+    </g>
+  </g>
 </svg>
