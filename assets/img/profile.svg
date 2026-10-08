@@ -1,0 +1,44 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attic & Ember profile picture — Instagram, PayPal, Venmo, anywhere a
+       square avatar is wanted. Same cat in the moon as the favicon, with two
+       changes that matter off-site:
+
+       The ground is a plain square, not a rounded one. Every one of those
+       services crops an avatar to a circle, so rounded corners would be cut
+       away regardless, and a square file crops cleanly.
+
+       The moon is pulled in to leave a ring of night inside that circular
+       crop, so the gold never touches the edge and the art doesn't look
+       jammed into its own frame. -->
+  <rect width="1024" height="1024" fill="#201C18"/>
+
+  <!-- a faint warm glow, so the ground doesn't read as flat black -->
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="48%" r="56%">
+      <stop offset="0%" stop-color="#D9A84E" stop-opacity="0.18"/>
+      <stop offset="62%" stop-color="#D9A84E" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#D9A84E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="512" cy="500" r="430" fill="url(#glow)"/>
+
+  <g transform="translate(512 512) scale(1.62) translate(-256 -262)">
+    <circle cx="256" cy="262" r="186" fill="#D9A84E"/>
+    <g transform="translate(-20 -43)">
+      <path d="M256 430 C214 430 198 384 208 344 C216 312 234 296 256 296
+               C278 296 296 312 304 344 C314 384 298 430 256 430 Z" fill="#17120E"/>
+      <circle cx="256" cy="286" r="50" fill="#17120E"/>
+      <path d="M212 258 L220 206 L250 244 Z" fill="#17120E"/>
+      <path d="M300 258 L292 206 L262 244 Z" fill="#17120E"/>
+      <path d="M304 420 C352 416 366 374 344 342" fill="none" stroke="#17120E"
+            stroke-width="22" stroke-linecap="round"/>
+      <ellipse cx="238" cy="284" rx="9" ry="11" fill="#EDB94F"/>
+      <ellipse cx="274" cy="284" rx="9" ry="11" fill="#EDB94F"/>
+    </g>
+  </g>
+
+  <path d="M214 250 l9 27 27 9 -27 9 -9 27 -9 -27 -27 -9 27 -9 Z"
+        fill="#EDE3D0" opacity="0.7"/>
+  <path d="M812 742 l6 18 18 6 -18 6 -6 18 -6 -18 -18 -6 18 -6 Z"
+        fill="#EDE3D0" opacity="0.5"/>
+</svg>
