@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attic & Ember — The hero's crescent, on its own.
+       Lifted from the homepage hero in index.html, not redrawn, so it matches
+       the site exactly. Scaled to sit inside a circle of 840/1024 and
+       centred on its measured bounds, so a round crop takes nothing off. -->
+  <g transform="translate(512 512) scale(3.0500) translate(-259.0 -152.7)">
+  <path d="M310 35 A105 105 0 1 0 310 245 A118 118 0 0 1 310 35 Z"
+        fill="#D9A84E" transform="rotate(-14 310 140)"/>
+  </g>
+</svg>

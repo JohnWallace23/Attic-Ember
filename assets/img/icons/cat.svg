@@ -1,0 +1,17 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attic & Ember — The shop cat, sitting. Silhouette and two gold eyes.
+       Lifted from the homepage hero in index.html, not redrawn, so it matches
+       the site exactly. Scaled to sit inside a circle of 840/1024 and
+       centred on its measured bounds, so a round crop takes nothing off. -->
+  <g transform="translate(512 512) scale(2.8038) translate(-279.6 -318.0)">
+  <path d="M256 430 C214 430 198 384 208 344 C216 312 234 296 256 296
+           C278 296 296 312 304 344 C314 384 298 430 256 430 Z" fill="#17120E"/>
+  <circle cx="256" cy="286" r="50" fill="#17120E"/>
+  <path d="M212 258 L220 206 L250 244 Z" fill="#17120E"/>
+  <path d="M300 258 L292 206 L262 244 Z" fill="#17120E"/>
+  <path d="M304 420 C352 416 366 374 344 342" fill="none" stroke="#17120E"
+        stroke-width="22" stroke-linecap="round"/>
+  <ellipse cx="238" cy="284" rx="9" ry="11" fill="#EDB94F"/>
+  <ellipse cx="274" cy="284" rx="9" ry="11" fill="#EDB94F"/>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attic & Ember — The jack-o'-lantern: five lobes back-to-front, so the overlapping
+       strokes become the ridges.
+       Lifted from the homepage hero in index.html, not redrawn, so it matches
+       the site exactly. Scaled to sit inside a circle of 840/1024 and
+       centred on its measured bounds, so a round crop takes nothing off. -->
+  <g transform="translate(512 512) scale(3.9145) translate(-195.0 -210.3)">
+  <g fill="#C9622D" stroke="#201C18" stroke-width="5">
+    <ellipse cx="148" cy="228" rx="28" ry="46"/>
+    <ellipse cx="242" cy="228" rx="28" ry="46"/>
+    <ellipse cx="167" cy="226" rx="36" ry="54"/>
+    <ellipse cx="223" cy="226" rx="36" ry="54"/>
+    <ellipse cx="195" cy="224" rx="42" ry="58"/>
+  </g>
+  <path d="M186 170 C184 154 190 142 202 139 C210 137 214 142 212 149 C210 156 205 161 203 168 Z"
+        fill="#5C6B4F" stroke="#201C18" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M212 146 C222 140 230 144 229 152 C228 158 222 159 220 155"
+        fill="none" stroke="#5C6B4F" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="156,214 178,214 167,192" fill="#201C18"/>
+  <polygon points="212,214 234,214 223,192" fill="#201C18"/>
+  <polygon points="188,232 202,232 195,218" fill="#201C18"/>
+  <path d="M148 238 Q195 272 242 238 Q195 312 148 238 Z" fill="#201C18"/>
+  <rect x="180" y="252" width="12" height="10" rx="1.5" fill="#C9622D"/>
+  <rect x="200" y="264" width="12" height="10" rx="1.5" fill="#C9622D"/>
+  </g>
+</svg>
