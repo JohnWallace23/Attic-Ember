@@ -7,6 +7,10 @@ description: >-
 
 # Instagram handle (without the @). Drives the footer button and the
 # social profile link in structured data. Blank hides the button.
+# The shop cat's seasonal hat. "auto" picks by month (October a witch hat,
+# December a santa hat); name one to pin it year-round; "none" for a bare cat.
+cat_hat: auto
+
 instagram: atticandember
 
 # --- SEO / social sharing (used by jekyll-seo-tag) ---

@@ -98,6 +98,69 @@
       '</g>' +
     '</svg>';
 
+
+  // ---- seasonal hat -------------------------------------------------------
+  // Hats are drawn in the SEATED pose's coordinates, over a head centred at
+  // (32,17) with r=12.5. The walking pose reuses the same art mapped onto its
+  // smaller, offset head, so a new hat only has to be drawn once.
+  //
+  // Each hat is drawn first and the ears are then redrawn on top, so the tips
+  // poke over the brim. A hat that swallows the ears stops reading as a cat.
+  var hatTag = document.querySelector("script[data-cat-hat]");
+  var HAT_SETTING = ((hatTag && hatTag.getAttribute("data-cat-hat")) || "auto")
+    .trim().toLowerCase();
+
+  var HATS = {
+    witch:
+      '<g transform="rotate(-12 32 9)">' +
+        '<path d="M21 9 C22.5 0 29.5 -8 44.5 -14 C39.5 -6 41.5 2 44.5 9 Z" fill="#3A2A4D"/>' +
+        '<ellipse cx="32" cy="9.4" rx="18.5" ry="3.9" fill="#4A3663"/>' +
+        '<path d="M23.8 4.4 C28 2.6 33.6 2 38.4 3.1 L39.5 6.6 C34.2 5.5 28.6 6.1 24.8 7.8 Z" fill="#D9A84E"/>' +
+        '<rect x="29.6" y="3.1" width="4.6" height="3.6" rx="0.7" fill="#17120E"/>' +
+        '<rect x="30.5" y="4" width="2.8" height="1.8" rx="0.4" fill="#D9A84E"/>' +
+      '</g>',
+    santa:
+      '<g transform="rotate(-8 32 9)">' +
+        '<path d="M21 9 C23 1 30 -6 44 -10 C41 -3 42.5 3 44.5 9 Z" fill="#7A3B2E"/>' +
+        '<ellipse cx="32" cy="9.2" rx="17" ry="3.6" fill="#EDE3D0"/>' +
+        '<circle cx="44" cy="-10" r="3.6" fill="#EDE3D0"/>' +
+      '</g>'
+  };
+
+  // Which hat "auto" picks. Months are 0-indexed: 9 is October.
+  var HAT_BY_MONTH = { 9: "witch", 11: "santa" };
+
+  // The ears, redrawn over the hat. Two sets, because the two poses hold
+  // their heads in different places.
+  var SIT_EARS =
+    '<polygon points="22,9.5 19,0.5 29.5,5.5" fill="#201C18"/>' +
+    '<polygon points="42,9.5 45,0.5 34.5,5.5" fill="#201C18"/>' +
+    '<polygon points="23.2,7.8 21.5,2.8 27.5,5.6" fill="#B4726B" opacity="0.85"/>' +
+    '<polygon points="40.8,7.8 42.5,2.8 36.5,5.6" fill="#B4726B" opacity="0.85"/>';
+  var WALK_EARS =
+    '<polygon points="38.5,18 36.5,7.5 45,12.5" fill="#201C18"/>' +
+    '<polygon points="55.5,18 57.5,7.5 49,12.5" fill="#201C18"/>' +
+    '<polygon points="39.5,16 38.2,9.5 43.5,12.8" fill="#B4726B" opacity="0.85"/>' +
+    '<polygon points="54.5,16 55.8,9.5 50.5,12.8" fill="#B4726B" opacity="0.85"/>';
+
+  (function wearHat() {
+    if (HAT_SETTING === "none" || HAT_SETTING === "") return;
+    var name = HAT_SETTING === "auto"
+      ? HAT_BY_MONTH[new Date().getMonth()]
+      : HAT_SETTING;
+    var art = HATS[name];
+    if (!art) return;
+    var sit = cat.querySelector(".pose-sit");
+    var walk = cat.querySelector(".pose-walk");
+    if (sit) sit.insertAdjacentHTML("beforeend",
+      '<g class="cat-hat">' + art + SIT_EARS + "</g>");
+    if (walk) walk.insertAdjacentHTML("beforeend",
+      '<g class="cat-hat">' +
+        '<g transform="translate(47 25) scale(0.88) translate(-32 -17)">' + art + "</g>" +
+        WALK_EARS +
+      "</g>");
+  })();
+
   var svg = cat.querySelector(".cat-svg");
   var bubble = cat.querySelector(".cat-bubble");
   var seatEl = document.querySelector(".moon-seat");
