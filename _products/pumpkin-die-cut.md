@@ -3,7 +3,7 @@ title: "Embossed Jack-O'-Lantern Die-Cut"
 date: 2026-10-09
 price: 30
 era: "1940s"
-category: "Decor"
+category: "Paper & Die-Cuts"
 source_type: "vintage"
 featured: true
 images:
