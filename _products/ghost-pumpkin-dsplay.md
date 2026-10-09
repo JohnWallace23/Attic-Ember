@@ -5,7 +5,6 @@ price: 15
 era: "1990s"
 category: "Decor"
 source_type: "vintage"
-shipping: 15
 images:
   - /assets/img/ghost-and-pumpkin-display/front.jpg
   - /assets/img/ghost-and-pumpkin-display/back.jpg
