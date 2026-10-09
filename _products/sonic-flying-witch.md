@@ -17,7 +17,6 @@ images:
   - /assets/img/sonic-flying-witch/battery-compartment.jpg
 videos:
   - /assets/video/sonic-witch.mp4
-featured: true
 description: >-
   She comes alive when you clap. Twenty-four inches of hunched, green-eyed witch, animated with a nostalgic sound. Sound-activated and genuinely startling in a dark room. Still in her original box, with the artwork showing exactly how she looked on the shelf in the 80s.
 condition: >-
