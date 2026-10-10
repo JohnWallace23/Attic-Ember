@@ -102,6 +102,9 @@
        petting. Sits still under prefers-reduced-motion. -->
   <script src="{{ '/assets/js/cat.js' | relative_url }}?v={{ site.time | date: '%s' }}"
           data-cat-hat="{{ site.cat_hat | default: 'auto' }}" defer></script>
+  <!-- Seasonal paper garland under the header; shows itself by month. -->
+  <script src="{{ '/assets/js/garland.js' | relative_url }}?v={{ site.time | date: '%s' }}"
+          data-garland="{{ site.garland | default: 'auto' }}" defer></script>
 
   <!-- Hearth ambience: a real CC0 campfire loop with a header mute
        toggle. Silent until the visitor's first interaction. -->

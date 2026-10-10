@@ -1108,3 +1108,26 @@ body.cart-open { overflow: hidden; }
 /* its own full-width row under the type chips and the sort control */
 .filter-chips--kind { flex-basis: 100%; }
 .filter-chip.is-active[data-kind] { background: var(--gold); color: var(--ink); }
+
+/* ---- seasonal paper garland (built by assets/js/garland.js) ----
+   Hangs from the header's scalloped edge over the top of the page. Takes no
+   room in the layout and never catches a click. */
+.garland {
+  position: relative;
+  z-index: 2;
+  height: 0;
+  pointer-events: none;
+}
+.garland svg { position: absolute; top: -10px; left: 0; display: block; overflow: visible; }
+.garland-flag {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  animation: garland-sway 4s ease-in-out infinite alternate;
+}
+@keyframes garland-sway {
+  from { transform: rotate(-3deg); }
+  to   { transform: rotate(3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .garland-flag { animation: none; }
+}
