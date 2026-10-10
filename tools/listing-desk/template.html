@@ -1,0 +1,482 @@
+<title>Attic &amp; Ember Listing Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Lora:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap">
+<style>
+/* Layout: one working column. A sticky toolbar picks the marketplace and filter;
+   each piece is a card with its photo, listed-on ticks, any flags, then that
+   marketplace's copy fields, each with its own Copy button. */
+:root {
+  --ground: #EFE6D3;   /* kraft paper */
+  --panel:  #F8F2E6;
+  --ink:    #241F1A;
+  --muted:  #6A5F4E;
+  --line:   #D6C8AC;
+  --accent: #A94E22;   /* pumpkin, deepened for paper */
+  --gold:   #86600F;
+  --sage:   #4D6340;
+  --flag-bg: #F4DFC2;
+  --flag-ink: #6B3711;
+  --chip:   #E6DAC1;
+  --focus:  #A94E22;
+  --display: "Rye", "Georgia", serif;
+  --body: "Lora", "Georgia", serif;
+  --mono: "Special Elite", "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #14100D; --panel: #1D1712; --ink: #EDE3D0; --muted: #A2A08A; --line: #3A2F23;
+    --accent: #DB7A43; --gold: #D9A84E; --sage: #A9C98A; --flag-bg: #2E1F12; --flag-ink: #F2BC8C;
+    --chip: #2A2119; --focus: #D9A84E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #14100D; --panel: #1D1712; --ink: #EDE3D0; --muted: #A2A08A; --line: #3A2F23;
+  --accent: #DB7A43; --gold: #D9A84E; --sage: #A9C98A; --flag-bg: #2E1F12; --flag-ink: #F2BC8C;
+  --chip: #2A2119; --focus: #D9A84E; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--ground); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.55;
+  padding-inline: clamp(16px, 4vw, 32px); padding-block: 0 48px;
+}
+.desk { max-width: 880px; margin: 0 auto; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---- header ---- */
+.masthead { padding-block: 32px 18px; display: grid; gap: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(32px, 6vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 span { color: var(--accent); }
+.lede { margin: 0; max-width: 62ch; color: var(--muted); }
+.scallop {
+  height: 12px; background: var(--ink); opacity: 0.85;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 0 C4 12 8 12 12 0 C16 12 20 12 24 0 Z'/%3E%3C/svg%3E") repeat-x 0 0 / 24px 12px;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 0 C4 12 8 12 12 0 C16 12 20 12 24 0 Z'/%3E%3C/svg%3E") repeat-x 0 0 / 24px 12px;
+}
+.rules { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.rules li { font-size: 14px; line-height: 1.5; padding: 12px 14px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); min-width: 0; }
+.rules b { display: block; font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+
+/* ---- toolbar ---- */
+.toolbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--ground); padding-block: 12px; margin-top: 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+}
+.seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 4px; overflow: hidden; }
+.seg button {
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.04em;
+  background: transparent; color: var(--ink); border: 0; padding: 7px 14px; cursor: pointer;
+}
+.seg button + button { border-left: 1.5px solid var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--ground); }
+.seg.small button { font-size: 12px; padding: 6px 10px; }
+.progress { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress strong { color: var(--ink); font-weight: 400; }
+.sync { font-size: 12px; color: var(--muted); font-style: italic; margin-left: auto; }
+
+/* ---- pieces ---- */
+.pieces { display: grid; gap: 16px; margin-top: 18px; }
+.empty-note { color: var(--muted); font-style: italic; text-align: center; padding-block: 24px; }
+.piece { border: 1px solid var(--line); border-radius: 4px; background: var(--panel); padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.piece.done { opacity: 0.62; }
+.piece-top { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 14px; align-items: start; }
+.piece-top img { width: 88px; height: 88px; object-fit: cover; border: 2px solid var(--ink); border-radius: 3px; display: block; max-width: 100%; }
+.piece h2 { font-family: var(--display); font-weight: 400; font-size: 21px; line-height: 1.15; margin: 0 0 4px; color: var(--accent); text-wrap: balance; }
+.meta { margin: 0; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
+.ticks { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; }
+.ticks label { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; cursor: pointer; }
+.ticks input { width: 17px; height: 17px; accent-color: var(--sage); margin: 0; }
+.ticks input:disabled + span { color: var(--muted); }
+
+.flag { margin: 0; font-size: 14px; line-height: 1.5; background: var(--flag-bg); color: var(--flag-ink); padding: 10px 12px; border-radius: 4px; }
+.flag b { font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 6px; }
+
+.fields { display: grid; gap: 12px; }
+body.on-etsy .fields.ebay, body:not(.on-etsy) .fields.etsy { display: none; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field-head { display: flex; align-items: center; gap: 10px; }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.count { font-family: var(--mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.copy {
+  margin-left: auto; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  background: transparent; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 3px;
+  padding: 3px 10px; cursor: pointer;
+}
+.copy:hover { background: var(--accent); color: var(--ground); }
+.copy.ok { background: var(--sage); border-color: var(--sage); color: var(--ground); }
+.value { margin: 0; font-size: 15px; overflow-wrap: anywhere; }
+.value.title { font-weight: 600; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.fact { display: grid; gap: 2px; }
+.fact .value { font-variant-numeric: tabular-nums; }
+.fact .value small { color: var(--muted); font-size: 12px; }
+.price-row { display: flex; align-items: center; gap: 8px; }
+.price-row .copy { margin-left: 0; padding: 1px 8px; font-size: 11px; }
+
+dl.specs { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 3px 14px; font-size: 14px; }
+dl.specs dt { color: var(--muted); }
+dl.specs dd { margin: 0; overflow-wrap: anywhere; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tags li { font-family: var(--mono); font-size: 12px; background: var(--chip); padding: 3px 9px; border-radius: 3px; }
+pre.desc {
+  margin: 0; white-space: pre-wrap; font-family: var(--body); font-size: 14px; line-height: 1.6;
+  background: var(--ground); border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px;
+  max-height: 15em; overflow: auto; min-width: 0;
+}
+
+/* ---- things to do: sold pieces still listed, prices that moved ---- */
+.alerts { display: grid; gap: 10px; margin-top: 18px; }
+.alert {
+  display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+  border: 1.5px solid var(--accent); border-radius: 4px; padding: 12px 14px; background: var(--flag-bg);
+}
+.alert p { margin: 0; flex: 1 1 260px; min-width: 0; color: var(--flag-ink); font-size: 15px; }
+.alert p b { font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-right: 6px; }
+.act {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; cursor: pointer;
+  background: var(--accent); color: var(--ground); border: 1.5px solid var(--accent); border-radius: 3px; padding: 5px 12px;
+}
+.act:disabled { opacity: 0.5; cursor: default; }
+.pricewatch { display: grid; gap: 8px; }
+.pricewatch:empty { display: none; }
+
+@media (max-width: 520px) {
+  .piece-top { grid-template-columns: 64px minmax(0, 1fr); }
+  .piece-top img { width: 64px; height: 64px; }
+  .sync { margin-left: 0; flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="desk">
+  <header class="masthead">
+    <p class="eyebrow">Cross-listing · <span id="piece-count"></span> pieces on the shelf · copy updated <span id="updated"></span></p>
+    <h1>Attic <span>&amp;</span> Ember Listing Desk</h1>
+    <p class="lede">eBay and Etsy copy for every unsold piece, ready to paste. Pick a marketplace, work down the list, and tick each piece once it's live there.</p>
+    <div class="scallop" aria-hidden="true"></div>
+    <ul class="rules">
+      <li><b>Prices</b>Marketplace prices run about 10–15% over your site's, to cover their fees. Your own site stays the best deal.</li>
+      <li><b>Leave your website out</b>Don't mention atticandember.com in a listing. eBay and Etsy both ban steering buyers off their site.</li>
+      <li><b>When it sells anywhere</b>Mark it sold on the site and end the other listings the same day. Each piece is one of one, so a second sale can't be filled. Once the desk is refreshed, anything sold on the site that's still ticked here shows at the top.</li>
+    </ul>
+  </header>
+
+  <div class="toolbar" role="toolbar" aria-label="Listing controls">
+    <div class="seg" id="market" aria-label="Marketplace">
+      <button type="button" id="m-ebay" data-m="ebay" aria-pressed="true">eBay</button>
+      <button type="button" id="m-etsy" data-m="etsy" aria-pressed="false">Etsy</button>
+    </div>
+    <div class="seg small" id="filter" aria-label="Show">
+      <button type="button" id="f-all" data-f="all" aria-pressed="true">All</button>
+      <button type="button" id="f-todo" data-f="todo" aria-pressed="false">Not listed yet</button>
+      <button type="button" id="f-check" data-f="check" aria-pressed="false">Check first</button>
+    </div>
+    <span class="progress" id="progress"></span>
+    <span class="sync" id="sync">Ticks are saved on this device until the shared list connects.</span>
+  </div>
+
+  <section class="alerts" id="alerts" aria-label="Listings to take down" hidden></section>
+  <div class="pieces" id="pieces"></div>
+  <p class="empty-note" id="empty" hidden>Nothing here. Every piece in this view is already listed.</p>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var BUILD = JSON.parse(document.getElementById("data").textContent);
+  var DATA = BUILD.pieces, SOLD = BUILD.sold || [];
+  var LIMIT = { ebay: 80, etsy: 140 };
+  // slug -> {ebay, etsy: listed?; ebayPrice, etsyPrice: the price it was listed at}
+  var state = {};
+  var market = "ebay", filter = "all";
+  var db = null, readOnly = false;
+  var LOCAL_KEY = "ae-listing-desk-ticks";
+
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  try { state = JSON.parse(load(LOCAL_KEY) || "{}") || {}; } catch (e) { state = {}; }
+  market = load("ae-listing-desk-market") === "etsy" ? "etsy" : "ebay";
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function money(n) { return "$" + n; }
+
+  // Copy inside the click handler; if the frame refuses, select the text instead.
+  function copyText(text, target, btn) {
+    function ok(label) {
+      btn.textContent = label; btn.classList.add("ok");
+      setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("ok"); }, 1600);
+    }
+    function selectIt() {
+      var r = document.createRange(); r.selectNodeContents(target);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      ok("Selected · Ctrl+C");
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { ok("Copied"); }, selectIt);
+    } else { selectIt(); }
+  }
+  function field(label, valueNode, copyValue, extra) {
+    var f = el("div", "field"), h = el("div", "field-head");
+    h.appendChild(el("span", "label", label));
+    if (extra) h.appendChild(extra);
+    var b = el("button", "copy", "Copy"); b.type = "button";
+    b.addEventListener("click", function () { copyText(copyValue, valueNode, b); });
+    h.appendChild(b);
+    f.appendChild(h); f.appendChild(valueNode);
+    return f;
+  }
+  function fact(label, value, copyable) {
+    var f = el("div", "fact");
+    f.appendChild(el("span", "label", label));
+    if (copyable) {
+      var row = el("div", "price-row"), v = el("p", "value", value), b = el("button", "copy", "Copy");
+      b.type = "button";
+      b.addEventListener("click", function () { copyText(value.replace("$", ""), v, b); });
+      row.appendChild(v); row.appendChild(b); f.appendChild(row);
+    } else { f.appendChild(el("p", "value", value)); }
+    return f;
+  }
+
+  function buildEbay(p) {
+    var box = el("div", "fields ebay");
+    var t = el("p", "value title", p.ebay.title);
+    box.appendChild(field("eBay title", t, p.ebay.title, el("span", "count", p.ebay.title.length + "/" + LIMIT.ebay)));
+    var facts = el("div", "facts");
+    facts.appendChild(fact("Price", money(p.ebayPrice), true));
+    facts.appendChild(fact("Condition", p.ebay.condition));
+    facts.appendChild(fact("Shipping", p.ship));
+    box.appendChild(facts);
+    var dl = el("dl", "specs"), lines = [];
+    Object.keys(p.ebay.specifics).forEach(function (k) {
+      dl.appendChild(el("dt", null, k)); dl.appendChild(el("dd", null, p.ebay.specifics[k]));
+      lines.push(k + ": " + p.ebay.specifics[k]);
+    });
+    lines.push("Original/Licensed Reproduction: Original", "Occasion: Halloween");
+    dl.appendChild(el("dt", null, "Original/Licensed Reproduction")); dl.appendChild(el("dd", null, "Original"));
+    dl.appendChild(el("dt", null, "Occasion")); dl.appendChild(el("dd", null, "Halloween"));
+    box.appendChild(field("Item specifics", dl, lines.join("\n")));
+    var d = el("pre", "desc", p.ebay.description);
+    box.appendChild(field("Description", d, p.ebay.description));
+    return box;
+  }
+  function buildEtsy(p) {
+    var box = el("div", "fields etsy");
+    var t = el("p", "value title", p.etsy.title);
+    box.appendChild(field("Etsy title", t, p.etsy.title, el("span", "count", p.etsy.title.length + "/" + LIMIT.etsy)));
+    var facts = el("div", "facts");
+    facts.appendChild(fact("Price", money(p.etsyPrice), true));
+    facts.appendChild(fact("When made", p.etsy.whenMade));
+    facts.appendChild(fact("Holiday", "Halloween"));
+    facts.appendChild(fact("Shipping", p.ship));
+    box.appendChild(facts);
+    var ul = el("ul", "tags");
+    p.etsy.tags.forEach(function (tag) { ul.appendChild(el("li", null, tag)); });
+    box.appendChild(field("Tags (13)", ul, p.etsy.tags.join(", ")));
+    var d = el("pre", "desc", p.etsy.description);
+    box.appendChild(field("Description", d, p.etsy.description));
+    return box;
+  }
+
+  var cards = {};
+  function build() {
+    var list = document.getElementById("pieces");
+    document.getElementById("piece-count").textContent = DATA.length;
+    document.getElementById("updated").textContent = BUILD.updated;
+    DATA.forEach(function (p) {
+      var card = el("article", "piece"); card.id = "piece-" + p.slug;
+      var top = el("div", "piece-top");
+      var img = el("img"); img.src = p.thumb; img.alt = p.name; img.width = 88; img.height = 88;
+      top.appendChild(img);
+      var head = el("div");
+      head.appendChild(el("h2", null, p.name));
+      var meta = el("p", "meta", p.era + " · " + p.category + " · site " + money(p.price) + " · ");
+      var a = el("a", null, "view on site"); a.href = p.url; a.target = "_blank"; a.rel = "noopener";
+      meta.appendChild(a);
+      head.appendChild(meta);
+      var ticks = el("div", "ticks");
+      ["ebay", "etsy"].forEach(function (m) {
+        var lab = el("label"), box = el("input");
+        box.type = "checkbox"; box.id = "t-" + m + "-" + p.slug; box.dataset.slug = p.slug; box.dataset.m = m;
+        box.addEventListener("change", onTick);
+        lab.appendChild(box); lab.appendChild(el("span", null, "Listed on " + (m === "ebay" ? "eBay" : "Etsy")));
+        ticks.appendChild(lab);
+      });
+      head.appendChild(ticks);
+      top.appendChild(head);
+      card.appendChild(top);
+      p.flags.forEach(function (f) {
+        var q = el("p", "flag"); q.appendChild(el("b", null, "Check")); q.appendChild(document.createTextNode(f));
+        card.appendChild(q);
+      });
+      var watch = el("div", "pricewatch"); watch.id = "watch-" + p.slug;
+      card.appendChild(watch);
+      card.appendChild(buildEbay(p));
+      card.appendChild(buildEtsy(p));
+      list.appendChild(card);
+      cards[p.slug] = card;
+    });
+  }
+
+  function render() {
+    document.body.classList.toggle("on-etsy", market === "etsy");
+    ["ebay", "etsy"].forEach(function (m) {
+      document.getElementById("m-" + m).setAttribute("aria-pressed", String(market === m));
+    });
+    ["all", "todo", "check"].forEach(function (f) {
+      document.getElementById("f-" + f).setAttribute("aria-pressed", String(filter === f));
+    });
+    var shown = 0, done = { ebay: 0, etsy: 0 };
+    DATA.forEach(function (p) {
+      var s = state[p.slug] || {};
+      ["ebay", "etsy"].forEach(function (m) {
+        var box = document.getElementById("t-" + m + "-" + p.slug);
+        box.checked = !!s[m]; box.disabled = readOnly;
+        if (s[m]) done[m]++;
+      });
+      var here = !!s[market];
+      var visible = filter === "all" || (filter === "todo" && !here) || (filter === "check" && p.flags.length > 0);
+      cards[p.slug].hidden = !visible;
+      cards[p.slug].classList.toggle("done", here && filter === "all");
+      if (visible) shown++;
+    });
+    document.getElementById("empty").hidden = shown > 0;
+    renderPriceNotes();
+    renderAlerts();
+    var prog = document.getElementById("progress");
+    prog.innerHTML = "";
+    prog.appendChild(document.createTextNode("eBay "));
+    prog.appendChild(el("strong", null, done.ebay + "/" + DATA.length));
+    prog.appendChild(document.createTextNode(" · Etsy "));
+    prog.appendChild(el("strong", null, done.etsy + "/" + DATA.length));
+    prog.appendChild(document.createTextNode(" listed"));
+  }
+
+  var NAMES = { ebay: "eBay", etsy: "Etsy" };
+  // The site price moved since this piece was listed, so the marketplace
+  // price is out of date. Shown on the card until it's been updated there.
+  function renderPriceNotes() {
+    DATA.forEach(function (p) {
+      var box = document.getElementById("watch-" + p.slug), s = state[p.slug] || {};
+      box.innerHTML = "";
+      ["ebay", "etsy"].forEach(function (m) {
+        var was = s[m + "Price"], now = p[m + "Price"];
+        if (!s[m] || was == null || was === now) return;
+        var q = el("div", "alert");
+        var t = el("p");
+        t.appendChild(el("b", null, "Price changed"));
+        t.appendChild(document.createTextNode(
+          "Listed on " + NAMES[m] + " at " + money(was) + ". The site price changed, so it should now be " + money(now) + "."));
+        q.appendChild(t);
+        var b = el("button", "act", "Updated on " + NAMES[m]); b.type = "button"; b.disabled = readOnly;
+        b.addEventListener("click", function () {
+          var next = Object.assign({}, state[p.slug]); next[m + "Price"] = now; save(p.slug, next);
+        });
+        q.appendChild(b);
+        box.appendChild(q);
+      });
+    });
+  }
+  // Sold on the site but still ticked as listed somewhere else: those
+  // listings need ending before a second buyer pays for a piece that's gone.
+  function renderAlerts() {
+    var box = document.getElementById("alerts");
+    box.innerHTML = "";
+    SOLD.forEach(function (sp) {
+      var s = state[sp.slug] || {};
+      var where = ["ebay", "etsy"].filter(function (m) { return s[m]; });
+      if (!where.length) return;
+      var q = el("div", "alert");
+      var t = el("p");
+      t.appendChild(el("b", null, "Sold"));
+      t.appendChild(document.createTextNode(
+        sp.name + " sold on your site but is still listed on " + where.map(function (m) { return NAMES[m]; }).join(" and ") +
+        ". End " + (where.length > 1 ? "those listings" : "that listing") + " now."));
+      q.appendChild(t);
+      var b = el("button", "act", "Ended it"); b.type = "button"; b.disabled = readOnly;
+      b.addEventListener("click", function () { save(sp.slug, { ebay: false, etsy: false }); });
+      q.appendChild(b);
+      box.appendChild(q);
+    });
+    box.hidden = !box.children.length;
+  }
+
+  // One write at a time per piece, in order.
+  var queue = {};
+  function save(slug, next) {
+    state[slug] = next;
+    store(LOCAL_KEY, JSON.stringify(state));
+    render();
+    if (!db) return;
+    var ref = db.collection("listed").doc(slug);
+    var body = JSON.parse(JSON.stringify(next));
+    queue[slug] = (queue[slug] || Promise.resolve()).then(function () {
+      return ref.set(body);
+    }).catch(function (err) {
+      if (err && err.code === "invalid_argument") {
+        readOnly = true;
+        document.getElementById("sync").textContent = "You can view this list. Ticking needs edit access to this page.";
+        render();
+      } else {
+        document.getElementById("sync").textContent = "That change didn't save to the shared list. It's kept on this device; try again in a moment.";
+      }
+    });
+  }
+  function onTick(e) {
+    var slug = e.target.dataset.slug, m = e.target.dataset.m;
+    var p = DATA.filter(function (x) { return x.slug === slug; })[0];
+    var next = Object.assign({ ebay: false, etsy: false }, state[slug]);
+    next[m] = e.target.checked;
+    // remember the price it went up at, so a later site price change can be flagged
+    if (e.target.checked) next[m + "Price"] = p[m + "Price"];
+    else delete next[m + "Price"];
+    save(slug, next);
+  }
+
+  document.getElementById("market").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    market = b.dataset.m; store("ae-listing-desk-market", market); render();
+  });
+  document.getElementById("filter").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    filter = b.dataset.f; render();
+  });
+
+  build();
+  render();
+
+  // The shared list: everyone who can edit this page sees the same ticks.
+  if (window.claude && window.claude.use) {
+    window.claude.use("db").then(function (d) {
+      if (!d) return;
+      db = d;
+      document.getElementById("sync").textContent = "Ticks are shared with everyone who can edit this page.";
+      db.collection("listed").onSnapshot(function (snap) {
+        var shared = {};
+        snap.docs.forEach(function (doc) {
+          var v = doc.data() || {};
+          shared[doc.id] = { ebay: !!v.ebay, etsy: !!v.etsy };
+          if (typeof v.ebayPrice === "number") shared[doc.id].ebayPrice = v.ebayPrice;
+          if (typeof v.etsyPrice === "number") shared[doc.id].etsyPrice = v.etsyPrice;
+        });
+        state = shared;
+        store(LOCAL_KEY, JSON.stringify(state));
+        render();
+      }, function () {
+        document.getElementById("sync").textContent = "The shared list disconnected. Ticks are saved on this device for now.";
+        db = null;
+      });
+    });
+  }
+})();
+</script>

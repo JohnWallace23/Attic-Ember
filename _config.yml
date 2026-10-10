@@ -35,6 +35,10 @@ include:
   - _redirects
   - _headers
 
+# Shop tooling that isn't part of the website (e.g. the eBay/Etsy listing desk).
+exclude:
+  - tools
+
 collections:
   products:
     output: true
