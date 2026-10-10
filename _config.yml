@@ -77,9 +77,8 @@ shipping_flat_rate: 8
 # rate still pay it. 0 turns it off.
 free_shipping_over: 75
 # Lets buyers here skip shipping and pick up instead (we email to arrange a
-# time and place — no address is published). Built and tested but parked
-# for now: set to "Chicago" to switch it on everywhere at once. "" = off.
-local_pickup: ""
+# time and place — no address is published). "" turns it off everywhere.
+local_pickup: "Chicago"
 shipping_note: "Shipping is included in the total above. International orders — we'll email you a quote before any payment."
 payments:
   # Full PayPal link (business profile or PayPal.Me), or just a PayPal.Me
