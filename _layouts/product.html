@@ -127,7 +127,7 @@ layout: default
       <h1>{{ page.title }}</h1>
       <p class="product-meta">{{ page.era | default: "Vintage" }}{% if page.category %} &middot; {{ page.category }}{% endif %}</p>
       <p class="product-price">${% include money.html amount=page.price %}</p>
-      {% if page.free_shipping %}<p class="free-ship free-ship--page">Free U.S. shipping — postage is included in the price</p>{% elsif page.shipping %}<p class="free-ship free-ship--page ship-extra">${{ page.shipping }} U.S. shipping — this one needs an oversize box</p>{% endif %}
+      {% if page.free_shipping %}<p class="free-ship free-ship--page">Free U.S. shipping — postage is included in the price</p>{% elsif page.shipping %}<p class="free-ship free-ship--page ship-extra">${{ page.shipping }} U.S. shipping — this one needs an oversize box{% if site.local_pickup and site.local_pickup != "" %}, or pick it up free in {{ site.local_pickup }}{% endif %}</p>{% endif %}
 
       <p class="product-desc">{{ page.description }}</p>
 

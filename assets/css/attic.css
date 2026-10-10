@@ -1131,3 +1131,26 @@ body.cart-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .garland-flag { animation: none; }
 }
+
+/* ---- checkout: ship or pick up, and the free-shipping nudge ---- */
+.ship-choices { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.ship-choice input:checked + span {
+  background: var(--sage-bright);
+  border-color: var(--sage-bright);
+  box-shadow: 0 0 0 3px rgba(169,201,138,0.25);
+}
+.pickup-note {
+  font-size: 13px; line-height: 1.6;
+  color: var(--paper);
+  background: rgba(169,201,138,0.12);
+  border-left: 3px solid var(--sage-bright);
+  padding: 10px 12px; margin: 0 0 16px; border-radius: var(--radius);
+}
+.free-nudge {
+  font-family: var(--mono); font-size: 13px;
+  color: var(--gold-bright);
+  margin: -6px 0 14px;
+}
+.free-nudge.met { color: var(--sage-bright); }
+.free-nudge span { display: block; font-size: 11px; color: var(--sage-light); margin-top: 2px; }
+.pickup-hint { font-size: 13px; color: var(--sage-light); font-style: italic; margin: 0 0 12px; }

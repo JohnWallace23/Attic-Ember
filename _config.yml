@@ -68,6 +68,14 @@ web3forms_key: "d1abc445-4121-4cb3-b1e3-31858bc804c3"
 # or waive it with `free_shipping: true`. Change it here and it
 # updates the cart, checkout, and order emails.
 shipping_flat_rate: 8
+# Free standard shipping when an order's items total at least this much.
+# Waives the shared flat-rate box only; pieces with their own `shipping:`
+# rate still pay it. 0 turns it off.
+free_shipping_over: 75
+# Lets buyers here skip shipping and pick up instead (we email to arrange a
+# time and place — no address is published). Built and tested but parked
+# for now: set to "Chicago" to switch it on everywhere at once. "" = off.
+local_pickup: ""
 shipping_note: "Shipping is included in the total above. International orders — we'll email you a quote before any payment."
 payments:
   # Full PayPal link (business profile or PayPal.Me), or just a PayPal.Me

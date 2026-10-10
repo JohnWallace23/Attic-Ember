@@ -59,6 +59,12 @@
         <h4>Shipping</h4>
         <p><strong>Ships within 3 business days.</strong><br>
         Fragile items double-boxed with care.<br>
+        {%- if site.free_shipping_over and site.free_shipping_over > 0 %}
+        Free shipping on orders over ${{ site.free_shipping_over }}.<br>
+        {%- endif %}
+        {%- if site.local_pickup and site.local_pickup != "" %}
+        Free local pickup in {{ site.local_pickup }}.<br>
+        {%- endif %}
         Shipping is shown on every item and again at checkout.</p>
       </div>
       <div>
@@ -92,7 +98,9 @@
           data-cashapp="{{ site.payments.cashapp }}"
           data-web3forms="{{ site.web3forms_key }}"
           data-shipping-note="{{ site.shipping_note | escape }}"
-          data-shipping-rate="{{ site.shipping_flat_rate }}" defer></script>
+          data-shipping-rate="{{ site.shipping_flat_rate }}"
+          data-free-over="{{ site.free_shipping_over | default: 0 }}"
+          data-pickup="{{ site.local_pickup }}" defer></script>
 
   <!-- Drifting embers atmosphere (progressive enhancement; self-disables
        under prefers-reduced-motion). -->

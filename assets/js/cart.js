@@ -18,6 +18,10 @@
   var SHIP_NOTE = attr("data-shipping-note", "");
   var SHIP_RATE = parseFloat(attr("data-shipping-rate", "0")) || 0;
   var WEB3KEY = (attr("data-web3forms", "") || "").trim();
+  // Local pickup (a place name, e.g. "Chicago") and the free-shipping
+  // threshold, both set in _config.yml. Empty / 0 turns either off.
+  var PICKUP = (attr("data-pickup", "") || "").trim();
+  var FREE_OVER = parseFloat(attr("data-free-over", "0")) || 0;
 
   function read() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {} }
@@ -38,52 +42,64 @@
   // if there are any ordinary items. Two blow molds are two boxes and cost
   // two rates — charging the higher of the two, as this used to, left us
   // paying the difference.
+  //
+  // Two ways to pay less:
+  //   - local pickup: nothing ships, so nothing is charged.
+  //   - orders of FREE_OVER or more: the shared flat-rate box is free.
+  //     Oversize pieces still pay their own rate — waiving a $15 blow-mold
+  //     box on a $76 order would cost more than the order makes.
+  var pickup = false;
   function itemShip(i) {
     if (i.freeShip === true) return 0;
     var r = parseFloat(i.ship);
     return isNaN(r) ? SHIP_RATE : r;
   }
   function isOversize(i) { return i.freeShip !== true && !isNaN(parseFloat(i.ship)); }
-  function allFreeShip() {
-    return cart.length > 0 && cart.every(function (i) { return itemShip(i) === 0; });
+  function hasOrdinary() {
+    return cart.some(function (i) { return i.freeShip !== true && !isOversize(i); });
   }
+  function oversizeItems() { return cart.filter(isOversize); }
+  function freeStandard() { return FREE_OVER > 0 && subtotal() >= FREE_OVER; }
+  function flatCharge() { return hasOrdinary() && !freeStandard() ? SHIP_RATE : 0; }
   function shipping() {
-    if (cart.length === 0 || !domestic) return 0;
-    var total = 0;
-    var ordinary = false;
-    for (var i = 0; i < cart.length; i++) {
-      if (cart[i].freeShip === true) continue;
-      if (isOversize(cart[i])) total += itemShip(cart[i]);
-      else ordinary = true;
-    }
-    return total + (ordinary ? SHIP_RATE : 0);
+    if (cart.length === 0 || pickup || !domestic) return 0;
+    return oversizeItems().reduce(function (t, i) { return t + itemShip(i); }, 0) + flatCharge();
   }
   // How many separate boxes the buyer is being charged for.
-  function boxCount() {
-    var n = 0, ordinary = false;
-    for (var i = 0; i < cart.length; i++) {
-      if (cart[i].freeShip === true) continue;
-      if (isOversize(cart[i])) n++;
-      else ordinary = true;
-    }
-    return n + (ordinary ? 1 : 0);
-  }
+  function boxCount() { return oversizeItems().length + (flatCharge() > 0 ? 1 : 0); }
   // "flat" only when the order is actually paying the plain flat rate.
   function shipNote() {
-    if (allFreeShip()) return "";
+    if (pickup || shipping() === 0) return "";
     if (boxCount() > 1) return " — " + boxCount() + " boxes";
-    return shipping() === SHIP_RATE ? " flat" : "";
+    return flatCharge() > 0 ? " flat" : "";
   }
-  // What to print on the domestic shipping line.
-  function shipLabel() { return allFreeShip() ? "Free" : money(shipping()); }
+  // What to print on the shipping line.
+  function shipLabel() { return shipping() === 0 ? "Free" : money(shipping()); }
   function shipEmailText() {
-    if (allFreeShip()) return "FREE (included in item price)";
+    if (pickup) return "LOCAL PICKUP in " + PICKUP + " — nothing to ship. Email the buyer to arrange a time and place.";
     var s = shipping();
-    if (boxCount() > 1) return money(s) + " (U.S. — " + boxCount() + " boxes)";
-    return money(s) + (s === SHIP_RATE ? " (U.S. flat rate)" : " (U.S. — oversize item)");
+    var waived = freeStandard() && hasOrdinary();
+    if (s === 0) return waived
+      ? "FREE (standard shipping free on orders over " + dollars(FREE_OVER) + ")"
+      : "FREE (included in item price)";
+    var tail = waived ? "; standard box free, order over " + dollars(FREE_OVER) : "";
+    if (boxCount() > 1) return money(s) + " (U.S. — " + boxCount() + " boxes" + tail + ")";
+    return money(s) + (flatCharge() > 0 ? " (U.S. flat rate)" : " (U.S. — oversize item" + tail + ")");
+  }
+  // Under the cart's shipping line: how far off free shipping is, or that
+  // it's been earned. Only when it would change the total — a cart of
+  // oversize or free-ship pieces gets nothing from the threshold.
+  function freeNudge() {
+    if (!FREE_OVER || !hasOrdinary()) return "";
+    var gap = FREE_OVER - subtotal();
+    if (gap > 0) return '<p class="free-nudge">Add <strong>' + money(gap) + "</strong> more for free shipping.</p>";
+    return '<p class="free-nudge met">Free shipping on orders over ' + dollars(FREE_OVER) + " \u2713" +
+      (oversizeItems().length ? " <span>Oversize pieces still ship at their own rate.</span>" : "") + "</p>";
   }
   function grandTotal() { return subtotal() + shipping(); }
   function money(n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); }
+  // Round figures in prose read better without cents: "over $75", not "$75.00".
+  function dollars(n) { return money(n).replace(/\.00$/, ""); }
   // Amount handed to the payment app — always the grand total, never subtotal.
   function amt() { return (Math.round(grandTotal() * 100) / 100).toFixed(2); }
 
@@ -126,6 +142,10 @@
   // ---- cart (items) view ----
   function showCart() {
     titleEl.textContent = "Your cart";
+    // Checkout rebuilds its form from scratch, so whatever was picked there
+    // (pickup, a foreign country) doesn't carry back into the cart's totals.
+    pickup = false;
+    domestic = true;
     if (cart.length === 0) {
       body.innerHTML =
         '<p class="cart-empty">Your cart is empty.</p>' +
@@ -149,7 +169,9 @@
         (SHIP_RATE > 0
           ? '<div class="cart-subtotal"><span>Shipping (U.S.' + shipNote() + ')</span><span>' + shipLabel() + "</span></div>"
           : "") +
+        freeNudge() +
         '<div class="cart-subtotal cart-grand"><span>Total</span><strong>' + money(grandTotal()) + "</strong></div>" +
+        (PICKUP ? '<p class="pickup-hint">In ' + esc(PICKUP) + "? Choose free local pickup at checkout.</p>" : "") +
         '<button class="btn cart-checkout" type="button">Checkout &rarr;</button>' +
       "</div>";
   }
@@ -215,9 +237,21 @@
       // sends the order and opens the buyer's payment app.
       step1 =
         '<form class="order-form" novalidate>' +
-          '<span class="co-step-h">Where should we ship it?</span>' +
+          (PICKUP
+            ? '<span class="co-step-h">How should we get it to you?</span>' +
+              '<div class="ship-choices">' +
+                '<label class="pay-choice ship-choice"><input type="radio" name="delivery" value="ship" checked>' +
+                  "<span>Ship it to me</span></label>" +
+                '<label class="pay-choice ship-choice"><input type="radio" name="delivery" value="pickup">' +
+                  "<span>Pick up in " + esc(PICKUP) + " &mdash; free</span></label>" +
+              "</div>" +
+              '<p class="pickup-note" hidden>We’ll email you to set up a time and place in ' + esc(PICKUP) +
+                ". Paying now holds it for you &mdash; nobody else can buy it in the meantime.</p>" +
+              '<span class="co-step-h">Your details</span>'
+            : '<span class="co-step-h">Where should we ship it?</span>') +
           '<input type="text" name="name" placeholder="Full name" autocomplete="name" required>' +
           '<input type="email" name="email" placeholder="Email" autocomplete="email" required>' +
+          '<div class="ship-fields">' +
           '<input type="text" name="address" placeholder="Street address" autocomplete="street-address">' +
           '<div class="of-row">' +
             '<input type="text" name="city" placeholder="City" autocomplete="address-level2">' +
@@ -227,6 +261,7 @@
           '<input type="text" name="country" placeholder="Country (leave blank if U.S.)" autocomplete="country-name">' +
           '<p class="intl-note" hidden>Shipping outside the U.S. isn’t covered by the flat rate — ' +
             'place your order and we’ll email you a shipping quote before you pay anything.</p>' +
+          "</div>" +
           '<textarea name="note" placeholder="Anything we should know? (optional)"></textarea>' +
           '<input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px">' +
           '<div class="pay-block">' +
@@ -253,7 +288,8 @@
           '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
           '<div class="co-line co-ship"><span>Shipping' +
             '<em class="ship-dom"> (U.S.' + shipNote() + ')</em>' +
-            '<em class="ship-intl" hidden> (international)</em></span>' +
+            '<em class="ship-intl" hidden> (international)</em>' +
+            '<em class="ship-pick" hidden> (local pickup)</em></span>' +
             '<span class="ship-amount">' + shipLabel() + "</span></div>" +
           '<div class="co-line co-total"><span>Total</span><strong class="pay-total">' + money(grandTotal()) + "</strong></div></div>" +
         (SHIP_NOTE ? '<p class="ship-note">' + esc(SHIP_NOTE) + "</p>" : "") +
@@ -266,7 +302,7 @@
   // orders can't be quoted from the flat rate, so we hide the payment step
   // entirely rather than show a total we'd have to correct later.
   function refreshTotals() {
-    var intl = !domestic;
+    var intl = !domestic && !pickup;
     Array.prototype.forEach.call(body.querySelectorAll(".pay-total"), function (el) {
       el.textContent = money(grandTotal());
     });
@@ -276,8 +312,17 @@
     if (shipAmt) shipAmt.textContent = intl ? "We’ll quote it" : shipLabel();
     var domEm = body.querySelector(".ship-dom");
     var intlEm = body.querySelector(".ship-intl");
-    if (domEm) domEm.hidden = intl;
+    var pickEm = body.querySelector(".ship-pick");
+    if (domEm) { domEm.hidden = intl || pickup; domEm.textContent = " (U.S." + shipNote() + ")"; }
     if (intlEm) intlEm.hidden = !intl;
+    if (pickEm) pickEm.hidden = !pickup;
+    var fields = body.querySelector(".ship-fields");
+    if (fields) fields.hidden = pickup;
+    var pnote = body.querySelector(".pickup-note");
+    if (pnote) pnote.hidden = !pickup;
+    // the shipping/international note says nothing useful to someone picking up
+    var snote = body.querySelector(".ship-note");
+    if (snote) snote.hidden = pickup;
     var note = body.querySelector(".intl-note");
     if (note) note.hidden = !intl;
     var payBlock = body.querySelector(".pay-block");
@@ -292,7 +337,7 @@
     }
   }
   body.addEventListener("input", function (e) {
-    if (!e.target || e.target.name !== "country") return;
+    if (!e.target || e.target.name !== "country" || pickup) return;
     var next = isDomestic(e.target.value);
     if (next === domestic) return;
     domestic = next;
@@ -312,7 +357,9 @@
       return;
     }
     // International orders skip payment entirely — we quote shipping first.
-    domestic = isDomestic(data.country);
+    // Pickup never ships, so it never counts as international.
+    pickup = data.delivery === "pickup";
+    domestic = pickup || isDomestic(data.country);
     // Which payment app they picked — required, no silent default.
     var methods = domestic ? payMethods() : [];
     var chosen = null;
@@ -344,7 +391,9 @@
     data.access_key = WEB3KEY;
     data.order_ref = ref;
     data.subject = "Attic & Ember order " + ref + " — " + cart.length + " item" +
-      (cart.length > 1 ? "s" : "") + ", " + (domestic ? money(grandTotal()) : money(subtotal()) + " + intl shipping");
+      (cart.length > 1 ? "s" : "") + ", " + (domestic ? money(grandTotal()) : money(subtotal()) + " + intl shipping") +
+      (pickup ? " — LOCAL PICKUP" : "");
+    if (PICKUP) data.delivery = pickup ? "LOCAL PICKUP in " + PICKUP : "Ship to the address below";
     data.from_name = data.name;
     data.paying_with = domestic ? (chosen ? chosen.label : "(not selected)") : "(international — quote shipping first)";
     data.shipping = domestic ? shipEmailText() : "TO QUOTE — international address";
@@ -372,19 +421,17 @@
       for (var j = 0; j < withRef.length; j++) {
         if (chosen && withRef[j].id === chosen.id) { chosen = withRef[j]; break; }
       }
-      orderSent(form, data.name, chosen, total, ref, items, data.email, sub, ship, domestic);
+      orderSent(form, data.name, chosen, total, ref, items, data.email, sub, ship, domestic, pickup);
     }).catch(function () {
       btn.disabled = false;
       status.className = "of-status err";
       status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
     });
   }
-  function orderSent(form, name, chosen, total, ref, items, email, sub, ship, isDom) {
+  function orderSent(form, name, chosen, total, ref, items, email, sub, ship, isDom, isPickup) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
     var first = (name || "").trim().split(/\s+/)[0];
-    var shipFree = (items || []).length > 0 &&
-      items.every(function (i) { return itemShip(i) === 0; });
     var html = "<strong>Thanks, " + esc(first) + "! Your order is in.</strong>" +
       '<div class="os-receipt">' +
         '<div class="os-ref"><span>Order</span><strong>' + esc(ref) + "</strong></div>" +
@@ -393,8 +440,8 @@
             money(parseFloat(i.price) || 0) + "</span></div>";
         }).join("") +
         '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(sub || 0) + "</span></div>" +
-        '<div class="co-line co-ship"><span>Shipping</span><span>' +
-          (isDom ? (shipFree ? "Free" : money(ship || 0)) : "We’ll quote it") + "</span></div>" +
+        '<div class="co-line co-ship"><span>' + (isPickup ? "Local pickup" : "Shipping") + "</span><span>" +
+          (isDom ? (ship ? money(ship) : "Free") : "We’ll quote it") + "</span></div>" +
         '<div class="co-line co-total"><span>Total</span><strong>' +
           (isDom ? total : money(sub || 0) + " + shipping") + "</strong></div>" +
       "</div>";
@@ -435,7 +482,9 @@
       html += "<p>We’ll email you shortly with how to pay.</p>";
     }
     html += '<p class="os-foot">We’ll email ' + (email ? "<strong>" + esc(email) + "</strong>" : "you") +
-      " to confirm it’s yours and let you know when it ships. " +
+      (isPickup
+        ? " to confirm it’s yours and set up a time and place to pick it up in " + esc(PICKUP) + ". "
+        : " to confirm it’s yours and let you know when it ships. ") +
       "Questions? Just reply to that email or write us at " +
       '<a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.</p>";
     wrap.innerHTML = html;
@@ -479,6 +528,15 @@
     // pasting it into the payment note is one tap on the other side.
     var p = e.target.closest(".os-pay");
     if (p && p.getAttribute("data-ref")) copyRef(p.getAttribute("data-ref"), null);
+  });
+  // Ship or pick up. Picking up means nothing ships, so the address and any
+  // foreign country stop mattering for the total.
+  body.addEventListener("change", function (e) {
+    if (!e.target || e.target.name !== "delivery") return;
+    pickup = e.target.value === "pickup";
+    var c = body.querySelector('input[name="country"]');
+    domestic = pickup || !c || isDomestic(c.value);
+    refreshTotals();
   });
   // Picking a payment method clears the "please select one" warning.
   body.addEventListener("change", function (e) {
