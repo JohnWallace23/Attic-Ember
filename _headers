@@ -18,3 +18,25 @@ https://:version.:project.pages.dev/*
 # which this repo can't set; until then, keep the duplicate out of search.
 https://www.atticandember.com/*
   X-Robots-Tag: noindex
+
+# Every page, every host.
+#
+# Frame protection: no other site may show these pages inside a frame of
+# its own (the "clickjacking" trick, where a page is laid invisibly over a
+# button on someone else's site). Nothing legitimate frames this site —
+# PayPal, Venmo and the order form are links and requests, not frames —
+# and the site never frames itself. SAMEORIGIN rather than DENY leaves
+# that door open should it ever want to. Both headers say the same thing:
+# frame-ancestors is the modern form, X-Frame-Options the one older
+# browsers read. This CSP restricts framing only, nothing else.
+#
+# HSTS: once a browser has seen it, it uses https for the site without
+# trying http first. Everything here is already https-only, so nothing
+# changes for a visitor except one fewer redirect on a typed address.
+# Kept deliberately modest — 180 days, this hostname only (no
+# includeSubDomains, so a future subdomain is never forced onto https it
+# might not have), and no preload-list entry, which is hard to undo.
+/*
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'
+  Strict-Transport-Security: max-age=15552000
