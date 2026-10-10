@@ -33,6 +33,7 @@ url: "https://atticandember.com"
 # _redirects in the built site, so include it explicitly.
 include:
   - _redirects
+  - _headers
 
 collections:
   products:

@@ -1,0 +1,20 @@
+# Cloudflare Pages response headers. Rules can match by hostname.
+#
+# The site answers on more addresses than the one we want in search
+# results. Every page already carries a canonical tag pointing at
+# https://atticandember.com/, but these hosts serve full copies too, so
+# tell search engines outright not to index them. Visitors on them are
+# unaffected — the pages still load normally.
+
+# Cloudflare's own address for the project, and each deploy's preview URL.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+# www serves the site rather than redirecting to the bare domain. The
+# proper fix is a Cloudflare redirect rule (www -> atticandember.com),
+# which this repo can't set; until then, keep the duplicate out of search.
+https://www.atticandember.com/*
+  X-Robots-Tag: noindex
