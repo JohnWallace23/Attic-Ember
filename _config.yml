@@ -10,8 +10,9 @@ description: >-
 # The shop cat's seasonal hat. "auto" picks by month (October a witch hat,
 # December a santa hat); name one to pin it year-round; "none" for a bare cat.
 cat_hat: auto
-# Paper pennant garland under the header. "auto" hangs it in October and takes
-# it down November 1st; "halloween" pins it year-round; "none" turns it off.
+# Paper pennant garland under the header. "auto" hangs HAPPY HALLOWEEN in
+# October and HAPPY HOLIDAYS in December, bare the rest of the year; name one
+# ("halloween", "holidays") to pin it; "none" turns it off.
 garland: auto
 
 instagram: atticandember

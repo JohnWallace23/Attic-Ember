@@ -26,10 +26,16 @@
     halloween: {
       colours: ["#C9622D", "#6A4C82", "#D9A84E", "#EDE3D0"],
       message: "HAPPY HALLOWEEN"
+    },
+    // Cranberry and the light sage rather than the site's darker rust and
+    // sage: on the night-brown ground those two barely separate from it.
+    holidays: {
+      colours: ["#A8423A", "#93A184", "#EDE3D0", "#D9A84E"],
+      message: "HAPPY HOLIDAYS"
     }
   };
-  // Which season "auto" hangs. Months are 0-indexed: 9 is October.
-  var BY_MONTH = { 9: "halloween" };
+  // Which season "auto" hangs. Months are 0-indexed: 9 is October, 11 December.
+  var BY_MONTH = { 9: "halloween", 11: "holidays" };
 
   var name = setting === "auto" ? BY_MONTH[new Date().getMonth()] : setting;
   var season = SEASONS[name];
@@ -45,8 +51,8 @@
   anchor.parentNode.insertBefore(holder, anchor.nextSibling);
 
   // Letter colour per paper colour, chosen for contrast: ink on the light
-  // papers, cream on plum.
-  var INK = { "#6A4C82": "#EDE3D0" };
+  // papers, cream on the dark ones.
+  var INK = { "#6A4C82": "#EDE3D0", "#A8423A": "#EDE3D0" };
   function letterColour(paper) { return INK[paper] || "#17120E"; }
 
   // Stable "handmade" wobble: the same pennant gets the same tilt and size
