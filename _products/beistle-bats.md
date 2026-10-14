@@ -1,5 +1,5 @@
 ---
-title: "Vintage Beistle Beistle Flying Bats — Set of 2"
+title: "Vintage Beistle Flying Bats — Set of 2"
 date: 2026-10-13
 price: 25.00
 era: "1980s"
