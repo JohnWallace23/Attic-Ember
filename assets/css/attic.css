@@ -195,7 +195,7 @@ img { max-width: 100%; display: block; }
 
 /* ---- hero ---- */
 .hero {
-  padding: 64px 0 48px;
+  padding-block: 64px 48px;   /* sides come from .wrap */
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 40px;
@@ -257,7 +257,7 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---- product grid ---- */
-.shop { padding: 56px 0 72px; }
+.shop { padding-block: 56px 72px; }   /* sides come from .wrap */
 .shop-all-cta { text-align: center; margin-top: 40px; }
 
 /* ---- shop filter + sort controls ---- */
@@ -892,7 +892,8 @@ body.cart-open { overflow: hidden; }
 /* on-page order form */
 .order-form { display: flex; flex-direction: column; gap: 10px; }
 .order-form input, .order-form textarea {
-  font-family: var(--body); font-size: 15px;
+  /* 16px, not less: iPhone Safari zooms in on any smaller text box when tapped */
+  font-family: var(--body); font-size: 16px;
   background: var(--night); color: var(--paper);
   border: 1.5px solid var(--sage); border-radius: var(--radius);
   padding: 10px 12px; width: 100%;
@@ -1078,7 +1079,7 @@ body.cart-open { overflow: hidden; }
 .product-photo.is-sold img { opacity: 0.5; filter: grayscale(0.55) sepia(0.15); }
 
 /* ---- 404 ---- */
-.not-found { padding: 72px 0 8px; max-width: 620px; }
+.not-found { padding-block: 72px 8px; max-width: 620px; }
 .not-found-title {
   font-family: var(--display);
   font-size: clamp(30px, 5vw, 44px);
@@ -1154,3 +1155,14 @@ body.cart-open { overflow: hidden; }
 .free-nudge.met { color: var(--sage-bright); }
 .free-nudge span { display: block; font-size: 11px; color: var(--sage-light); margin-top: 2px; }
 .pickup-hint { font-size: 13px; color: var(--sage-light); font-style: italic; margin: 0 0 12px; }
+
+/* ---- touch screens: bigger targets for fingers ----
+   Apple's guideline is 44px; the chips and buttons were 30-34px tall, fine for
+   a mouse and fiddly for a thumb. Desktop is untouched. */
+@media (pointer: coarse) {
+  .filter-chip, .add-btn, .cart-stamp { min-height: 44px; }
+  .filter-chip { padding-block: 10px; }
+  .sound-toggle { width: 44px; height: 44px; }
+  .thumb { min-width: 44px; min-height: 44px; }
+  .cart-close, .cart-remove { min-width: 44px; min-height: 44px; }
+}
