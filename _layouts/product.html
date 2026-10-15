@@ -43,7 +43,7 @@ layout: default
   "@context": "https://schema.org",
   "@type": "Product",
   "name": {{ page.title | strip_html | jsonify }},
-  "description": {{ page.description | default: site.description | strip_html | normalize_whitespace | jsonify }},
+  "description": {{ page.description_full | default: page.description | default: site.description | strip_html | normalize_whitespace | jsonify }},
   {% if main_img %}"image": [{% for src in page.images %}{{ src | absolute_url | jsonify }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% if page.images == nil %}{{ main_img | absolute_url | jsonify }}{% endif %}],{% endif %}
   "sku": {{ page.slug | jsonify }},
   "category": {{ page.category | strip_html | jsonify }},
@@ -129,7 +129,7 @@ layout: default
       <p class="product-price">${% include money.html amount=page.price %}</p>
       {% if page.free_shipping %}<p class="free-ship free-ship--page">Free U.S. shipping — postage is included in the price</p>{% elsif page.shipping %}<p class="free-ship free-ship--page ship-extra">${{ page.shipping }} U.S. shipping — this one needs an oversize box{% if site.local_pickup and site.local_pickup != "" %}, or pick it up free in {{ site.local_pickup }}{% endif %}</p>{% endif %}
 
-      <p class="product-desc">{{ page.description }}</p>
+      <p class="product-desc">{{ page.description_full | default: page.description }}</p>
 
       {% if page.condition %}
       <div class="condition-note">
