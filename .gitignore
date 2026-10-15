@@ -36,3 +36,6 @@ Gemfile.lock
 # Listing desk build output (rebuilt from _products, published as an artifact)
 tools/listing-desk/out/
 __pycache__/
+
+# Mobile check screenshots
+tools/mobile-check/out/
