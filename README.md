@@ -133,17 +133,43 @@ Same result whether you do it on github.com or locally.
    from `PRODUCTS.md`, then fill in the fields.
 5. **Commit changes.** Cloudflare redeploys in ~1–2 minutes. Done.
 
-**Locally** (repo cloned on your machine):
+**Locally** (the shop folder on this computer):
 1. Copy an existing file in `_products/`, rename it, edit the fields.
-2. Drop the photos in `assets/img/` (and videos in `assets/video/`).
-3. `git add . && git commit -m "Add <product>" && git push` → Cloudflare redeploys.
+2. Drop the photos in `assets/img/<product>/` (and videos in `assets/video/`).
+   Straight off the phone is fine: Publish shrinks photos and turns .MOV into .mp4.
+3. Double-click **Publish Shop** on the desktop, read the summary, type `y`.
+
+### Publish Shop (tools/publish)
+
+`python tools\publish\publish.py` (the desktop shortcut) puts local changes live, and
+stops to explain instead of publishing anything doubtful:
+
+- brings in changes made on github.com first (fast-forward only; if both sides
+  changed in different ways it stops and says so, it never merges)
+- shrinks photos over 1600px or 1 MB, converts .MOV/.m4v to .mp4 and points the
+  product at it, offers to add a missing `.md`, double-quotes titles and turns an
+  inch mark `"` into `″` (a plain quote broke the order email)
+- refuses spreadsheets, databases, key files, anything over 25 MB, HEIC photos,
+  damaged (tiny) media, files outside the site's folders, and the sourcing app's data
+- checks that every photo and video a product lists exists with exactly that
+  spelling (Cloudflare is case-sensitive)
+- test-builds the site, shows what will go live, asks, then commits, pushes and
+  waits for Cloudflare to report the deploy live
+
+`--check` runs every step except commit and push.
+
+`tools\publish\autosync.py` runs at sign-in and every 2 hours (Task Scheduler,
+"Attic & Ember shop download") and downloads github.com changes into this folder
+when nothing here is being edited. It never uploads. Its log and last result are
+in `%LOCALAPPDATA%\AtticEmberShop`. Set both up, or remove them, with
+`powershell -ExecutionPolicy Bypass -File tools\publish\setup.ps1 [-Remove]`.
 
 To **change a price** or **mark something sold**, just open its file, edit
 `price:` or add `sold: true`, and commit. `PRODUCTS.md` is the friendlier,
 copy-paste version of all this.
 
-> **If both of us are editing:** when you've made changes on github.com, run
-> `git pull` on any local copy before editing there, so the two don't drift.
+> **If both of us are editing:** changes made on github.com come down to this
+> folder on their own (see above), and Publish brings in any that haven't yet.
 
 ---
 
