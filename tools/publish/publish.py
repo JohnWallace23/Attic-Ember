@@ -31,6 +31,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from shopgit import (BRANCH, FFMPEG, FFPROBE, REPO, RUBY_BIN, GitError, ahead_behind, busy,  # noqa: E402
                      current_branch, git, load_state, log)
+import sitechanges  # noqa: E402
 
 PHOTO_EXT = {".jpg", ".jpeg", ".png", ".webp"}
 VIDEO_EXT = {".mp4", ".webm"}
@@ -301,7 +302,7 @@ def build():
 
 
 # ------------------------------------------------------------------ 8. deploy check
-def wait_for_deploy(commit):
+def wait_for_deploy(commit, seconds=600):
     token_f, acct_f = Path.home() / ".cf-token", Path.home() / ".cf-account"
     if not (token_f.exists() and acct_f.exists()):
         say("Pushed. Cloudflare usually has it live within 2–3 minutes.")
@@ -309,7 +310,7 @@ def wait_for_deploy(commit):
     token, acct = token_f.read_text().strip(), acct_f.read_text().strip()
     url = f"https://api.cloudflare.com/client/v4/accounts/{acct}/pages/projects/attic-ember/deployments?per_page=3"
     say("Waiting for Cloudflare to put it live…")
-    deadline = time.time() + 600
+    deadline = time.time() + seconds
     last = None
     while time.time() < deadline:
         try:
@@ -347,8 +348,22 @@ def main(check_only):
             f"({note.get('when', '')[:16].replace('T', ' ')}): {note.get('message')}")
     unpushed = bring_up_to_date()
 
+    # Price changes and bundle deals John confirmed in the sourcing app.
+    app = {"applied": [], "conflicts": [], "skipped": [], "messages": {}, "files": []}
+    app_changes = sitechanges.load()
+    if sitechanges.queued(app_changes):
+        app = sitechanges.apply(REPO, app_changes)
+        if app["messages"]:
+            say("\nFrom the sourcing app:")
+            for m in app["messages"].values():
+                say("  - " + m)
+        for c in app["conflicts"] + app["skipped"]:
+            say("  ! not applied: " + c["why"])
+
     items = changes()
     if not items and not unpushed:
+        if sitechanges.queued(app_changes):
+            sitechanges.write_result("nothing", "Nothing to change: the site already matches.", app)
         say("\nNothing has changed here since the last publish. The website is already up to date.")
         return
     say(f"\n{len(items)} file(s) changed here." if items else "")
@@ -470,6 +485,8 @@ def main(check_only):
         return
     say("")
     if not ask("Publish these to the live website now?"):
+        if app["files"]:
+            sitechanges.write_result("waiting", "Applied in the shop folder; waiting for Publish Shop to be confirmed.", app)
         say("Not published. Your changes are still here; run Publish again when ready.")
         return
 
@@ -493,7 +510,11 @@ def main(check_only):
     commit = git("rev-parse", "HEAD")
     log(f"published {commit[:7]}")
     origin = git("remote", "get-url", "origin")
-    if "github.com" in origin and wait_for_deploy(commit):
+    live = "github.com" in origin and wait_for_deploy(commit)
+    if sitechanges.queued(app_changes):
+        sitechanges.write_result("published", "; ".join(app["messages"].values()) or "Published.", app,
+                                 deploy="live" if live else "pending")
+    if live:
         say("\nLive! It's on atticandember.com now.")
         for rel, (status, _) in sorted(products.items()):
             if status == "new":

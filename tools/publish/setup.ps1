@@ -8,7 +8,8 @@
 # - A Task Scheduler task, "Attic & Ember shop download", for the current user:
 #   at sign-in and every 2 hours, tools\publish\autosync.py brings changes made on
 #   GitHub down to this folder, but only when nothing here is being edited. It
-#   never uploads anything. A run missed while asleep happens on wake; never two at once.
+#   uploads nothing unless automatic publishing of app-confirmed price/bundle
+#   changes has been switched on (see sitechanges.py). A run missed while asleep happens on wake; never two at once.
 
 param([switch]$Remove)
 
@@ -55,7 +56,7 @@ $every2h   = New-ScheduledTaskTrigger -Once -At $now.Date.AddHours([math]::Floor
                -RepetitionInterval (New-TimeSpan -Hours 2)
 $principal = New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -RunLevel Limited
 $settings  = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew `
-               -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+               -ExecutionTimeLimit (New-TimeSpan -Minutes 20) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 Register-ScheduledTask -TaskName $task -Action $action -Trigger @($atLogon, $every2h) -Principal $principal `
     -Settings $settings -Description "Brings shop changes made on GitHub down to $repo (download only)." -Force | Out-Null
 Write-Output "Automatic download: at sign-in and every 2 hours, while $user is logged on."
