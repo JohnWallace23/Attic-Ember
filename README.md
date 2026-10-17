@@ -205,3 +205,5 @@ Then open the local URL it prints. Notes:
   [OpenGameArt.org](https://opengameart.org/content/fireplace-sound-loop) —
   **CC0 / public domain** (no attribution required; credited here for our own
   records). Compressed to a small mono MP3.
+
+<!-- sync check 2026-10-16 (made on github.com to test the automatic download; Publish Shop removes it) -->
