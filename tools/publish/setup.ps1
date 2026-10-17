@@ -58,5 +58,5 @@ $principal = New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -Ru
 $settings  = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew `
                -ExecutionTimeLimit (New-TimeSpan -Minutes 20) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 Register-ScheduledTask -TaskName $task -Action $action -Trigger @($atLogon, $every2h) -Principal $principal `
-    -Settings $settings -Description "Brings shop changes made on GitHub down to $repo (download only)." -Force | Out-Null
+    -Settings $settings -Description "Brings shop changes made on GitHub down to $repo, and publishes price/bundle changes confirmed in the sourcing app when automatic publishing is switched on." -Force | Out-Null
 Write-Output "Automatic download: at sign-in and every 2 hours, while $user is logged on."
