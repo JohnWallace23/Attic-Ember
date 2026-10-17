@@ -30,7 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from shopgit import (BRANCH, FFMPEG, FFPROBE, REPO, RUBY_BIN, GitError, ahead_behind, busy,  # noqa: E402
-                     current_branch, git, load_state, log)
+                     current_branch, git, load_state, log, on_github)
 import sitechanges  # noqa: E402
 
 PHOTO_EXT = {".jpg", ".jpeg", ".png", ".webp"}
@@ -351,7 +351,11 @@ def main(check_only):
     # Price changes and bundle deals John confirmed in the sourcing app.
     app = {"applied": [], "conflicts": [], "skipped": [], "messages": {}, "files": []}
     app_changes = sitechanges.load()
-    if sitechanges.queued(app_changes):
+    app_active = sitechanges.needs_work(REPO, app_changes)
+
+    def report(*args, **kw):
+        sitechanges.write_result(*args, live=sitechanges.live_ids(app_changes, on_github), **kw)
+    if app_active:
         app = sitechanges.apply(REPO, app_changes)
         if app["messages"]:
             say("\nFrom the sourcing app:")
@@ -362,8 +366,8 @@ def main(check_only):
 
     items = changes()
     if not items and not unpushed:
-        if sitechanges.queued(app_changes):
-            sitechanges.write_result("nothing", "Nothing to change: the site already matches.", app)
+        if app_active:
+            report("nothing", "Nothing to change: the site already matches.", app)
         say("\nNothing has changed here since the last publish. The website is already up to date.")
         return
     say(f"\n{len(items)} file(s) changed here." if items else "")
@@ -486,7 +490,7 @@ def main(check_only):
     say("")
     if not ask("Publish these to the live website now?"):
         if app["files"]:
-            sitechanges.write_result("waiting", "Applied in the shop folder; waiting for Publish Shop to be confirmed.", app)
+            report("waiting", "Applied in the shop folder; waiting for Publish Shop to be confirmed.", app)
         say("Not published. Your changes are still here; run Publish again when ready.")
         return
 
@@ -511,8 +515,8 @@ def main(check_only):
     log(f"published {commit[:7]}")
     origin = git("remote", "get-url", "origin")
     live = "github.com" in origin and wait_for_deploy(commit)
-    if sitechanges.queued(app_changes):
-        sitechanges.write_result("published", "; ".join(app["messages"].values()) or "Published.", app,
+    if app_active:
+        report("published", "; ".join(app["messages"].values()) or "Published.", app,
                                  deploy="live" if live else "pending")
     if live:
         say("\nLive! It's on atticandember.com now.")

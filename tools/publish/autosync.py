@@ -19,8 +19,8 @@ import subprocess
 import sys
 import time
 
-from shopgit import (BRANCH, REPO, GitError, ahead_behind, busy, current_branch, git, log, save_state,
-                     tracked_changes)
+from shopgit import (BRANCH, REPO, GitError, ahead_behind, busy, current_branch, git, log, on_github,
+                     save_state, tracked_changes)
 import sitechanges
 
 
@@ -60,16 +60,20 @@ def anything_edited():
 def publish_queued(sync_result):
     """Publish the app's confirmed changes, if allowed. Returns a short note for the sync log, or None."""
     changes = sitechanges.load()
-    if not sitechanges.queued(changes):
+    if not sitechanges.needs_work(REPO, changes):
         return None
+
+    def report(*args, **kw):
+        sitechanges.write_result(*args, live=sitechanges.live_ids(changes, on_github), **kw)
+
     if not sitechanges.autopublish_on():
-        sitechanges.write_result("waiting", "Waiting for Publish Shop: automatic publishing is switched off.")
+        report("waiting", "Waiting for Publish Shop: automatic publishing is switched off.")
         return "app changes wait for Publish Shop (automatic publishing is off)"
     if sync_result not in ("ok",) or busy() or current_branch() != BRANCH:
-        sitechanges.write_result("waiting", "The shop folder isn't in step with GitHub right now, so this waits.")
+        report("waiting", "The shop folder isn't in step with GitHub right now, so this waits.")
         return "app changes waiting: folder not in step with GitHub"
     if anything_edited():
-        sitechanges.write_result("waiting", "Files in the shop folder are being edited, so this waits for Publish Shop.")
+        report("waiting", "Files in the shop folder are being edited, so this waits for Publish Shop.")
         return "app changes wait for Publish Shop (folder has edits)"
 
     import publish                                  # its build and deploy check, nothing else
@@ -77,7 +81,7 @@ def publish_queued(sync_result):
     outcome = sitechanges.apply(REPO, changes)
     files = outcome["files"]
     if not files:
-        sitechanges.write_result("nothing", "Nothing to change: the site already matches.", outcome)
+        report("nothing", "Nothing to change: the site already matches.", outcome)
         return "app changes already on the site"
     try:
         changed = {l[3:].strip().strip('"').replace("\\", "/")
@@ -99,7 +103,7 @@ def publish_queued(sync_result):
             if p.exists() and git("ls-files", "--error-unmatch", f, check=False).returncode != 0:
                 p.unlink()                          # a bundles file this run created
         msg = (str(e).splitlines() or [type(e).__name__])[0][:300]
-        sitechanges.write_result("error", "Couldn't publish the app's changes, so nothing was sent: " + msg, outcome)
+        report("error", "Couldn't publish the app's changes, so nothing was sent: " + msg, outcome)
         return "app changes NOT published: " + msg
     commit = git("rev-parse", "HEAD")
     log(f"published app changes {commit[:7]}")
@@ -109,7 +113,7 @@ def publish_queued(sync_result):
             live = publish.wait_for_deploy(commit, seconds=420)
         except Exception:
             live = False
-    sitechanges.write_result("published", "; ".join(outcome["messages"].values()) or "Published.", outcome,
+    report("published", "; ".join(outcome["messages"].values()) or "Published.", outcome,
                              deploy="live" if live else "pending")
     return f"published app changes {commit[:7]}" + ("" if live else " (deploy still running)")
 

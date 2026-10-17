@@ -73,6 +73,12 @@ def tracked_changes():
     return [l for l in git("status", "--porcelain", "--untracked-files=no").splitlines() if l.strip()]
 
 
+def on_github(path):
+    """A file's text as it is on GitHub (origin/main, as of the last fetch), or None."""
+    r = git("show", f"origin/{BRANCH}:{path}", check=False)
+    return r.stdout if r.returncode == 0 else None
+
+
 def log(line):
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     with open(SYNC_LOG, "a", encoding="utf-8") as f:

@@ -41,21 +41,34 @@ def autopublish_on():
 
 
 def load(path=CHANGES):
-    """The app's queued changes, or [] if there's no file or it isn't what we expect."""
+    """The app's changes, or None if there's no file or it isn't what we expect. None means
+    "don't touch anything": a missing or damaged file must never wipe the site's bundles."""
     try:
         if path.stat().st_size > 1_000_000:
-            return []
+            return None
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return []
+        return None
     if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("changes"), list):
-        return []
+        return None
     return [c for c in data["changes"] if isinstance(c, dict)]
 
 
 def queued(changes):
     """Changes still waiting to reach the site (a price not yet applied, a bundle not yet live)."""
-    return [c for c in changes if c.get("status") == "pending" and c.get("kind") in ("price", "bundle")]
+    return [c for c in (changes or []) if c.get("status") == "pending" and c.get("kind") in ("price", "bundle")]
+
+
+def needs_work(repo, changes):
+    """Whether the shop folder is out of step with the app: a pending change, or a bundles
+    file that doesn't match (a bundle was removed, or ended because a piece sold)."""
+    if changes is None:
+        return False
+    if any(c.get("kind") == "price" and c.get("status") == "pending" for c in changes):
+        return True
+    wanted, _, _ = _bundle_plan(Path(repo), changes)
+    current = _read_bundles(Path(repo))
+    return not (current is None and not wanted) and (current or "").replace("\r\n", "\n") != _bundles_text(wanted)
 
 
 def _money(x):
@@ -146,10 +159,45 @@ def apply(repo, changes):
         out["messages"][cid] = f"{title} is now ${price:.2f} on the site (was ${was:.2f})"
 
     # Bundles: the file holds exactly the valid pending/live ones (prices as they are after the above).
-    wanted = []
+    wanted, skipped, pending = _bundle_plan(repo, changes)
+    out["skipped"] += skipped
+    for b in wanted:
+        if b["id"] in pending:
+            out["applied"].append(b["id"])
+            names = [(_field(_product(repo, s)[2], "title") or s) for s in b["items"]]
+            out["messages"][b["id"]] = f"Bundle deal live: {' + '.join(names)} for ${b['price']:.2f}"
+    current = _read_bundles(repo)
+    text = _bundles_text(wanted)
+    if current is None and not wanted:
+        pass                                       # nothing to say and no file: don't create one
+    elif current is None or current.replace("\r\n", "\n") != text:
+        kept = {b["id"] for b in wanted}
+        for gone in re.findall(r'^- id: "([^"]+)"', current or "", re.M):
+            if gone not in kept:
+                out["messages"][gone] = "Bundle deal taken off the site"
+        target = repo / BUNDLES_FILE
+        target.parent.mkdir(exist_ok=True)
+        target.write_bytes(text.encode("utf-8"))
+        out["files"].append(BUNDLES_FILE)
+    return out
+
+
+def _read_bundles(repo):
+    target = repo / BUNDLES_FILE
+    return target.read_bytes().decode("utf-8") if target.exists() else None
+
+
+def _bundles_text(wanted):
+    return HEADER + ("".join(f"- id: \"{b['id']}\"\n  items: [{', '.join(b['items'])}]\n  price: {b['price']:.2f}\n"
+                             for b in wanted) if wanted else "[]\n")
+
+
+def _bundle_plan(repo, changes):
+    """(bundles that belong on the site, [{id, why}] skipped, ids of those still pending)."""
+    wanted, skipped, pending = [], [], set()
     for c in sorted((c for c in changes if c.get("kind") == "bundle"), key=lambda c: str(c.get("id"))):
         if c.get("status") not in ("pending", "live"):
-            continue
+            continue                               # removed, ended: not on the site
         cid = str(c.get("id"))
         slugs = c.get("slugs")
         price = _money(c.get("price"))
@@ -171,32 +219,50 @@ def apply(repo, changes):
                 if not price < total:
                     why = f"its price (${price:.2f}) isn't below the pieces' total (${total:.2f})"
         if why:
-            out["skipped"].append({"id": cid, "why": why})
+            skipped.append({"id": cid, "why": why})
             continue
         wanted.append({"id": cid, "items": list(slugs), "price": price})
         if c.get("status") == "pending":
-            out["applied"].append(cid)
-            names = [(_field(_product(repo, s)[2], "title") or s) for s in slugs]
-            out["messages"][cid] = f"Bundle deal live: {' + '.join(names)} for ${price:.2f}"
+            pending.add(cid)
+    return wanted, skipped, pending
 
-    target = repo / BUNDLES_FILE
-    current = target.read_bytes().decode("utf-8") if target.exists() else None
-    text = HEADER + ("".join(f"- id: \"{b['id']}\"\n  items: [{', '.join(b['items'])}]\n  price: {b['price']:.2f}\n"
-                             for b in wanted) if wanted else "[]\n")
-    if current is None and not wanted:
-        pass                                       # nothing to say and no file: don't create one
-    elif current is None or current.replace("\r\n", "\n") != text:
-        target.parent.mkdir(exist_ok=True)
-        target.write_bytes(text.encode("utf-8"))
-        out["files"].append(BUNDLES_FILE)
+
+def live_ids(changes, show):
+    """Ids of pending changes that are already on GitHub, whatever this run did. `show(path)`
+    returns that file's text in origin/main, or None. Lets the app mark a change live even
+    when a later run only says "waiting"."""
+    out = []
+    bundles = None
+    for c in queued(changes):
+        cid = str(c.get("id"))
+        if c.get("kind") == "price":
+            slug, price = c.get("slug"), _money(c.get("price"))
+            if not (isinstance(slug, str) and SLUG.match(slug) and price):
+                continue
+            text = show(f"_products/{slug}.md")
+            m = re.match(r"\A﻿?---[ \t]*\r?\n(.*?)\r?\n---", text or "", re.S)
+            now = _price(m.group(1)) if m else None
+            if now is not None and abs(now - price) < 0.005:
+                out.append(cid)
+        elif c.get("kind") == "bundle":
+            if bundles is None:
+                bundles = (show(BUNDLES_FILE) or "").replace("\r\n", "\n")
+            price = _money(c.get("price"))
+            slugs = c.get("slugs") if isinstance(c.get("slugs"), list) else []
+            entry = f"- id: \"{cid}\"\n  items: [{', '.join(map(str, slugs))}]\n  price: {price or 0:.2f}\n"
+            if CHANGE_ID.match(cid) and entry in bundles:
+                out.append(cid)
     return out
 
 
-def write_result(result, message, outcome=None, deploy=None):
+def write_result(result, message, outcome=None, deploy=None, live=None):
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     outcome = outcome or {}
+    # A waiting run hasn't put anything on GitHub; what's already there is in live_ids.
+    applied = [] if result in ("waiting", "error") else outcome.get("applied", [])
     data = {"at": datetime.now().astimezone().isoformat(timespec="seconds"), "result": result, "message": message,
-            "applied": outcome.get("applied", []), "conflicts": [c["id"] for c in outcome.get("conflicts", [])],
+            "live_ids": live or [],
+            "applied": applied, "conflicts": [c["id"] for c in outcome.get("conflicts", [])],
             "conflict_reasons": {c["id"]: c["why"] for c in outcome.get("conflicts", [])},
             "skipped": {s["id"]: s["why"] for s in outcome.get("skipped", [])},
             "message_per_id": outcome.get("messages", {}), "deploy": deploy}
