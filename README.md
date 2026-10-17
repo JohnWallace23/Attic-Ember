@@ -160,7 +160,17 @@ stops to explain instead of publishing anything doubtful:
 
 `tools\publish\autosync.py` runs at sign-in and every 2 hours (Task Scheduler,
 "Attic & Ember shop download") and downloads github.com changes into this folder
-when nothing here is being edited. It never uploads. Its log and last result are
+when nothing here is being edited.
+
+Price changes and bundle deals confirmed in the sourcing app (its Ledger tab:
+Adjust price… / Bundle…) are applied by `tools\publish\sitechanges.py`, which can
+only change a product's `price:` line and `_data/bundles.yml`; Publish Shop lists
+and publishes them. With automatic publishing switched on
+(`%LOCALAPPDATA%\AtticEmberShop\autopublish.json` = `{"enabled": true}`, on since
+2026-10-17 at John's request; delete the file to turn it off) the 2-hourly task
+publishes those changes by itself when the folder has no other edits, and nothing
+else. Bundles show on product pages and discount the cart via `_plugins/bundles.rb`.
+Its log and last result are
 in `%LOCALAPPDATA%\AtticEmberShop`. Set both up, or remove them, with
 `powershell -ExecutionPolicy Bypass -File tools\publish\setup.ps1 [-Remove]`.
 
