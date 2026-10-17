@@ -233,6 +233,38 @@ def media_paths(fm):
     return re.findall(r'(/assets/[^\s"\'#]+)', fm)
 
 
+# ------------------------------------------------------------------ listing checks (warnings only)
+SIZE_WORDS = re.compile(r"\d\s*(″|\"|in\b|inch|inches|cm\b|ft\b|feet|foot)|\b(tall|wide|long|high|deep|diameter|"
+                        r"measures?|measuring|dimensions?|wingspan)\b", re.I)
+PRICE_REPORT = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "AtticEmberSourcing" / "shop_prices.json"
+
+
+def price_report():
+    """The sourcing app's fair-price check of the shop, if it's on this computer and recent."""
+    try:
+        if time.time() - PRICE_REPORT.stat().st_mtime > 3 * 86400:
+            return {}
+        data = json.loads(PRICE_REPORT.read_text(encoding="utf-8"))
+        return {i["slug"]: i for i in data.get("items", []) if i.get("slug")}
+    except (OSError, ValueError, KeyError, TypeError):
+        return {}
+
+
+def listing_warnings(rel, fm, prices):
+    """Things that make a listing sell slower or invite returns. Never stops a publish."""
+    out = []
+    photos = [m for m in media_paths(fm) if Path(m).suffix.lower() in PHOTO_EXT and "/img/" in m]
+    if len(photos) < 3:
+        out.append(f"only {len(photos)} photo(s): front, back, maker's mark and any flaws help it sell")
+    desc = fm.split("description:", 1)[1] if "description:" in fm else ""
+    if not SIZE_WORDS.search(desc) and not any("measure" in Path(m).stem.lower() or "size" in Path(m).stem.lower() for m in photos):
+        out.append("no size given: add measurements to the description (or a measurements photo)")
+    hit = prices.get(Path(rel).stem)
+    if hit and hit.get("over"):
+        out.append(hit.get("note") or "priced well above what pieces like it usually sell for")
+    return out
+
+
 def exists_exactly(rel):
     """True if the file exists with exactly this spelling, capitals included (Cloudflare is strict)."""
     cur = REPO
@@ -376,7 +408,7 @@ def main(check_only):
             raise Stop(f"{rel} is still {size_text(p.stat().st_size)} after shrinking; too big for the website.")
 
     # Products: titles, converted video names, and every listed file must exist exactly.
-    products, missing = {}, []
+    products, missing, warnings, prices = {}, [], [], price_report()
     for status, rel in changes():
         if not (rel.startswith("_products/") and rel.endswith(".md")):
             continue
@@ -397,6 +429,8 @@ def main(check_only):
         for media in media_paths(fm):
             if not exists_exactly(media.lstrip("/")):
                 missing.append(f"{rel} lists {media}, but there's no file with exactly that name")
+        if not re.search(r"^sold:\s*true\b", fm, re.M | re.I):
+            warnings += [f"{title}: {w}" for w in listing_warnings(rel, fm, prices)]
         products[rel] = (status, title)
     if missing:
         raise Stop("Some photos or videos a product lists aren't there (capitals count):\n  - " +
@@ -424,6 +458,10 @@ def main(check_only):
         say("\nFixed automatically:")
         for n in notes:
             say("  - " + n)
+    if warnings:
+        say("\nWorth a look (these won't stop you publishing):")
+        for w in warnings:
+            say("  - " + w)
     if len(gone) > 10:
         say(f"\nCareful: {len(gone)} files would be deleted from the website.")
 
