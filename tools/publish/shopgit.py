@@ -5,9 +5,12 @@ download result) lives outside the repo, in %LOCALAPPDATA%\\AtticEmberShop, so
 it never shows up as a change to publish.
 """
 import json
+import msvcrt
 import os
 import shutil
 import subprocess
+import time
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -71,6 +74,38 @@ def ahead_behind():
 def tracked_changes():
     """Edited or deleted files git already knows about (new, untracked files not counted)."""
     return [l for l in git("status", "--porcelain", "--untracked-files=no").splitlines() if l.strip()]
+
+
+class Busy(Exception):
+    """Publish Shop or the background task is already working on the folder."""
+
+
+@contextmanager
+def publish_lock(wait_seconds=0):
+    """Only one of Publish Shop and the background task touches the folder at a time.
+    A lock on a file in the state folder; Windows releases it if the process dies."""
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    f = open(STATE_DIR / "publish.lock", "a+b")
+    deadline = time.time() + wait_seconds
+    while True:
+        try:
+            f.seek(0)
+            msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+            break
+        except OSError:
+            if time.time() >= deadline:
+                f.close()
+                raise Busy() from None
+            time.sleep(2)
+    try:
+        yield
+    finally:
+        try:
+            f.seek(0)
+            msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+        except OSError:
+            pass
+        f.close()
 
 
 def on_github(path):

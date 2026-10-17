@@ -30,7 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from shopgit import (BRANCH, FFMPEG, FFPROBE, REPO, RUBY_BIN, GitError, ahead_behind, busy,  # noqa: E402
-                     current_branch, git, load_state, log, on_github)
+                     Busy, current_branch, git, load_state, log, on_github, publish_lock)
 import sitechanges  # noqa: E402
 
 PHOTO_EXT = {".jpg", ".jpeg", ".png", ".webp"}
@@ -528,7 +528,12 @@ def main(check_only):
 if __name__ == "__main__":
     check = "--check" in sys.argv[1:]
     try:
-        main(check)
+        try:
+            with publish_lock(wait_seconds=int(os.environ.get("ATTIC_PUBLISH_LOCK_WAIT", "90"))):
+                main(check)
+        except Busy:
+            raise Stop("The background task is publishing a change from the sourcing app right now. "
+                       "Try again in a couple of minutes.") from None
     except Stop as e:
         say("\nStopped: " + str(e))
     except (GitError, OSError, subprocess.SubprocessError) as e:

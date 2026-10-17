@@ -19,8 +19,8 @@ import subprocess
 import sys
 import time
 
-from shopgit import (BRANCH, REPO, GitError, ahead_behind, busy, current_branch, git, log, on_github,
-                     save_state, tracked_changes)
+from shopgit import (BRANCH, REPO, Busy, GitError, ahead_behind, busy, current_branch, git, log, on_github,
+                     publish_lock, save_state, tracked_changes)
 import sitechanges
 
 
@@ -57,6 +57,24 @@ def anything_edited():
     return bool(git("status", "--porcelain", "--untracked-files=all", check=False).stdout.strip())
 
 
+def undo_own_changes(head, files, written):
+    """After a failed publish: drop this run's commit (if it got that far) and put back only the
+    files it changed, and only if they still hold exactly what it wrote. Returns files left alone."""
+    if git("rev-parse", "HEAD") != head:
+        git("reset", "-q", "--soft", head, check=False)      # HEAD back; the working tree untouched
+    git("reset", "-q", head, "--", *files, check=False)       # unstage just these
+    kept = []
+    for f in files:
+        p = REPO / f
+        if not p.exists() or p.read_bytes() != written[f]:
+            kept.append(f)                                  # changed since this run wrote it: not ours to undo
+        elif git("cat-file", "-e", f"{head}:{f}", check=False).returncode == 0:
+            git("checkout", "-q", head, "--", f, check=False)
+        else:
+            p.unlink()                                      # a bundles file this run created
+    return kept
+
+
 def publish_queued(sync_result):
     """Publish the app's confirmed changes, if allowed. Returns a short note for the sync log, or None."""
     changes = sitechanges.load()
@@ -83,6 +101,7 @@ def publish_queued(sync_result):
     if not files:
         report("nothing", "Nothing to change: the site already matches.", outcome)
         return "app changes already on the site"
+    written = {f: (REPO / f).read_bytes() for f in files}       # exactly what this run wrote
     try:
         changed = {l[3:].strip().strip('"').replace("\\", "/")
                    for l in git("status", "--porcelain", "--untracked-files=all", check=False).stdout.splitlines() if l.strip()}
@@ -96,13 +115,12 @@ def publish_queued(sync_result):
         if r.returncode != 0:
             raise RuntimeError("GitHub didn't accept the push: " + (r.stderr.strip().splitlines() or ["?"])[-1])
     except Exception as e:
-        # Put everything back exactly as it was; nothing has reached GitHub.
-        git("reset", "-q", "--hard", head, check=False)
-        for f in files:
-            p = REPO / f
-            if p.exists() and git("ls-files", "--error-unmatch", f, check=False).returncode != 0:
-                p.unlink()                          # a bundles file this run created
+        # Nothing reached GitHub. Undo this run's own work only: anything John edited in the
+        # meantime (the build takes a while) is left exactly as he left it.
+        kept = undo_own_changes(head, files, written)
         msg = (str(e).splitlines() or [type(e).__name__])[0][:300]
+        if kept:
+            msg += f" (left {', '.join(kept)} as edited since)"
         report("error", "Couldn't publish the app's changes, so nothing was sent: " + msg, outcome)
         return "app changes NOT published: " + msg
     commit = git("rev-parse", "HEAD")
@@ -118,7 +136,7 @@ def publish_queued(sync_result):
     return f"published app changes {commit[:7]}" + ("" if live else " (deploy still running)")
 
 
-if __name__ == "__main__":
+def run():
     try:
         result, message = download()
     except (GitError, OSError) as e:
@@ -137,4 +155,14 @@ if __name__ == "__main__":
             sitechanges.write_result("error", f"{type(e).__name__}: {e}"[:300])
         except OSError:
             pass
+    return result
+
+
+if __name__ == "__main__":
+    try:
+        with publish_lock():
+            result = run()
+    except Busy:
+        log("skipped: Publish Shop is working on the folder right now")
+        result = "waiting"
     sys.exit(0 if result in ("ok", "waiting", "offline") else 1)
