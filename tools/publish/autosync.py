@@ -7,7 +7,9 @@ edits of its own. If files here are being edited, or this folder has commits
 GitHub doesn't (the two have gone different ways), it changes nothing and leaves
 a note that the Publish tool shows. It never merges, rebases, resets or stashes.
 """
+import subprocess
 import sys
+import time
 
 from shopgit import (BRANCH, GitError, ahead_behind, busy, current_branch, git, log, save_state,
                      tracked_changes)
@@ -18,7 +20,16 @@ def main():
         return "skipped", "A merge or rebase is half-finished in the shop folder."
     if current_branch() != BRANCH:
         return "skipped", f"The shop folder isn't on the {BRANCH} branch."
-    git("fetch", "--quiet", "origin", BRANCH, timeout=90)
+    # Right after the PC wakes, the network often isn't up yet: wait and try once more,
+    # and if GitHub still can't be reached, that's "offline", not a fault.
+    for attempt in (1, 2):
+        try:
+            git("fetch", "--quiet", "origin", BRANCH, timeout=60)
+            break
+        except (GitError, subprocess.TimeoutExpired):
+            if attempt == 2:
+                return "offline", "Couldn't reach GitHub (no internet yet?). Will try again at the next run."
+            time.sleep(30)
     ahead, behind = ahead_behind()
     if behind == 0:
         return "ok", "Already up to date."
@@ -41,4 +52,4 @@ if __name__ == "__main__":
         result, message = "error", f"{type(e).__name__}: {e}"[:300]
     log(f"{result}: {message}")
     save_state(result, message)
-    sys.exit(0 if result in ("ok", "waiting") else 1)
+    sys.exit(0 if result in ("ok", "waiting", "offline") else 1)
