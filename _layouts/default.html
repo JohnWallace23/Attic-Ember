@@ -92,6 +92,8 @@
 
   <!-- Browser cart + manual checkout (PayPal / Venmo / Cash App). No backend;
        items live in the visitor's browser, orders email the shop. -->
+  <!-- Current prices, sold flags and bundle deals for the cart (_plugins/bundles.rb). -->
+  <script type="application/json" id="shop-data">{{ site.data.shop_json }}</script>
   <script src="{{ '/assets/js/cart.js' | relative_url }}?v={{ site.time | date: '%s' }}"
           data-order-email="{{ site.order_email }}"
           data-paypal="{{ site.payments.paypal_me }}"

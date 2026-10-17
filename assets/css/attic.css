@@ -1181,3 +1181,16 @@ body.cart-open { overflow: hidden; }
 .want-callout { text-align: center; color: var(--sage-light); margin: 36px auto 0; max-width: 560px; }
 .want-callout a { color: var(--gold-bright); }
 @media (max-width: 560px) { .want-page .of-row { flex-direction: column; } }
+
+/* ---- bundle deals (product page + cart) ---- */
+.bundle-deal { margin-top: 16px; padding: 12px 14px; border: 1.5px dashed var(--gold); border-radius: var(--radius); background: rgba(217,168,78,0.07); }
+.bundle-deal p { margin: 0 0 10px; color: var(--paper); line-height: 1.5; }
+.bundle-deal strong { color: var(--gold-bright); }
+.bundle-deal a { color: var(--gold-bright); }
+.bundle-save { color: var(--sage-bright); white-space: nowrap; }
+.deal-line span:first-child { color: var(--sage-bright); }
+.deal-line span:last-child { color: var(--sage-bright); white-space: nowrap; padding-left: 12px; }
+.bundle-nudge { margin: 10px 0 0; padding: 8px 10px; font-size: 14px; color: var(--paper); border: 1px dashed var(--gold); border-radius: var(--radius); }
+.bundle-nudge a { color: var(--gold-bright); }
+.cart-note { margin: 0 0 12px; padding: 8px 10px; font-size: 14px; color: var(--paper); background: rgba(201,98,45,0.15); border-left: 3px solid var(--pumpkin); }
+.linkish { background: none; border: 0; padding: 0; font: inherit; color: var(--gold-bright); text-decoration: underline; cursor: pointer; }

@@ -27,8 +27,94 @@
   function save() { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {} }
   var cart = read();
 
+  // ---- what the shop says right now (_plugins/bundles.rb puts it in every page) ----
+  // Current price, sold flag and shipping for each product, and the bundle deals.
+  var SHOP = { products: {}, bundles: [] };
+  var factsTag = document.getElementById("shop-data");
+  try {
+    var parsed = factsTag ? JSON.parse(factsTag.textContent) : null;
+    if (parsed && parsed.products) SHOP = { products: parsed.products, bundles: parsed.bundles || [] };
+  } catch (e) { /* no facts: the cart works as before, without deals */ }
+  var HAVE_FACTS = Object.keys(SHOP.products).length > 0;
+  function slugOf(id) { return String(id || "").replace(/^\/shop\//, "").replace(/\/+$/, ""); }
+
+  // A cart can sit in the browser for days. Prices change (sometimes from the
+  // sourcing app) and pieces sell, so bring it up to date before showing a total.
+  var cartNote = "";
+  if (HAVE_FACTS) {
+    var sold = [], gone = [];
+    cart = cart.filter(function (i) {
+      var p = SHOP.products[slugOf(i.id)];
+      if (!p) { gone.push(i.title); return false; }
+      if (p.sold) { sold.push(i.title); return false; }
+      if (typeof p.price === "number") i.price = String(p.price);
+      i.freeShip = p.freeShip === true;
+      i.ship = p.ship == null ? "" : String(p.ship);
+      return true;
+    });
+    var notes = [];
+    if (sold.length) notes.push(sold.join(" and ") + (sold.length > 1 ? " have" : " has") + " sold since you added " +
+      (sold.length > 1 ? "them" : "it") + ", so we took " + (sold.length > 1 ? "them" : "it") + " out of your cart. Sorry!");
+    if (gone.length) notes.push(gone.join(" and ") + (gone.length > 1 ? " are" : " is") +
+      " no longer in the shop, so we took " + (gone.length > 1 ? "them" : "it") + " out of your cart.");
+    cartNote = notes.join(" ");
+    save();
+  }
+
   function has(id) { return cart.some(function (i) { return i.id === id; }); }
   function subtotal() { return cart.reduce(function (s, i) { return s + (parseFloat(i.price) || 0); }, 0); }
+
+  // Bundle deals: when every piece of a bundle is in the cart, it costs the
+  // bundle price. A piece counts toward one deal only; the biggest saving wins.
+  function appliedDeals() {
+    var inCart = {};
+    cart.forEach(function (i) { inCart[slugOf(i.id)] = i; });
+    var used = {};
+    return SHOP.bundles.slice().sort(function (a, b) { return b.save - a.save; }).map(function (b) {
+      if (!b.items.every(function (s) { return inCart[s] && !used[s]; })) return null;
+      var sum = b.items.reduce(function (t, s) { return t + (parseFloat(inCart[s].price) || 0); }, 0);
+      var save = Math.round((sum - b.price) * 100) / 100;
+      if (!(save > 0)) return null;
+      b.items.forEach(function (s) { used[s] = true; });
+      return { id: b.id, save: save, names: b.items.map(function (s) { return inCart[s].title; }) };
+    }).filter(Boolean);
+  }
+  function discount() { return appliedDeals().reduce(function (t, d) { return t + d.save; }, 0); }
+  // What the pieces cost after any deal: the free-shipping threshold and the total use this.
+  function goods() { return Math.max(0, subtotal() - discount()); }
+  function dealRows(cls) {
+    return appliedDeals().map(function (d) {
+      return '<div class="' + cls + ' deal-line"><span>' + dealLabel(d) + "</span><span>&minus;" +
+        money(d.save) + "</span></div>";
+    }).join("");
+  }
+  // On screen the pieces are listed right above, so name the deal briefly; the email spells them out.
+  function dealLabel(d) {
+    return "Bundle deal (" + (d.names.length === 2 ? "both pieces" : "all " + d.names.length + " pieces") + ")";
+  }
+  function dealText() {
+    return appliedDeals().map(function (d) { return "\nBundle deal (" + d.names.join(" + ") + "): -" + money(d.save); }).join("");
+  }
+  // In the cart: "add the other piece and save" when part of a bundle is already in.
+  function dealNudges() {
+    var inCart = {};
+    cart.forEach(function (i) { inCart[slugOf(i.id)] = true; });
+    var applied = {};
+    appliedDeals().forEach(function (d) { applied[d.id] = true; });
+    return SHOP.bundles.map(function (b) {
+      if (applied[b.id]) return "";
+      var have = b.items.filter(function (s) { return inCart[s]; });
+      var need = b.items.filter(function (s) { return !inCart[s]; });
+      if (!have.length || !need.length) return "";
+      var links = need.map(function (s) {
+        var p = SHOP.products[s] || {};
+        return '<a href="' + esc(p.url || "/shop/") + '">' + esc(p.title || s) + "</a>";
+      }).join(" and ");
+      return '<p class="bundle-nudge">Add ' + links + " for the bundle deal and save " + money(b.save) + ". " +
+        '<button type="button" class="add-bundle linkish" data-bundle="' + esc(b.id) + '">Add ' +
+        (need.length > 1 ? "them" : "it") + "</button></p>";
+    }).join("");
+  }
   // Shipping, U.S. only — international is quoted by hand (no rate here
   // would cover it) and the buyer is told we'll follow up before paying.
   //
@@ -59,7 +145,7 @@
     return cart.some(function (i) { return i.freeShip !== true && !isOversize(i); });
   }
   function oversizeItems() { return cart.filter(isOversize); }
-  function freeStandard() { return FREE_OVER > 0 && subtotal() >= FREE_OVER; }
+  function freeStandard() { return FREE_OVER > 0 && goods() >= FREE_OVER; }
   function flatCharge() { return hasOrdinary() && !freeStandard() ? SHIP_RATE : 0; }
   function shipping() {
     if (cart.length === 0 || pickup || !domestic) return 0;
@@ -91,12 +177,12 @@
   // oversize or free-ship pieces gets nothing from the threshold.
   function freeNudge() {
     if (!FREE_OVER || !hasOrdinary()) return "";
-    var gap = FREE_OVER - subtotal();
+    var gap = FREE_OVER - goods();
     if (gap > 0) return '<p class="free-nudge">Add <strong>' + money(gap) + "</strong> more for free shipping.</p>";
     return '<p class="free-nudge met">Free shipping on orders over ' + dollars(FREE_OVER) + " \u2713" +
       (oversizeItems().length ? " <span>Oversize pieces still ship at their own rate.</span>" : "") + "</p>";
   }
-  function grandTotal() { return subtotal() + shipping(); }
+  function grandTotal() { return goods() + shipping(); }
   function money(n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); }
   // Round figures in prose read better without cents: "over $75", not "$75.00".
   function dollars(n) { return money(n).replace(/\.00$/, ""); }
@@ -146,8 +232,9 @@
     // (pickup, a foreign country) doesn't carry back into the cart's totals.
     pickup = false;
     domestic = true;
+    var note = cartNote ? '<p class="cart-note">' + esc(cartNote) + "</p>" : "";
     if (cart.length === 0) {
-      body.innerHTML =
+      body.innerHTML = note +
         '<p class="cart-empty">Your cart is empty.</p>' +
         '<p class="cart-empty-sub">Find something with a little history in <a href="/shop/">the shop</a>.</p>';
       return;
@@ -162,10 +249,11 @@
         '<button class="cart-remove" type="button" data-id="' + esc(i.id) + '" aria-label="Remove">&times;</button>' +
       "</div>";
     }).join("");
-    body.innerHTML =
-      '<div class="cart-items">' + rows + "</div>" +
+    body.innerHTML = note +
+      '<div class="cart-items">' + rows + "</div>" + dealNudges() +
       '<div class="cart-foot">' +
         '<div class="cart-subtotal"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
+        dealRows("cart-subtotal") +
         (SHIP_RATE > 0
           ? '<div class="cart-subtotal"><span>Shipping (U.S.' + shipNote() + ')</span><span>' + shipLabel() + "</span></div>"
           : "") +
@@ -180,7 +268,7 @@
   function orderBody() {
     var lines = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n");
     return "Hi Attic & Ember,\n\nI'd like to order:\n" + lines +
-      "\n\nSubtotal: " + money(subtotal()) +
+      "\n\nSubtotal: " + money(subtotal()) + dealText() +
       "\nShipping: " + shipLabel() +
       "\nTotal: " + money(grandTotal()) +
       "\n\nMy shipping details:\nName:\nAddress:\nCity / State / ZIP:\n\nI'll send payment by PayPal / Venmo / Cash App. Thanks!";
@@ -286,6 +374,7 @@
       '<div class="checkout">' +
         '<div class="co-summary">' + summary +
           '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>" +
+          dealRows("co-line") +
           '<div class="co-line co-ship"><span>Shipping' +
             '<em class="ship-dom"> (U.S.' + shipNote() + ')</em>' +
             '<em class="ship-intl" hidden> (international)</em>' +
@@ -387,22 +476,25 @@
     var ref = "AE-" + pad2(now.getMonth() + 1) + pad2(now.getDate()) + "-" +
       Math.random().toString(36).slice(2, 5).toUpperCase();
     var items = cart.slice();
+    var deals = appliedDeals();
+    var goodsAmt = goods();
 
     data.access_key = WEB3KEY;
     data.order_ref = ref;
     data.subject = "Attic & Ember order " + ref + " — " + cart.length + " item" +
-      (cart.length > 1 ? "s" : "") + ", " + (domestic ? money(grandTotal()) : money(subtotal()) + " + intl shipping") +
+      (cart.length > 1 ? "s" : "") + ", " + (domestic ? money(grandTotal()) : money(goodsAmt) + " + intl shipping") +
       (pickup ? " — LOCAL PICKUP" : "");
     if (PICKUP) data.delivery = pickup ? "LOCAL PICKUP in " + PICKUP : "Ship to the address below";
     data.from_name = data.name;
     data.paying_with = domestic ? (chosen ? chosen.label : "(not selected)") : "(international — quote shipping first)";
     data.shipping = domestic ? shipEmailText() : "TO QUOTE — international address";
-    data.order_total = domestic ? money(grandTotal()) : money(subtotal()) + " + shipping (to be quoted)";
+    data.order_total = domestic ? money(grandTotal()) : money(goodsAmt) + " + shipping (to be quoted)";
+    if (deals.length) data.bundle_deal = deals.map(function (d) { return d.names.join(" + ") + ": -" + money(d.save); }).join("; ");
     data.order = cart.map(function (i) { return "- " + i.title + " (" + money(parseFloat(i.price) || 0) + ")"; }).join("\n") +
-      "\nSubtotal: " + money(subtotal()) +
+      "\nSubtotal: " + money(subtotal()) + dealText() +
       (domestic
         ? "\nShipping: " + shipEmailText() + "\nTOTAL DUE: " + money(grandTotal())
-        : "\nShipping: TO QUOTE (international)\nTOTAL DUE: " + money(subtotal()) + " + shipping — quote before payment");
+        : "\nShipping: TO QUOTE (international)\nTOTAL DUE: " + money(goodsAmt) + " + shipping — quote before payment");
     btn.disabled = true;
     status.className = "of-status";
     status.textContent = "Sending…";
@@ -421,14 +513,14 @@
       for (var j = 0; j < withRef.length; j++) {
         if (chosen && withRef[j].id === chosen.id) { chosen = withRef[j]; break; }
       }
-      orderSent(form, data.name, chosen, total, ref, items, data.email, sub, ship, domestic, pickup);
+      orderSent(form, data.name, chosen, total, ref, items, data.email, sub, ship, domestic, pickup, deals, goodsAmt);
     }).catch(function () {
       btn.disabled = false;
       status.className = "of-status err";
       status.innerHTML = 'That didn’t go through — please email us at <a href="mailto:' + esc(ORDER_EMAIL) + '">' + esc(ORDER_EMAIL) + "</a>.";
     });
   }
-  function orderSent(form, name, chosen, total, ref, items, email, sub, ship, isDom, isPickup) {
+  function orderSent(form, name, chosen, total, ref, items, email, sub, ship, isDom, isPickup, deals, goodsAmt) {
     var wrap = document.createElement("div");
     wrap.className = "order-sent";
     var first = (name || "").trim().split(/\s+/)[0];
@@ -440,10 +532,13 @@
             money(parseFloat(i.price) || 0) + "</span></div>";
         }).join("") +
         '<div class="co-line co-sub"><span>Subtotal</span><span>' + money(sub || 0) + "</span></div>" +
+        (deals || []).map(function (d) {
+          return '<div class="co-line deal-line"><span>' + dealLabel(d) + "</span><span>&minus;" + money(d.save) + "</span></div>";
+        }).join("") +
         '<div class="co-line co-ship"><span>' + (isPickup ? "Local pickup" : "Shipping") + "</span><span>" +
           (isDom ? (ship ? money(ship) : "Free") : "We’ll quote it") + "</span></div>" +
         '<div class="co-line co-total"><span>Total</span><strong>' +
-          (isDom ? total : money(sub || 0) + " + shipping") + "</strong></div>" +
+          (isDom ? total : money(goodsAmt == null ? (sub || 0) : goodsAmt) + " + shipping") + "</strong></div>" +
       "</div>";
     if (!isDom) {
       // International: never quote a total we can't honour — we email a
@@ -581,6 +676,31 @@
       });
       save(); updateCount(); syncButtons();
     }
+    showCart(); open();
+  });
+
+  // ---- add a whole bundle at once ----
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".add-bundle");
+    if (!btn) return;
+    e.preventDefault();
+    var id = btn.getAttribute("data-bundle");
+    var b = SHOP.bundles.filter(function (x) { return x.id === id; })[0];
+    if (!b) return;
+    b.items.forEach(function (s) {
+      var p = SHOP.products[s];
+      if (!p || p.sold || has("/shop/" + s)) return;
+      cart.push({
+        id: "/shop/" + s,
+        title: p.title,
+        price: String(p.price),
+        url: new URL(p.url, location.href).href,
+        image: p.image ? new URL(p.image, location.href).href : "",
+        freeShip: p.freeShip === true,
+        ship: p.ship == null ? "" : String(p.ship)
+      });
+    });
+    save(); updateCount(); syncButtons();
     showCart(); open();
   });
 

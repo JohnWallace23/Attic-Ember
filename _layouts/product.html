@@ -149,6 +149,15 @@ layout: default
         data-free-ship="{{ page.free_shipping }}"
         data-ship="{{ page.shipping }}"
         style="font-size:16px; padding:14px 24px;">Add to cart — ${% include money.html amount=page.price %}</button>
+      {% for deal in page.bundle_deals %}
+      {%- comment -%} Bundles come from _plugins/bundles.rb; only valid, unsold ones get here. {%- endcomment -%}
+      <div class="bundle-deal">
+        <p><strong>Bundle deal:</strong> get it with
+          {% for p in deal.partners %}<a href="{{ p.url | relative_url }}">{{ p.title }}</a>{% unless forloop.last %}{% if forloop.rindex == 2 %} and {% else %}, {% endif %}{% endunless %}{% endfor %}
+          for ${% include money.html amount=deal.price %} <span class="bundle-save">(save ${% include money.html amount=deal.save %})</span></p>
+        <button class="add-btn add-bundle" type="button" data-bundle="{{ deal.id | escape }}">Add {% if deal.items.size == 2 %}both{% else %}all {{ deal.items.size }}{% endif %} to cart — ${% include money.html amount=deal.price %}</button>
+      </div>
+      {% endfor %}
       {% endif %}
 
       <p class="fine-print" style="margin-top:20px; color: var(--sage-light);">
