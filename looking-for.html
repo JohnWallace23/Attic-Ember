@@ -1,0 +1,54 @@
+---
+layout: default
+title: "Looking for something?"
+description: "Hunting for a certain vintage Halloween piece? Tell us what it is and we'll keep watch at the estate sales, auctions and thrift stores we comb every week."
+permalink: /looking-for/
+---
+{%- comment -%}
+  The want list. Requests are emailed to the shop through Web3Forms, the same
+  way orders are (assets/js/want.js). The field names Item / Max price / Name /
+  Contact / Notes are what the sourcing app's "Paste a request email" reads, so
+  keep them as they are.
+{%- endcomment -%}
+<section class="wrap want-page">
+  <p class="eyebrow">The want list</p>
+  <h1>Looking for something?</h1>
+  <p class="want-intro">
+    Tell us the piece you've been hunting for: the blow mold from your grandparents'
+    porch, the mask you wore in 1978, the one die-cut missing from your set. We're at
+    estate sales, auctions and thrift stores every week, and we'll keep an eye out.
+    If we find it, we'll get in touch before it goes in the shop. No obligation, and
+    we never share your details.
+  </p>
+
+  <form class="order-form want-form" id="want-form" novalidate>
+    <label class="want-label" for="want-item">What are you looking for?</label>
+    <input id="want-item" name="Item" type="text" maxlength="200" required
+           placeholder="e.g. Empire black cat blow mold, 1970s">
+    <div class="of-row">
+      <div class="want-field">
+        <label class="want-label" for="want-max">Most you'd pay (optional)</label>
+        <input id="want-max" name="Max price" type="text" inputmode="decimal" maxlength="20" placeholder="$">
+      </div>
+      <div class="want-field">
+        <label class="want-label" for="want-name">Your first name</label>
+        <input id="want-name" name="Name" type="text" maxlength="60" required autocomplete="given-name">
+      </div>
+    </div>
+    <label class="want-label" for="want-contact">Email or phone, so we can tell you</label>
+    <input id="want-contact" name="Contact" type="text" maxlength="120" required autocomplete="email">
+    <label class="want-label" for="want-notes">Anything else? (optional)</label>
+    <textarea id="want-notes" name="Notes" maxlength="1000" placeholder="Size, color, condition, the year you remember it from…"></textarea>
+    <input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px">
+    <button class="btn want-send" type="submit">Add me to the want list</button>
+    <p class="of-status" id="want-status" role="status" aria-live="polite"></p>
+  </form>
+
+  <div class="want-done" id="want-done" hidden>
+    <h2>Got it, <span id="want-done-name"></span>!</h2>
+    <p>We'll keep an eye out for <strong id="want-done-item"></strong>. If it turns up, you'll hear from us first.</p>
+    <a class="btn" href="{{ '/shop/' | relative_url }}">Browse the shop meanwhile &rarr;</a>
+  </div>
+</section>
+
+<script src="{{ '/assets/js/want.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

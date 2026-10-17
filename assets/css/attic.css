@@ -1166,3 +1166,18 @@ body.cart-open { overflow: hidden; }
   .thumb { min-width: 44px; min-height: 44px; }
   .cart-close, .cart-remove { min-width: 44px; min-height: 44px; }
 }
+
+/* ---- want list (/looking-for/) ---- */
+.want-page { max-width: 640px; padding-block: 72px 60px; }
+.want-page h1 { font-family: var(--display); color: var(--gold-bright); font-weight: 400; font-size: clamp(30px, 6vw, 42px); margin: 4px 0 12px; }
+.want-intro { color: rgba(237,227,208,0.82); line-height: 1.6; margin: 0 0 22px; }
+.want-form { gap: 8px; }
+.want-label { font-family: var(--mono); font-size: 13px; letter-spacing: 0.04em; color: var(--sage-light); margin-top: 6px; }
+.want-field { flex: 1 1 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.want-send { margin-top: 12px; align-self: flex-start; cursor: pointer; }
+.want-send:disabled { opacity: 0.5; cursor: wait; transform: none; }
+.want-done h2 { font-family: var(--display); color: var(--gold-bright); font-weight: 400; }
+.want-done p { color: rgba(237,227,208,0.82); line-height: 1.6; }
+.want-callout { text-align: center; color: var(--sage-light); margin: 36px auto 0; max-width: 560px; }
+.want-callout a { color: var(--gold-bright); }
+@media (max-width: 560px) { .want-page .of-row { flex-direction: column; } }
